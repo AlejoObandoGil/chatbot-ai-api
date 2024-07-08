@@ -11,11 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chatbots', function (Blueprint $table) {
+        Schema::create('contexts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
+            $table->foreignId('intent_id')->constrained('intents');
             $table->string('name');
-            $table->text('description');
+            $table->integer('lifespan');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chatbots');
+        Schema::dropIfExists('contexts');
     }
 };

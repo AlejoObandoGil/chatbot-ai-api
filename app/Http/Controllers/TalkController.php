@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chatbot\Chatbot;
+use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
 
-class ChatbotController extends Controller
+class TalkController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class ChatbotController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Chatbot $chatbot)
+    public function show(Talk $talk)
     {
         //
     }
@@ -42,7 +42,7 @@ class ChatbotController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Chatbot $chatbot)
+    public function edit(Talk $talk)
     {
         //
     }
@@ -50,7 +50,7 @@ class ChatbotController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Chatbot $chatbot)
+    public function update(Request $request, Talk $talk)
     {
         //
     }
@@ -58,7 +58,7 @@ class ChatbotController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Chatbot $chatbot)
+    public function destroy(Talk $talk)
     {
         //
     }

@@ -11,11 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chatbots', function (Blueprint $table) {
+        Schema::create('intent_training_phrases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('users');
-            $table->string('name');
-            $table->text('description');
+            $table->unsignedBigInteger('chatbot_id');
+            $table->string('phrase');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -26,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chatbots');
+        Schema::dropIfExists('intent_training_phrases');
     }
 };
