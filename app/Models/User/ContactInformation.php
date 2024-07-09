@@ -13,7 +13,7 @@ class ContactInformation extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'entitie_id',
+        'entity_id',
         'value'
     ];
 
@@ -24,6 +24,6 @@ class ContactInformation extends Model
 
     public function entity()
     {
-        return $this->belongsTo(Entity::class, 'entitie_id', 'entitie_id');
+        return $this->belongsTo(Entity::class);
     }
 }

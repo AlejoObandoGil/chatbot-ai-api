@@ -13,9 +13,8 @@ return new class extends Migration
     {
         Schema::create('entity_values', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('entitie_id')->constrained('entities');
+            $table->foreignId('entity_id')->constrained('entities');
             $table->string('value');
-            $table->boolean('is_selectable');
             $table->timestamps();
             $table->softDeletes();
         });

@@ -1,0 +1,245 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Chatbot\Entity;
+use App\Models\Chatbot\Intent;
+use App\Models\Chatbot\Chatbot;
+use Illuminate\Database\Seeder;
+use App\Models\Chatbot\Knowledge;
+use App\Models\Chatbot\EntityValue;
+use App\Models\Chatbot\IntentResponse;
+use App\Models\Chatbot\IntentTrainingPhrase;
+
+
+class ChatbotTelecomunications extends Seeder
+{
+    /**
+     * Run the database seeds.
+     */
+    public function run(): void
+    {
+        // Datos del chatbot
+        $chatbotData = [
+            'user_id' => 1,
+            'name' => 'TelcoBot',
+            'description' => 'Chatbot para la empresa de telefonía, televisión y internet.'
+        ];
+
+        $chatbot = Chatbot::create($chatbotData);
+
+         // Datos de las intenciones
+        $intentsData = [
+            [
+                'name' => 'Obtener información',
+                'level' => 0,
+                'children' => [
+                    [
+                        'name' => 'Obtener tipo de plan del cliente',
+                        'level' => 1,
+                        'phrases' => [
+                            'Quiero saber sobre el plan de internet',
+                            '¿Qué tipo de planes tienen?'
+                        ],
+                        'responses' => [
+                            'Nuestro plan de Internet ofrece alta velocidad y precios competitivos.',
+                            'Ofrecemos planes de Internet, Teléfono y TV. ¿Cuál te interesa?'
+                        ]
+                    ],
+                    [
+                        'name' => 'Obtener saldo del cliente',
+                        'level' => 1,
+                        'phrases' => [
+                            'Me gustaría saber mi saldo',
+                            'Quiero saber el precio de mi internet'
+                        ],
+                        'responses' => [
+                            'Por favor escriba su numero de documento.',
+                            'El saldo registrado es {{Obtener saldo del cliente}}.'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Reportar un Problema',
+                'level' => 0,
+                'children' => [
+                    [
+                        'name' => 'Reportar un Problema de Conectividad',
+                        'level' => 1,
+                        'phrases' => [
+                            'Tengo problemas con la conexión a internet',
+                            'Mi internet no funciona correctamente'
+                        ],
+                        'responses' => [
+                            'Lamentamos escuchar eso. ¿Podrías proporcionar más detalles sobre el problema de conectividad?',
+                            '¿Estás experimentando problemas de conectividad en un dispositivo específico?'
+                        ]
+                    ],
+                    [
+                        'name' => 'Reportar un Problema de Facturación',
+                        'level' => 1,
+                        'phrases' => [
+                            'Tengo un problema con mi factura',
+                            'Mi factura no es correcta'
+                        ],
+                        'responses' => [
+                            'Entendido. Vamos a revisar tu factura. ¿Podrías proporcionar más detalles?',
+                            '¿El problema con tu factura está relacionado con algún cargo específico?'
+                        ]
+                    ]
+                ]
+            ],
+            [
+                'name' => 'Solicitar un Servicio',
+                'level' => 1,
+                'phrases' => [
+                    'Quiero solicitar un servicio',
+                    'Necesito mantenimiento para mi internet'
+                ],
+                'responses' => [
+                    '¿Qué tipo de servicio necesitas?',
+                    'Entendido. Vamos a proceder con tu solicitud.'
+                ]
+            ],
+            [
+                'name' => 'Saludo',
+                'level' => 0,
+                'phrases' => [
+                    'Hola',
+                    'Buenos días',
+                    'Buenas tardes',
+                    'Buenas noches'
+                ],
+                'responses' => [
+                    '¡Hola! ¿En qué puedo ayudarte hoy?',
+                    'Buenos días, ¿cómo puedo asistirte?',
+                    'Buenas tardes, ¿en qué puedo ayudarte?',
+                    'Buenas noches, ¿cómo puedo asistirte?'
+                ]
+            ],
+            [
+                'name' => 'Error',
+                'level' => 0,
+                'phrases' => [
+                    'Hubo un error',
+                    'No entendí tu mensaje'
+                ],
+                'responses' => [
+                    'Lo siento, ha ocurrido un error. Por favor, intenta nuevamente.',
+                    'Parece que hubo un problema. ¿Podrías intentar decirlo de otra manera?'
+                ]
+            ],
+            [
+                'name' => 'No Coincidencia',
+                'level' => 0,
+                'phrases' => [
+                    'No encontré una coincidencia',
+                    'No tengo una respuesta para eso'
+                ],
+                'responses' => [
+                    'Lo siento, no tengo una respuesta para eso. ¿Podrías intentar preguntar de otra manera?',
+                    'No estoy seguro de cómo responder eso. Por favor, intenta con una pregunta diferente.'
+                ]
+            ]
+        ];
+
+        // Función para crear las intenciones recursivamente
+        $createIntents = function ($intents, $parent = null) use (&$createIntents, $chatbot) {
+            foreach ($intents as $intentData) {
+                $intent = Intent::create([
+                    'chatbot_id' => $chatbot->id,
+                    'name' => $intentData['name'],
+                    'parent_id' => $parent ? $parent->id : null,
+                ]);
+
+                if (isset($intentData['phrases'])) {
+                    foreach ($intentData['phrases'] as $phrase) {
+                        IntentTrainingPhrase::create([
+                            'intent_id' => $intent->id,
+                            'phrase' => $phrase
+                        ]);
+                    }
+                }
+
+                if (isset($intentData['responses'])) {
+                    foreach ($intentData['responses'] as $response) {
+                        IntentResponse::create([
+                            'intent_id' => $intent->id,
+                            'response' => $response
+                        ]);
+                    }
+                }
+
+                if (isset($intentData['children'])) {
+                    $createIntents($intentData['children'], $intent);
+                }
+            }
+        };
+
+        // Crear las intenciones recursivamente
+        $createIntents($intentsData);
+
+        // Datos de conocimientos
+        $knowledgesData = [
+            ['topic' => 'Planes de Internet', 'content' => 'Ofrecemos planes de internet de alta velocidad para hogar y oficina.'],
+            ['topic' => 'Planes de Telefonía', 'content' => 'Nuestros planes de telefonía incluyen llamadas ilimitadas y roaming internacional.'],
+            ['topic' => 'Planes de TV', 'content' => 'Ofrecemos una variedad de canales de entretenimiento, deportes y noticias.'],
+            ['topic' => 'Soporte Técnico', 'content' => 'Nuestro equipo de soporte técnico está disponible 24/7 para resolver cualquier problema.']
+        ];
+
+        // Crear Conocimientos
+        foreach ($knowledgesData as $knowledgeData) {
+            Knowledge::create([
+                'chatbot_id' => $chatbot->id,
+                'topic' => $knowledgeData['topic'],
+                'content' => $knowledgeData['content']
+            ]);
+        }
+
+        // Datos de entidades y sus valores
+        $entitiesData = [
+            [
+                'name' => 'Tipo de plan',
+                'type' => 'string',
+                'save' => true,
+                'values' => ['Internet', 'Teléfono', 'TV']
+            ],
+            [
+                'name' => 'Saldo de cliente',
+                'type' => 'string',
+                'save' => true,
+                'values' => ['100.000']
+            ],
+            [
+                'name' => 'Tipo de servicio',
+                'type' => 'string',
+                'save' => true,
+                'values' => ['Instalación', 'Mantenimiento', 'Actualización']
+            ],
+            [
+                'name' => 'Tipo de problema',
+                'type' => 'string',
+                'save' => true,
+                'values' => ['Conectividad', 'Facturación', 'Soporte técnico']
+            ]
+        ];
+
+        // Crear Entidades y sus valores
+        foreach ($entitiesData as $entityData) {
+            $entity = Entity::create([
+                'chatbot_id' => $chatbot->id,
+                'name' => $entityData['name'],
+                'type' => $entityData['type'],
+                'save' => $entityData['save']
+            ]);
+
+            foreach ($entityData['values'] as $value) {
+                EntityValue::create([
+                    'entity_id' => $entity->id,
+                    'value' => $value
+                ]);
+            }
+        }
+    }
+}

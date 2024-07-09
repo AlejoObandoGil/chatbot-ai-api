@@ -25,6 +25,6 @@ class Entity extends Model
 
     public function contactInformation()
     {
-        return $this->hasMany(ContactInformation::class, 'entitie_id', 'entitie_id');
+        return $this->hasMany(ContactInformation::class);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Chatbot\IntentTrainingPhrases;
 use Illuminate\Http\Request;
 
-class IntentTrainingPhrasesController extends Controller
+class IntentTrainingPhraseController extends Controller
 {
     /**
      * Display a listing of the resource.

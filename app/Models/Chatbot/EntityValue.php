@@ -12,7 +12,7 @@ class EntityValue extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'entitie_id',
+        'entity_id',
         'value',
         'is_selectable'
     ];

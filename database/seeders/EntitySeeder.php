@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Chatbot\Entity;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class EntitySeeder extends Seeder
 {
@@ -12,6 +13,32 @@ class EntitySeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Entity::create([
+            'chatbot_id' => 1,
+            'name' => 'Tipo de plan',
+            'type' => 'string',
+            'save' => true
+        ]);
+
+        Entity::create([
+            'chatbot_id' => 1,
+            'name' => 'Saldo de cliente',
+            'type' => 'string',
+            'save' => true
+        ]);
+
+        Entity::create([
+            'chatbot_id' => 1,
+            'name' => 'Tipo de servicio',
+            'type' => 'string',
+            'save' => true
+        ]);
+
+        Entity::create([
+            'chatbot_id' => 1,
+            'name' => 'Tipo de problema',
+            'type' => 'string',
+            'save' => true
+        ]);
     }
 }

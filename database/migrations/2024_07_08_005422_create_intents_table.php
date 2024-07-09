@@ -14,7 +14,11 @@ return new class extends Migration
         Schema::create('intents', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chatbot_id')->constrained('chatbots');
+            $table->foreignId('parent_id')->constrained('intents')->nullable();
             $table->string('name');
+            $table->string('type');
+            $table->string('group')->nullable();
+            $table->integer('level')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

@@ -14,6 +14,7 @@ class Intent extends Model
 
     protected $fillable = [
         'chatbot_id',
+        'parent_id',
         'name',
         'description'
     ];
@@ -31,5 +32,15 @@ class Intent extends Model
     public function contexts()
     {
         return $this->hasMany(Context::class);
+    }
+
+    public function parent()
+    {
+        return $this->belongsTo(Intent::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(Intent::class, 'parent_id');
     }
 }

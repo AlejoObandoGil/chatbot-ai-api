@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Models\Chatbot\Intent;
 use Illuminate\Database\Seeder;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class IntentSeeder extends Seeder
 {
@@ -12,6 +13,24 @@ class IntentSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        Intent::create([
+            'chatbot_id' => 1,
+            'name' => 'Obtener tipo de plan del cliente',
+        ]);
+
+        Intent::create([
+            'chatbot_id' => 1,
+            'name' => 'Obtener saldo del cliente',
+        ]);
+
+        Intent::create([
+            'chatbot_id' => 1,
+            'name' => 'Reportar un Problema',
+        ]);
+
+        Intent::create([
+            'chatbot_id' => 1,
+            'name' => 'Solicitar un Service',
+        ]);
     }
 }

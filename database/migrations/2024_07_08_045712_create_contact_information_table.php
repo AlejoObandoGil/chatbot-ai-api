@@ -13,8 +13,7 @@ return new class extends Migration
     {
         Schema::create('contact_information', function (Blueprint $table) {
             $table->id();
-            // $table->foreignId('talk_id')->constrained('talks');
-            $table->foreignId('entitie_id')->constrained('entities');
+            $table->foreignId('entitiy_id')->constrained('entities');
             $table->string('value');
             $table->timestamps();
             $table->softDeletes();

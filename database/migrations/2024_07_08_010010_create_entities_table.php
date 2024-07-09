@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('chatbot_id')->constrained('chatbots');
             $table->string('name');
             $table->string('type');
+            $table->string('group')->nullable();
             $table->boolean('save')->default(false);
             $table->timestamps();
             $table->softDeletes();
