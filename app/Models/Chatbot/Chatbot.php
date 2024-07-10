@@ -2,7 +2,7 @@
 
 namespace App\Models\Chatbot;
 
-use App\Models\User;
+use App\Models\User\User;
 use App\Models\Talk\Talk;
 use App\Models\Chatbot\Entity;
 use App\Models\Chatbot\Intent;

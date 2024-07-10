@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('intent_training_phrases', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('chatbot_id');
+            $table->foreignId('intent_id')->constrained('intents')->onDelete('cascade');
             $table->string('phrase');
             $table->timestamps();
             $table->softDeletes();

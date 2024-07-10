@@ -13,7 +13,7 @@ class ChatbotController extends Controller
      */
     public function index()
     {
-        //
+        return response()->json(['chatbots' => Chatbot::all()]);
     }
 
     /**

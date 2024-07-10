@@ -12,7 +12,7 @@ use App\Models\Chatbot\IntentResponse;
 use App\Models\Chatbot\IntentTrainingPhrase;
 
 
-class ChatbotTelecomunications extends Seeder
+class ChatbotTelecomunicationSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -35,7 +35,7 @@ class ChatbotTelecomunications extends Seeder
                 'level' => 0,
                 'children' => [
                     [
-                        'name' => 'Obtener tipo de plan del cliente',
+                        'name' => 'Obtener tipos de planes',
                         'level' => 1,
                         'phrases' => [
                             'Quiero saber sobre el plan de internet',
@@ -44,18 +44,32 @@ class ChatbotTelecomunications extends Seeder
                         'responses' => [
                             'Nuestro plan de Internet ofrece alta velocidad y precios competitivos.',
                             'Ofrecemos planes de Internet, Teléfono y TV. ¿Cuál te interesa?'
-                        ]
-                    ],
-                    [
-                        'name' => 'Obtener saldo del cliente',
-                        'level' => 1,
-                        'phrases' => [
-                            'Me gustaría saber mi saldo',
-                            'Quiero saber el precio de mi internet'
                         ],
-                        'responses' => [
-                            'Por favor escriba su numero de documento.',
-                            'El saldo registrado es {{Obtener saldo del cliente}}.'
+                        'children' => [
+                            [
+                                'name' => 'Comprar un plan de Internet',
+                                'level' => 2,
+                                'phrases' => [
+                                    'Me gustaría comprar un plan de internet',
+                                    'Quiero saber el precio del plan de internet'
+                                ],
+                                'responses' => [
+                                    'Por favor escriba su numero de documento, lo contactaremos a la brevedad.',
+                                    'El plan de internet tiene un precio de $100.000 por mes.'
+                                ]
+                                ],
+                            [
+                                'name' => 'Comprar un plan de Telefonía',
+                                'level' => 1,
+                                'phrases' => [
+                                    'Me gustaría comprar un plan de telefonía',
+                                    'Quiero saber el precio del plan de telefonía'
+                                ],
+                                'responses' => [
+                                    'Por favor escriba su numero de documento, lo contactaremos a la brevedad.',
+                                    'El plan de telefónía tiene un precio de $40.000 por mes.'
+                                ]
+                            ]
                         ]
                     ]
                 ]

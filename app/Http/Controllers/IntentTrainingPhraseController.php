@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chatbot\IntentTrainingPhrases;
 use Illuminate\Http\Request;
+use App\Models\Chatbot\IntentTrainingPhrase;
 
 class IntentTrainingPhraseController extends Controller
 {
@@ -34,7 +34,7 @@ class IntentTrainingPhraseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(IntentTrainingPhrases $intentTrainingPhrases)
+    public function show(IntentTrainingPhrase $intentTrainingPhrase)
     {
         //
     }
@@ -42,7 +42,7 @@ class IntentTrainingPhraseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(IntentTrainingPhrases $intentTrainingPhrases)
+    public function edit(IntentTrainingPhrase $intentTrainingPhrase)
     {
         //
     }
@@ -50,7 +50,7 @@ class IntentTrainingPhraseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, IntentTrainingPhrases $intentTrainingPhrases)
+    public function update(Request $request, IntentTrainingPhrase $intentTrainingPhrase)
     {
         //
     }
@@ -58,7 +58,7 @@ class IntentTrainingPhraseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(IntentTrainingPhrases $intentTrainingPhrases)
+    public function destroy(IntentTrainingPhrase $intentTrainingPhrase)
     {
         //
     }
