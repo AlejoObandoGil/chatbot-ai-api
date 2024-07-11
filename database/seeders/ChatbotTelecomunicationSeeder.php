@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\User\User;
 use App\Models\Chatbot\Entity;
 use App\Models\Chatbot\Intent;
 use App\Models\Chatbot\Chatbot;
@@ -19,6 +20,12 @@ class ChatbotTelecomunicationSeeder extends Seeder
      */
     public function run(): void
     {
+        // $user = User::create([
+        //     'name' => 'John',
+        //     'email' => 'joanlejo0803@gmail.com',
+        //     'password' => bcrypt('Password1234.'),
+        // ]);
+
         // Datos del chatbot
         $chatbotData = [
             'user_id' => 1,
@@ -74,88 +81,88 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     ]
                 ]
             ],
-            [
-                'name' => 'Reportar un Problema',
-                'level' => 0,
-                'children' => [
-                    [
-                        'name' => 'Reportar un Problema de Conectividad',
-                        'level' => 1,
-                        'phrases' => [
-                            'Tengo problemas con la conexión a internet',
-                            'Mi internet no funciona correctamente'
-                        ],
-                        'responses' => [
-                            'Lamentamos escuchar eso. ¿Podrías proporcionar más detalles sobre el problema de conectividad?',
-                            '¿Estás experimentando problemas de conectividad en un dispositivo específico?'
-                        ]
-                    ],
-                    [
-                        'name' => 'Reportar un Problema de Facturación',
-                        'level' => 1,
-                        'phrases' => [
-                            'Tengo un problema con mi factura',
-                            'Mi factura no es correcta'
-                        ],
-                        'responses' => [
-                            'Entendido. Vamos a revisar tu factura. ¿Podrías proporcionar más detalles?',
-                            '¿El problema con tu factura está relacionado con algún cargo específico?'
-                        ]
-                    ]
-                ]
-            ],
-            [
-                'name' => 'Solicitar un Servicio',
-                'level' => 1,
-                'phrases' => [
-                    'Quiero solicitar un servicio',
-                    'Necesito mantenimiento para mi internet'
-                ],
-                'responses' => [
-                    '¿Qué tipo de servicio necesitas?',
-                    'Entendido. Vamos a proceder con tu solicitud.'
-                ]
-            ],
-            [
-                'name' => 'Saludo',
-                'level' => 0,
-                'phrases' => [
-                    'Hola',
-                    'Buenos días',
-                    'Buenas tardes',
-                    'Buenas noches'
-                ],
-                'responses' => [
-                    '¡Hola! ¿En qué puedo ayudarte hoy?',
-                    'Buenos días, ¿cómo puedo asistirte?',
-                    'Buenas tardes, ¿en qué puedo ayudarte?',
-                    'Buenas noches, ¿cómo puedo asistirte?'
-                ]
-            ],
-            [
-                'name' => 'Error',
-                'level' => 0,
-                'phrases' => [
-                    'Hubo un error',
-                    'No entendí tu mensaje'
-                ],
-                'responses' => [
-                    'Lo siento, ha ocurrido un error. Por favor, intenta nuevamente.',
-                    'Parece que hubo un problema. ¿Podrías intentar decirlo de otra manera?'
-                ]
-            ],
-            [
-                'name' => 'No Coincidencia',
-                'level' => 0,
-                'phrases' => [
-                    'No encontré una coincidencia',
-                    'No tengo una respuesta para eso'
-                ],
-                'responses' => [
-                    'Lo siento, no tengo una respuesta para eso. ¿Podrías intentar preguntar de otra manera?',
-                    'No estoy seguro de cómo responder eso. Por favor, intenta con una pregunta diferente.'
-                ]
-            ]
+            // [
+            //     'name' => 'Reportar un Problema',
+            //     'level' => 0,
+            //     'children' => [
+            //         [
+            //             'name' => 'Reportar un Problema de Conectividad',
+            //             'level' => 1,
+            //             'phrases' => [
+            //                 'Tengo problemas con la conexión a internet',
+            //                 'Mi internet no funciona correctamente'
+            //             ],
+            //             'responses' => [
+            //                 'Lamentamos escuchar eso. ¿Podrías proporcionar más detalles sobre el problema de conectividad?',
+            //                 '¿Estás experimentando problemas de conectividad en un dispositivo específico?'
+            //             ]
+            //         ],
+            //         [
+            //             'name' => 'Reportar un Problema de Facturación',
+            //             'level' => 1,
+            //             'phrases' => [
+            //                 'Tengo un problema con mi factura',
+            //                 'Mi factura no es correcta'
+            //             ],
+            //             'responses' => [
+            //                 'Entendido. Vamos a revisar tu factura. ¿Podrías proporcionar más detalles?',
+            //                 '¿El problema con tu factura está relacionado con algún cargo específico?'
+            //             ]
+            //         ]
+            //     ]
+            // ],
+            // [
+            //     'name' => 'Solicitar un Servicio',
+            //     'level' => 1,
+            //     'phrases' => [
+            //         'Quiero solicitar un servicio',
+            //         'Necesito mantenimiento para mi internet'
+            //     ],
+            //     'responses' => [
+            //         '¿Qué tipo de servicio necesitas?',
+            //         'Entendido. Vamos a proceder con tu solicitud.'
+            //     ]
+            // ],
+            // [
+            //     'name' => 'Saludo',
+            //     'level' => 0,
+            //     'phrases' => [
+            //         'Hola',
+            //         'Buenos días',
+            //         'Buenas tardes',
+            //         'Buenas noches'
+            //     ],
+            //     'responses' => [
+            //         '¡Hola! ¿En qué puedo ayudarte hoy?',
+            //         'Buenos días, ¿cómo puedo asistirte?',
+            //         'Buenas tardes, ¿en qué puedo ayudarte?',
+            //         'Buenas noches, ¿cómo puedo asistirte?'
+            //     ]
+            // ],
+            // [
+            //     'name' => 'Error',
+            //     'level' => 0,
+            //     'phrases' => [
+            //         'Hubo un error',
+            //         'No entendí tu mensaje'
+            //     ],
+            //     'responses' => [
+            //         'Lo siento, ha ocurrido un error. Por favor, intenta nuevamente.',
+            //         'Parece que hubo un problema. ¿Podrías intentar decirlo de otra manera?'
+            //     ]
+            // ],
+            // [
+            //     'name' => 'No Coincidencia',
+            //     'level' => 0,
+            //     'phrases' => [
+            //         'No encontré una coincidencia',
+            //         'No tengo una respuesta para eso'
+            //     ],
+            //     'responses' => [
+            //         'Lo siento, no tengo una respuesta para eso. ¿Podrías intentar preguntar de otra manera?',
+            //         'No estoy seguro de cómo responder eso. Por favor, intenta con una pregunta diferente.'
+            //     ]
+            // ]
         ];
 
         // Función para crear las intenciones recursivamente
@@ -216,25 +223,25 @@ class ChatbotTelecomunicationSeeder extends Seeder
             [
                 'name' => 'Tipo de plan',
                 'type' => 'string',
-                'save' => true,
+                'save_information' => true,
                 'values' => ['Internet', 'Teléfono', 'TV']
             ],
             [
                 'name' => 'Saldo de cliente',
                 'type' => 'string',
-                'save' => true,
+                'save_information' => true,
                 'values' => ['100.000']
             ],
             [
                 'name' => 'Tipo de servicio',
                 'type' => 'string',
-                'save' => true,
+                'save_information' => true,
                 'values' => ['Instalación', 'Mantenimiento', 'Actualización']
             ],
             [
                 'name' => 'Tipo de problema',
                 'type' => 'string',
-                'save' => true,
+                'save_information' => true,
                 'values' => ['Conectividad', 'Facturación', 'Soporte técnico']
             ]
         ];
@@ -245,7 +252,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 'chatbot_id' => $chatbot->id,
                 'name' => $entityData['name'],
                 'type' => $entityData['type'],
-                'save' => $entityData['save']
+                'save_information' => $entityData['save_information']
             ]);
 
             foreach ($entityData['values'] as $value) {

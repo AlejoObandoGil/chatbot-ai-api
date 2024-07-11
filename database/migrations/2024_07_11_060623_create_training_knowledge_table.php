@@ -11,10 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('intent_training_phrases', function (Blueprint $table) {
+        Schema::create('training_knowledge', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('intent_id')->constrained('intents')->onDelete('cascade');
-            $table->string('phrase')->index();
+            $table->foreignId('chatbot_id')->constrained('chatbots');
+            $table->longText('content');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('intent_training_phrases');
+        Schema::dropIfExists('training_knowledge');
     }
 };
