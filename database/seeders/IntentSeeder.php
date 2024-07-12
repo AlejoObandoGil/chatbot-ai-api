@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Chatbot\Intent;
+use App\Models\Intent\Intent;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 

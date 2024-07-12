@@ -3,15 +3,14 @@
 namespace Database\Seeders;
 
 use App\Models\User\User;
-use App\Models\Chatbot\Entity;
-use App\Models\Chatbot\Intent;
+use App\Models\Entity\Entity;
+use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use Illuminate\Database\Seeder;
 use App\Models\Chatbot\Knowledge;
 use App\Models\Chatbot\EntityValue;
-use App\Models\Chatbot\IntentResponse;
-use App\Models\Chatbot\IntentTrainingPhrase;
-
+use App\Models\Intent\IntentResponse;
+use App\Models\Intent\IntentTrainingPhrase;
 
 class ChatbotTelecomunicationSeeder extends Seeder
 {
@@ -20,6 +19,14 @@ class ChatbotTelecomunicationSeeder extends Seeder
      */
     public function run(): void
     {
+        // categoria de intenciones
+        // 'greetings',
+        // 'only_information',
+        // 'save_information',
+        // 'goodbyes',
+        // 'unanswered',
+        // 'errors'
+
         // $user = User::create([
         //     'name' => 'John',
         //     'email' => 'joanlejo0803@gmail.com',
@@ -38,12 +45,31 @@ class ChatbotTelecomunicationSeeder extends Seeder
          // Datos de las intenciones
         $intentsData = [
             [
+                'name' => 'Saludo inicial',
+                'level' => 1,
+                'intent_category_id' => 1,
+                'phrases' => [
+                    'Hola',
+                    'Buenos días',
+                    'Buenas tardes',
+                    'Buenas noches'
+                ],
+                'responses' => [
+                    '¡Hola! ¿En qué puedo ayudarte hoy?',
+                    'Buenos días, ¿cómo puedo asistirte?',
+                    'Buenas tardes, ¿en qué puedo ayudarte?',
+                    'Buenas noches, ¿cómo puedo asistirte?'
+                ]
+            ],
+            [
                 'name' => 'Obtener información',
-                'level' => 0,
+                'level' => 1,
+                'intent_category_id' => 2,
                 'children' => [
                     [
                         'name' => 'Obtener tipos de planes',
-                        'level' => 1,
+                        'level' => 2,
+                        'intent_category_id' => 2,
                         'phrases' => [
                             'Quiero saber sobre el plan de internet',
                             '¿Qué tipo de planes tienen?'
@@ -55,7 +81,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         'children' => [
                             [
                                 'name' => 'Comprar un plan de Internet',
-                                'level' => 2,
+                                'level' => 3,
+                                'intent_category_id' => 3,
                                 'phrases' => [
                                     'Me gustaría comprar un plan de internet',
                                     'Quiero saber el precio del plan de internet'
@@ -64,10 +91,11 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                     'Por favor escriba su numero de documento, lo contactaremos a la brevedad.',
                                     'El plan de internet tiene un precio de $100.000 por mes.'
                                 ]
-                                ],
+                            ],
                             [
                                 'name' => 'Comprar un plan de Telefonía',
-                                'level' => 1,
+                                'level' => 3,
+                                'intent_category_id' => 3,
                                 'phrases' => [
                                     'Me gustaría comprar un plan de telefonía',
                                     'Quiero saber el precio del plan de telefonía'
@@ -83,11 +111,13 @@ class ChatbotTelecomunicationSeeder extends Seeder
             ],
             [
                 'name' => 'Reportar un Problema',
-                'level' => 0,
+                'level' => 1,
+                'intent_category_id' => 2,
                 'children' => [
                     [
                         'name' => 'Reportar un Problema de Conectividad',
-                        'level' => 1,
+                        'level' => 2,
+                        'intent_category_id' => 2,
                         'phrases' => [
                             'Tengo problemas con la conexión a internet',
                             'Mi internet no funciona correctamente'
@@ -99,7 +129,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     ],
                     [
                         'name' => 'Reportar un Problema de Facturación',
-                        'level' => 1,
+                        'level' => 2,
+                        'intent_category_id' => 2,
                         'phrases' => [
                             'Tengo un problema con mi factura',
                             'Mi factura no es correcta'
@@ -114,6 +145,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
             [
                 'name' => 'Solicitar un Servicio',
                 'level' => 1,
+                'intent_category_id' => 2,
                 'phrases' => [
                     'Quiero solicitar un servicio',
                     'Necesito mantenimiento para mi internet'
@@ -124,45 +156,46 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 ]
             ],
             [
-                'name' => 'Saludo',
+                'name' => 'Despedida',
                 'level' => 0,
+                'intent_category_id' => 4,
                 'phrases' => [
-                    'Hola',
-                    'Buenos días',
-                    'Buenas tardes',
-                    'Buenas noches'
+                    'Adiós',
+                    'Hasta luego',
+                    'Nos vemos',
+                    'Hasta pronto',
+                    'Que tengas un buen día'
                 ],
                 'responses' => [
-                    '¡Hola! ¿En qué puedo ayudarte hoy?',
-                    'Buenos días, ¿cómo puedo asistirte?',
-                    'Buenas tardes, ¿en qué puedo ayudarte?',
-                    'Buenas noches, ¿cómo puedo asistirte?'
+                    '¡Adiós! Que tengas un buen día.',
+                    'Hasta luego, que estés bien.',
+                    'Nos vemos, que todo vaya bien.',
+                    'Hasta pronto, cuídate.',
+                    'Que tengas un buen día, ¡nos vemos pronto!'
                 ]
             ],
-            [
-                'name' => 'Error',
-                'level' => 0,
-                'phrases' => [
-                    'Hubo un error',
-                    'No entendí tu mensaje'
-                ],
-                'responses' => [
-                    'Lo siento, ha ocurrido un error. Por favor, intenta nuevamente.',
-                    'Parece que hubo un problema. ¿Podrías intentar decirlo de otra manera?'
-                ]
-            ],
-            [
-                'name' => 'No Coincidencia',
-                'level' => 0,
-                'phrases' => [
-                    'No encontré una coincidencia',
-                    'No tengo una respuesta para eso'
-                ],
-                'responses' => [
-                    'Lo siento, no tengo una respuesta para eso. ¿Podrías intentar preguntar de otra manera?',
-                    'No estoy seguro de cómo responder eso. Por favor, intenta con una pregunta diferente.'
-                ]
-            ]
+            // [
+            //     'name' => 'No Coincidencia',
+            //     'level' => 1,
+            //     'intent_category_id' => 5,
+            //     'responses' => [
+            //         'Lo siento, no tengo una respuesta para eso. ¿Podrías intentar preguntar de otra manera?',
+            //         'No estoy seguro de cómo responder eso. Por favor, intenta con una pregunta diferente.'
+            //     ]
+            // ]
+            // [
+            //     'name' => 'Error',
+            //     'level' => 1,
+            //     'intent_category_id' => 6,
+            //     'phrases' => [
+            //         'Hubo un error',
+            //         'No entendí tu mensaje'
+            //     ],
+            //     'responses' => [
+            //         'Lo siento, ha ocurrido un error. Por favor, intenta nuevamente.',
+            //         'Parece que hubo un problema. ¿Podrías intentar decirlo de otra manera?'
+            //     ]
+            // ],
         ];
 
         // Función para crear las intenciones recursivamente

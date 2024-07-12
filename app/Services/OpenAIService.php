@@ -4,7 +4,7 @@ namespace App\Services;
 
 use GuzzleHttp\Client;
 use Illuminate\Http\Request;
-use App\Models\Chatbot\Intent;
+use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use App\Models\Knowledge\TrainingKnowledge;
 use OpenAI\Resources\Completions;

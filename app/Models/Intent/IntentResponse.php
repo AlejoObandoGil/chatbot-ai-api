@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Chatbot;
+namespace App\Models\Intent;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

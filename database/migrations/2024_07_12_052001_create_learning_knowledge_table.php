@@ -11,13 +11,10 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('entities', function (Blueprint $table) {
+        Schema::create('learning_knowledge', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chatbot_id')->constrained('chatbots');
-            $table->string('name');
-            $table->string('datatype')->index();
-            // $table->string('group')->nullable()->index();
-            $table->boolean('save_information')->default(false);
+            $table->longText('content');
             $table->timestamps();
             $table->softDeletes();
         });
@@ -28,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('entities');
+        Schema::dropIfExists('learning_knowledge');
     }
 };

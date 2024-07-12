@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Knowledge\TrainingKnowledge;
+use App\Models\Learning\LearningKnowledge;
 use Illuminate\Http\Request;
 
-class TrainingKnowledgeController extends Controller
+class LearningKnowledgeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class TrainingKnowledgeController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(TrainingKnowledge $trainingKnowledge)
+    public function show(LearningKnowledge $learningKnowledge)
     {
         //
     }
@@ -42,7 +42,7 @@ class TrainingKnowledgeController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TrainingKnowledge $trainingKnowledge)
+    public function edit(LearningKnowledge $learningKnowledge)
     {
         //
     }
@@ -50,7 +50,7 @@ class TrainingKnowledgeController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TrainingKnowledge $trainingKnowledge)
+    public function update(Request $request, LearningKnowledge $learningKnowledge)
     {
         //
     }
@@ -58,7 +58,7 @@ class TrainingKnowledgeController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TrainingKnowledge $trainingKnowledge)
+    public function destroy(LearningKnowledge $learningKnowledge)
     {
         //
     }

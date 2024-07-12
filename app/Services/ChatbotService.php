@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
-use App\Models\Chatbot\Intent;
-use App\Models\Chatbot\IntentResponse;
-use App\Models\Chatbot\IntentTrainingPhrase;
+use App\Models\Intent\Intent;
+use App\Models\Intent\IntentResponse;
+use App\Models\Intent\IntentTrainingPhrase;
 
 class ChatbotService
 {
@@ -39,36 +39,36 @@ class ChatbotService
 
     private function getBestMatch($userInput, $trainingPhrases)
     {
-        // Implementar lógica para encontrar la mejor coincidencia
+        //
     }
 
     private function findIntentByPhrase($bestMatchPhrase, $intents)
     {
-        // Implementar lógica para encontrar la intención correspondiente
+        //
     }
 
     private function extractEntities($userInput)
     {
-        // Implementar lógica para extraer entidades
+        //
     }
 
     private function generateResponse($intent, $intentResponses)
     {
-        // Implementar lógica para generar la respuesta
+        //
     }
 
     private function getCurrentContext($userId, $chatbotId)
     {
-        // Implementar lógica para obtener el contexto actual
+        //
     }
 
     private function updateContext($userId, $chatbotId, $intent, $context)
     {
-        // Implementar lógica para actualizar el contexto
+        //
     }
 
     private function logMessage($userId, $chatbotId, $userInput, $response)
     {
-        // Implementar lógica para registrar el mensaje
+        //
     }
 }

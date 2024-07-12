@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Chatbot\IntentResponse;
+use App\Models\Intent\IntentResponse;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class IntentResponseSeeder extends Seeder

@@ -3,7 +3,7 @@
 namespace App\Models\User;
 
 use App\Models\Talk\Talk;
-use App\Models\Chatbot\Entity;
+use App\Models\Entity\Entity;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

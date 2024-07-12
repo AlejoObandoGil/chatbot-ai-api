@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chatbot\IntentResponse;
+use App\Models\Intent\IntentResponse;
 use Illuminate\Http\Request;
 
 class IntentResponseController extends Controller

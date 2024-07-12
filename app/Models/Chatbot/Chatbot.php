@@ -4,8 +4,8 @@ namespace App\Models\Chatbot;
 
 use App\Models\User\User;
 use App\Models\Talk\Talk;
-use App\Models\Chatbot\Entity;
-use App\Models\Chatbot\Intent;
+use App\Models\Entity\Entity;
+use App\Models\Intent\Intent;
 use App\Models\Knowledge\Knowledge;
 use App\Models\Chatbot\ChatbotConfig;
 use Illuminate\Database\Eloquent\Model;

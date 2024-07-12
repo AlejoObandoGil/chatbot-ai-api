@@ -14,6 +14,7 @@ class DatabaseSeeder extends Seeder
     {
         $this->call([
             // UserSeeder::class,
+            IntentCategorySeeder::class,
             ChatbotTelecomunicationSeeder::class,
             // ChatbotSeeder::class,
             // EntitySeeder::class,

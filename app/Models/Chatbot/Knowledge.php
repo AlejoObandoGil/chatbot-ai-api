@@ -2,23 +2,23 @@
 
 namespace App\Models\Chatbot;
 
-use App\Models\Chatbot\Entity;
+use App\Models\Chatbot\Chatbot;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class EntityValue extends Model
+class Knowledge extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'entity_id',
-        'value',
-        'is_selectable'
+        'chatbot_id',
+        'topic',
+        'content'
     ];
 
-    public function entity()
+    public function chatbot()
     {
-        return $this->belongsTo(Entity::class);
+        return $this->belongsTo(Chatbot::class);
     }
 }

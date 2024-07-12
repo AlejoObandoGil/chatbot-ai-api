@@ -1,23 +1,22 @@
 <?php
 
-namespace App\Models\Knowledge;
+namespace App\Models\Intent;
 
-use App\Models\Chatbot\Chatbot;
+use App\Models\Intent\Intent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
-class TrainingKnowledge extends Model
+class IntentCategory extends Model
 {
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'chatbot_id',
-        'content'
+        'name',
     ];
 
-    public function chatbot()
+    public function intent()
     {
-        return $this->belongsTo(Chatbot::class);
+        return $this->HasMany(Intent::class);
     }
 }

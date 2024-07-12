@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Chatbot;
+namespace App\Models\Intent;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class IntentTrainingPhrase extends Model
+class IntentDefaultResponse extends Model
 {
     use HasFactory;
 }

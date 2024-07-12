@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Models\Chatbot;
+namespace App\Models\Entity;
 
+use App\Models\Chatbot\Chatbot;
 use App\Models\User\ContactInformation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

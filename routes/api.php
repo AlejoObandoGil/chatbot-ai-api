@@ -13,6 +13,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::middleware(['auth:sanctum'])->group(function () {
-    // Route::get('/chatbots/index', [ChatbotController::class, 'index']);
-    Route::post('/chatbots', [ChatbotController::class, 'store']);
+    Route::prefix('v1')->group(function () {
+        Route::get('/chatbots/index', [ChatbotController::class, 'index']);
+        Route::post('/chatbots', [ChatbotController::class, 'store']);
+    });
 });

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\Chatbot\Entity;
+use App\Models\Entity\Entity;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 

@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('training_knowledge', function (Blueprint $table) {
+        Schema::create('learning_intent_responses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chatbot_id')->constrained('chatbots');
-            $table->longText('content');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('training_knowledge');
+        Schema::dropIfExists('learning_intent_responses');
     }
 };

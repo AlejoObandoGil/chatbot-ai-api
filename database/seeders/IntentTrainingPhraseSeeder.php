@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Chatbot\IntentTrainingPhrase;
+use App\Models\Intent\IntentTrainingPhrase;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class IntentTrainingPhraseSeeder extends Seeder

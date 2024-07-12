@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Intent\Intent;
+use App\Models\Intent\IntentCategory;
 use Illuminate\Http\Request;
 
-class IntentController extends Controller
+class IntentCategoryController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class IntentController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Intent $intent)
+    public function show(IntentCategory $intentCategory)
     {
         //
     }
@@ -42,7 +42,7 @@ class IntentController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Intent $intent)
+    public function edit(IntentCategory $intentCategory)
     {
         //
     }
@@ -50,7 +50,7 @@ class IntentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Intent $intent)
+    public function update(Request $request, IntentCategory $intentCategory)
     {
         //
     }
@@ -58,7 +58,7 @@ class IntentController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Intent $intent)
+    public function destroy(IntentCategory $intentCategory)
     {
         //
     }
