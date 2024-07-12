@@ -19,7 +19,15 @@ class Chatbot extends Model
     protected $fillable = [
         'user_id',
         'name',
-        'description'
+        'description',
+        'type',
+        'enabled',
+        'script_embed'
+    ];
+
+    protected $casts = [
+        'enabled' => 'boolean',
+
     ];
 
     public function user()

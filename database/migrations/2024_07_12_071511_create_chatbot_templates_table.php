@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chatbot_configs', function (Blueprint $table) {
+        Schema::create('chatbot_templates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chatbot_id')->constrained('chatbots');
-            $table->text('config_data');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chatbot_configs');
+        Schema::dropIfExists('chatbot_templates');
     }
 };

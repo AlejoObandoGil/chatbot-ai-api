@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('intents', function (Blueprint $table) {
             $table->id();
+
             $table->foreignId('chatbot_id')->constrained('chatbots');
             $table->foreignId('intent_category_id')->nullable()->constrained('intent_categories');
             $table->foreignId('parent_id')->nullable()->constrained('intents');
@@ -20,6 +21,7 @@ return new class extends Migration
             $table->string('datatype')->nullable()->index();
             $table->string('group')->nullable()->index();
             $table->integer('level')->nullable()->index();
+
             $table->timestamps();
             $table->softDeletes();
         });
