@@ -6,7 +6,7 @@ use App\Http\Controllers\Chatbot\ChatbotController;
 use App\Services\OpenAIService;
 
 Route::get('/chatbots/index', [ChatbotController::class, 'index']);
-Route::get('/chatbots/openai-api', [OpenAIService::class, 'conexionGptApi']);
+Route::get('/chatbots/openai-api', [OpenAIService::class, 'handleMessage']);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

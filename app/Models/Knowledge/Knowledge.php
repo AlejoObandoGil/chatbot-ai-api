@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models\Chatbot;
+namespace App\Models\Knowledge;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Chatbot\Chatbot;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Knowledge extends Model
 {

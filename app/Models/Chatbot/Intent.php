@@ -2,9 +2,11 @@
 
 namespace App\Models\Chatbot;
 
+use App\Models\Chatbot\Chatbot;
 use App\Models\Chatbot\Context;
 use App\Models\Chatbot\IntentResponse;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Chatbot\IntentTrainingPhrase;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -22,6 +24,11 @@ class Intent extends Model
     public function chatbot()
     {
         return $this->belongsTo(Chatbot::class);
+    }
+
+    public function trainingPhrases()
+    {
+        return $this->hasMany(IntentTrainingPhrase::class);
     }
 
     public function responses()

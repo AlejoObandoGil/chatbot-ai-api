@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\Chatbot\Intent;
 use App\Models\Chatbot\Chatbot;
+use App\Models\Knowledge\TrainingKnowledge;
 use OpenAI\Resources\Completions;
 use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Log;
@@ -18,32 +19,66 @@ class OpenAIService
         //
     }
 
-    public function conexionGptApi($context = 'Eres un Asistente virtual de telefonia', $message = 'Cuales planes ofrecen ustedes')
+    // public function conexionGptApi($context, $message)
+    // {
+    //     $content = $context . "User:" . $message. ". " . "AI:";
+
+    //     $result = OpenAI::chat()->create([
+    //         'model' => 'gpt-3.5-turbo',
+    //         'messages' => [
+    //             [
+    //                 'role' => 'user',
+    //                 'content' => $content
+    //             ],
+    //         ],
+    //         'temperature' => 0.2, // permitir al usaurio calibrar
+    //         'max_tokens' => 30, // agregar que se pueda calcular el promedio de toikens que se vayan a usar segun la info de la empresa para ahorrar tokens
+    //     ]);
+
+    //     Log::info('$result api openAI: '.json_encode($result));
+
+    //     return $result['choices'][0]['message']['content'];
+    // }
+
+    public function conexionGptApiTest($context = null, $message = null)
     {
-        $result = OpenAI::chat()->create([
-            'model' => 'gpt-3.5-turbo',
-            'messages' => [
-                [
-                    'role' => 'user',
-                    'content' => $context . "\nUser: " . $message . "\nAI:"
+        $content = $context . "User:" . $message. ". " . "AI:";
+
+        OpenAI::fake([
+            CreateResponse::fake([
+                'choices' => [
+                    [
+                        'text' => 'awesome!',
+                    ],
                 ],
-            ],
-            'temperature' => 0.2, // permitir al usaurio calibrar
-            'max_tokens' => 10, // agregar que se pueda calcular el promedio de toikens que se vayan a usar segun la info de la empresa para ahorrar tokens
+            ]),
         ]);
 
-        Log::info('$result api openAI: '.json_encode($result));
-
-        return response()->json([
-            'expected' => $result->choices[0]->message->content
+        $completion = OpenAI::completions()->create([
+            'model' => 'gpt-3.5-turbo-instruct',
+            'prompt' => 'PHP is ',
         ]);
+
+        Log::info('$completion openai create: '.json_encode($completion));
+
+        expect($completion['choices'][0]['text'])->toBe('awesome!');
+
+        OpenAI::assertSent(Completions::class, function (string $method, array $parameters): bool {
+            return $method === 'create' &&
+                $parameters['model'] === 'gpt-3.5-turbo-instruct' &&
+                $parameters['prompt'] === 'PHP is ';
+        });
+
+        return $completion['choices'][0]['text'];
     }
 
     // public function handleMessage(Request $request)
-    public function handleMessage(Request $request)
+    public function handleMessage()
     {
-        $userMessage = $request->input('message');
-        $chatbotId = $request->input('chatbot_id');
+        // $userMessage = $request->input('message');
+        // $chatbotId = $request->input('chatbot_id');
+        $chatbotId = 1;
+        $userMessage = 'Cuales planes de internet tienen';
 
         $chatbot = Chatbot::find($chatbotId);
 
@@ -64,7 +99,8 @@ class OpenAIService
 
             Log::info('$context buil training knowledge: '.json_encode($context));
 
-            $response = $this->conexionGptApi($context, $userMessage)['choices'][0]['text'];
+            // $response = $this->conexionGptApi($context, $userMessage);
+            $response = $this->conexionGptApiTest($context, $userMessage);
 
             Log::info('$response text api openAI: '.json_encode($response));
         }
@@ -74,56 +110,44 @@ class OpenAIService
 
     protected function buildTrainingKnowledge($chatbot)
     {
-        $context = "Chatbot: " . $chatbot->name . "\nDescription: " . $chatbot->description . "\n";
+        $context = "Chatbot:" . $chatbot->name. ". " . "Descripción:" . $chatbot->description . "Eres un agente, ayuda a los clientes. Si no tienes respuesta, responder Lo siento, no tengo una respuesta para eso.";
 
         $intents = Intent::where('chatbot_id', $chatbot->id)->with('trainingPhrases', 'responses')->get();
+
+        $intentNames = [];
+        $trainingPhrases = [];
+        $responses = [];
+
         foreach ($intents as $intent) {
-            $context .= "\nIntent: " . $intent->name;
-            $context .= "\nTraining Phrases: ";
+            $intentNames[] = $intent->name;
             foreach ($intent->trainingPhrases as $phrase) {
-                $context .= $phrase->phrase . ", ";
+                $trainingPhrases[] = $phrase->phrase;
             }
-            $context .= "\nResponses: ";
             foreach ($intent->responses as $response) {
-                $context .= $response->response . ", ";
+                $responses[] = $response->response;
             }
+        }
+
+        $context .= "Intenciones: " . implode(", ", $intentNames) . ". ";
+        $context .= "Frases de Entrenamiento: " . implode(", ", $trainingPhrases) . ". ";
+        $context .= "Respuestas: " . implode(", ", $responses) . ". ";
+
+        return $this->createTrainingKnowledge($chatbot, $context);
+    }
+
+    public function createTrainingKnowledge($chatbot, $context)
+    {
+        $trainingKnowledge = TrainingKnowledge::where('chatbot_id', $chatbot->id)->first();
+        if (!$trainingKnowledge) {
+            $trainingKnowledge = new TrainingKnowledge();
+            $trainingKnowledge->chatbot_id = $chatbot->id;
+            $trainingKnowledge->content = $context;
+            $trainingKnowledge->save();
         }
 
         return $context;
     }
 
-    // public function conexionGptApiTest($context = null, $message = null)
-    // {
-    //     OpenAI::fake([
-    //         CreateResponse::fake([
-    //             'choices' => [
-    //                 [
-    //                     'text' => 'awesome!',
-    //                 ],
-    //             ],
-    //         ]),
-    //     ]);
-
-    //     $completion = OpenAI::completions()->create([
-    //         'model' => 'gpt-3.5-turbo-instruct',
-    //         'prompt' => 'PHP is ',
-    //     ]);
-
-    //     Log::info('$completion openai create: '.json_encode($completion));
-
-    //     expect($completion['choices'][0]['text'])->toBe('awesome!');
-
-    //     OpenAI::assertSent(Completions::class, function (string $method, array $parameters): bool {
-    //         return $method === 'create' &&
-    //             $parameters['model'] === 'gpt-3.5-turbo-instruct' &&
-    //             $parameters['prompt'] === 'PHP is ';
-    //     });
-
-    //     return response()->json([
-    //         'expected' => $expected,
-    //         'actual' => $actual,
-    //     ]);
-    // }
     // protected $client;
     // protected $apiKey;
 
