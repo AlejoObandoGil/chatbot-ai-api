@@ -12,7 +12,8 @@ class IntentResponse extends Model
 
     protected $fillable = [
         'intent_id',
-        'response'
+        'response',
+        'is_learning'
     ];
 
     public function intent()

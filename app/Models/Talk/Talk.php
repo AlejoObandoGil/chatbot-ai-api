@@ -3,6 +3,7 @@
 namespace App\Models\Talk;
 
 use App\Models\Entity\Entity;
+use App\Models\Talk\TalkMessage;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -18,13 +19,15 @@ class Talk extends Model
         'ended_at'
     ];
 
-    public function talk()
+    public function messages()
     {
-        return $this->belongsTo(Talk::class);
+        return $this->hasMany(TalkMessage::class);
     }
 
     public function entity()
     {
         return $this->belongsTo(Entity::class);
     }
+
+
 }

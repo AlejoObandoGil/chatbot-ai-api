@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Learning\LearningIntentResponse;
+use App\Models\Talk\TalkMessages;
 use Illuminate\Http\Request;
 
-class LearningIntentResponseController extends Controller
+class TalkMessageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +34,7 @@ class LearningIntentResponseController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(LearningIntentResponse $learningIntentResponse)
+    public function show(TalkMessages $talkMessages)
     {
         //
     }
@@ -42,7 +42,7 @@ class LearningIntentResponseController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(LearningIntentResponse $learningIntentResponse)
+    public function edit(TalkMessages $talkMessages)
     {
         //
     }
@@ -50,7 +50,7 @@ class LearningIntentResponseController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, LearningIntentResponse $learningIntentResponse)
+    public function update(Request $request, TalkMessages $talkMessages)
     {
         //
     }
@@ -58,7 +58,7 @@ class LearningIntentResponseController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(LearningIntentResponse $learningIntentResponse)
+    public function destroy(TalkMessages $talkMessages)
     {
         //
     }
