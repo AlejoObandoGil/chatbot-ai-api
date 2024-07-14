@@ -6,7 +6,7 @@ use App\Models\User\User;
 use App\Models\Talk\Talk;
 use App\Models\Entity\Entity;
 use App\Models\Intent\Intent;
-use App\Models\Knowledge\Knowledge;
+use App\Models\Chatbot\Knowledge;
 use App\Models\Chatbot\ChatbotConfig;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;

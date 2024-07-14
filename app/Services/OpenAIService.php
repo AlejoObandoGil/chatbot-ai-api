@@ -6,7 +6,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
-use App\Models\Knowledge\TrainingKnowledge;
+use App\Models\Learning\LearningKnowledge;
 use OpenAI\Resources\Completions;
 use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Log;
@@ -95,7 +95,7 @@ class OpenAIService
         if ($intent) {
             $response = $intent->responses->random()->response;
         } else {
-            $context = $this->buildTrainingKnowledge($chatbot);
+            $context = $this->buildLearningKnowledge($chatbot);
 
             Log::info('$context buil training knowledge: '.json_encode($context));
 
@@ -108,7 +108,7 @@ class OpenAIService
         return response()->json(['response' => $response]);
     }
 
-    protected function buildTrainingKnowledge($chatbot)
+    protected function buildLearningKnowledge($chatbot)
     {
         $context = "Chatbot:" . $chatbot->name. ". " . "Descripción:" . $chatbot->description . "Eres un agente, ayuda a los clientes. Si no tienes respuesta, responder Lo siento, no tengo una respuesta para eso.";
 
@@ -132,17 +132,17 @@ class OpenAIService
         $context .= "Frases de Entrenamiento: " . implode(", ", $trainingPhrases) . ". ";
         $context .= "Respuestas: " . implode(", ", $responses) . ". ";
 
-        return $this->createTrainingKnowledge($chatbot, $context);
+        return $this->createLearningKnowledge($chatbot, $context);
     }
 
-    public function createTrainingKnowledge($chatbot, $context)
+    public function createLearningKnowledge($chatbot, $context)
     {
-        $trainingKnowledge = TrainingKnowledge::where('chatbot_id', $chatbot->id)->first();
-        if (!$trainingKnowledge) {
-            $trainingKnowledge = new TrainingKnowledge();
-            $trainingKnowledge->chatbot_id = $chatbot->id;
-            $trainingKnowledge->content = $context;
-            $trainingKnowledge->save();
+        $learningKnowledge = LearningKnowledge::where('chatbot_id', $chatbot->id)->first();
+        if (!$learningKnowledge) {
+            $learningKnowledge = new LearningKnowledge();
+            $learningKnowledge->chatbot_id = $chatbot->id;
+            $learningKnowledge->content = $context;
+            $learningKnowledge->save();
         }
 
         return $context;

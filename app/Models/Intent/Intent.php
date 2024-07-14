@@ -35,11 +35,21 @@ class Intent extends Model
         return $this->belongsTo(IntentCategory::class);
     }
 
+    /**
+     * Get the training phrases associated with the intent.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function trainingPhrases()
     {
         return $this->hasMany(IntentTrainingPhrase::class);
     }
 
+    /**
+     * Get the responses associated with the intent.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function responses()
     {
         return $this->hasMany(IntentResponse::class);

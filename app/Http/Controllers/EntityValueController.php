@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Chatbot\EntityValue;
+use App\Models\Entity\EntityValue;
 use Illuminate\Http\Request;
 
 class EntityValueController extends Controller
