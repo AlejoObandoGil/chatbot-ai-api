@@ -17,9 +17,12 @@ class Intent extends Model
 
     protected $fillable = [
         'chatbot_id',
+        'intent_category_id',
         'parent_id',
         'name',
-        'description'
+        'is_choice',
+        'datatype',
+        'level'
     ];
 
     public function chatbot()

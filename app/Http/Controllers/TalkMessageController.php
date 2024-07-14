@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Talk\TalkMessages;
+use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
+use App\Models\Intent\Intent;
+use App\Models\Chatbot\Chatbot;
+use App\Models\Talk\TalkMessage;
+use App\Models\Intent\IntentResponse;
 
 class TalkMessageController extends Controller
 {
@@ -26,15 +30,46 @@ class TalkMessageController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Chatbot $chatbot, Talk $talk)
     {
-        //
+        $message = $request->input('message');
+
+        $talkMessage = TalkMessage::create([
+            'talk_id' => $talk->id,
+            'message' => $message,
+            'sender' => 'user',
+        ]);
+
+        $response = $this->processMessage($message, $chatbot->id);
+
+        TalkMessage::create([
+            'talk_id' => $talk->Id,
+            'message' => $response,
+            'sender' => 'bot',
+        ]);
+
+        return response()->json(['response' => $response]);
+    }
+
+    protected function processMessage($message, $chatbotId)
+    {
+        $intent = Intent::where('chatbot_id', $chatbotId)
+            ->whereHas('trainingPhrases', function($query) use ($message) {
+                $query->where('phrase', 'like', '%' . $message . '%');
+            })->first();
+
+        if ($intent) {
+            $response = IntentResponse::where('intent_id', $intent->id)->inRandomOrder()->first();
+            return $response ? $response->response : 'Lo siento, no entendí tu mensaje.';
+        }
+
+        return 'Lo siento, no entendí tu mensaje.';
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(TalkMessages $talkMessages)
+    public function show(TalkMessage $talkMessage)
     {
         //
     }
@@ -42,7 +77,7 @@ class TalkMessageController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(TalkMessages $talkMessages)
+    public function edit(TalkMessage $talkMessage)
     {
         //
     }
@@ -50,7 +85,7 @@ class TalkMessageController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, TalkMessages $talkMessages)
+    public function update(Request $request, TalkMessage $talkMessage)
     {
         //
     }
@@ -58,7 +93,7 @@ class TalkMessageController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(TalkMessages $talkMessages)
+    public function destroy(TalkMessage $talkMessage)
     {
         //
     }

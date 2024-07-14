@@ -14,9 +14,13 @@ class Talk extends Model
 
     protected $fillable = [
         'chatbot_id',
-        'user_id',
         'started_at',
         'ended_at'
+    ];
+
+    protected $casts = [
+        'started_at' => 'datetime:Y-m-d H:i:s',
+        'ended_at' => 'datetime:Y-m-d H:i:s',
     ];
 
     public function messages()

@@ -18,8 +18,8 @@ return new class extends Migration
             $table->foreignId('intent_category_id')->nullable()->constrained('intent_categories');
             $table->foreignId('parent_id')->nullable()->constrained('intents');
             $table->string('name');
+            $table->boolean('is_choice')->default(false);
             $table->string('datatype')->nullable()->index();
-            $table->string('group')->nullable()->index();
             $table->integer('level')->nullable()->index();
 
             $table->timestamps();

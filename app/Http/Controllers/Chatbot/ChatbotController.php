@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Chatbot;
 
+use App\Models\User\User;
 use Illuminate\Http\Request;
 use App\Models\Chatbot\Chatbot;
 use App\Http\Controllers\Controller;
@@ -13,7 +14,9 @@ class ChatbotController extends Controller
      */
     public function index()
     {
-        return response()->json(['chatbots' => Chatbot::all()]);
+        $chatbots = Chatbot::where('user_id', auth()->user()->id)->get();
+
+        return response()->json(['chatbots' => $chatbots]);
     }
 
     /**

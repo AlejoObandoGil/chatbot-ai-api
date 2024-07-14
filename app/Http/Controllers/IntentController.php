@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Intent\Intent;
 use Illuminate\Http\Request;
+use App\Models\Intent\Intent;
+use App\Models\Chatbot\Chatbot;
+use App\Models\Intent\IntentResponse;
+use App\Models\Intent\IntentTrainingPhrase;
 
 class IntentController extends Controller
 {
@@ -26,9 +29,40 @@ class IntentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Chatbot $chatbot)
     {
-        //
+        $intent = Intent::create([
+            'chatbot_id' => $chatbot->id,
+            'name' => $request->input('name'),
+            'type_var' => $request->input('type_var'),
+            'group' => $request->input('group'),
+            'level' => $request->input('level'),
+        ]);
+
+        $trainingPhrase = $this->addTrainingPhrase($request, $intent->id);
+        $intentResponse = $this->addIntentResponse($request, $intent->id);
+
+        return response()->json($intent, 201);
+    }
+
+    public function addTrainingPhrase(Request $request, $intentId)
+    {
+        $trainingPhrase = IntentTrainingPhrase::create([
+            'intent_id' => $intentId,
+            'phrase' => $request->input('phrase'),
+        ]);
+
+        return $trainingPhrase;
+    }
+
+    public function addIntentResponse(Request $request, $intentId)
+    {
+        $intentResponse = IntentResponse::create([
+            'intent_id' => $intentId,
+            'response' => $request->input('response'),
+        ]);
+
+        return $intentResponse;
     }
 
     /**

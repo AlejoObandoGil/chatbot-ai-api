@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
+use App\Models\Chatbot\Chatbot;
 
 class TalkController extends Controller
 {
@@ -26,9 +28,14 @@ class TalkController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Chatbot $chatbot)
     {
-        //
+        $talk = Talk::create([
+            'chatbot_id' => $chatbot->id,
+            'started_at' => Carbon::now()
+        ]);
+
+        return response()->json(['talkId' => $talk->id], 201);
     }
 
     /**
