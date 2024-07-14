@@ -27,7 +27,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
                     Route::put('/', [TalkController::class, 'update']);
                     Route::delete('/', [TalkController::class, 'destroy']);
 
-                    Route::prefix('{talk}/message')->group(function () {
+                    Route::prefix('/{talk}/message')->group(function () {
                         Route::get('/', [TalkMessageController::class, 'index']);
                         Route::post('/', [TalkMessageController::class, 'store']);
                         Route::put('/', [TalkMessageController::class, 'update']);

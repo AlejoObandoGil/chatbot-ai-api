@@ -16,7 +16,7 @@ class TalkMessage extends Model
         'message'
     ];
 
-    public function chatbotTalk()
+    public function talk()
     {
         return $this->belongsTo(Talk::class);
     }

@@ -23,6 +23,11 @@ class Talk extends Model
         'ended_at' => 'datetime:Y-m-d H:i:s',
     ];
 
+    /**
+     * Retrieves the messages associated with the current model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function messages()
     {
         return $this->hasMany(TalkMessage::class);

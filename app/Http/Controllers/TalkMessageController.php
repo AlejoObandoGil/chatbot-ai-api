@@ -34,16 +34,14 @@ class TalkMessageController extends Controller
     {
         $message = $request->input('message');
 
-        $talkMessage = TalkMessage::create([
-            'talk_id' => $talk->id,
+        $talk->messages()->create([
             'message' => $message,
             'sender' => 'user',
         ]);
 
         $response = $this->processMessage($message, $chatbot->id);
 
-        TalkMessage::create([
-            'talk_id' => $talk->id,
+        $talk->messages()->create([
             'message' => $response,
             'sender' => 'bot',
         ]);

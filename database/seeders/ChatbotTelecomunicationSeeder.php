@@ -88,7 +88,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                     'Quiero saber el precio del plan de internet'
                                 ],
                                 'responses' => [
-                                    'Por favor escriba su numero de documento, lo contactaremos a la brevedad.',
+                                    'Por favor escriba su numero de documento, y lo contactaremos a la brevedad.',
                                     'El plan de internet tiene un precio de $100.000 por mes.'
                                 ]
                             ],
