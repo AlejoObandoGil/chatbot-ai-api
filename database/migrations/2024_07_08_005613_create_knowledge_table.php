@@ -14,8 +14,9 @@ return new class extends Migration
         Schema::create('knowledge', function (Blueprint $table) {
             $table->id();
             $table->foreignId('chatbot_id')->constrained('chatbots');
-            $table->string('topic');
-            $table->text('content');
+            // $table->string('topic');
+            $table->text('content')->nullable();
+            $table->text('links')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

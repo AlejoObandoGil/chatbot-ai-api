@@ -33,7 +33,31 @@ class ChatbotController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type' => 'required|string|in:Reglas,PLN,Híbrido',
+            'knowledge_base' => 'nullable|string',
+            'link' => 'nullable|string|url',
+        ]);
+
+        $user = User::find(auth()->user()->id);
+
+        $chatbot = Chatbot::create([
+            'user_id' => $user->id,
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'type' => $validatedData['type'],
+        ]);
+
+        if (isset($validatedData['knowledge_base']) || isset($validatedData['link'])) {
+            $chatbot->knowledges()->create([
+                'content' => $validatedData['knowledge_base'] ?? null,
+                'link' => $validatedData['link'] ?? null,
+            ]);
+        }
+
+        return response()->json(['saved' => true, 'chatbot' => $chatbot], 201);
     }
 
     /**

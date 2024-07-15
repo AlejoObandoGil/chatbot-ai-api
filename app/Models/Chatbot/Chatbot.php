@@ -45,7 +45,7 @@ class Chatbot extends Model
         return $this->hasMany(Intent::class);
     }
 
-    public function knowledge()
+    public function knowledges()
     {
         return $this->hasMany(Knowledge::class);
     }

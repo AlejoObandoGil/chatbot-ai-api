@@ -13,8 +13,8 @@ class Knowledge extends Model
 
     protected $fillable = [
         'chatbot_id',
-        'topic',
-        'content'
+        'content',
+        'link'
     ];
 
     public function chatbot()
