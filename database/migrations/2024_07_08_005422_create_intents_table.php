@@ -16,7 +16,7 @@ return new class extends Migration
 
             $table->foreignId('chatbot_id')->constrained('chatbots');
             $table->foreignId('intent_category_id')->nullable()->constrained('intent_categories');
-            $table->foreignId('parent_id')->nullable()->constrained('intents');
+            // $table->foreignId('parent_id')->nullable()->constrained('intents');
             $table->string('name');
             $table->boolean('is_choice')->default(false);
             $table->string('datatype')->nullable()->index();

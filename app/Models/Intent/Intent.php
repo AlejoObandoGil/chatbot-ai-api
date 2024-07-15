@@ -55,18 +55,33 @@ class Intent extends Model
         return $this->hasMany(IntentResponse::class);
     }
 
+    public function options()
+    {
+        return $this->hasMany(IntentOption::class);
+    }
+
     public function contexts()
     {
         return $this->hasMany(Context::class);
     }
 
-    public function parent()
+    public function parentTransitions()
     {
-        return $this->belongsTo(Intent::class, 'parent_id');
+        return $this->hasMany(IntentTransition::class, 'parent_intent_id');
+    }
+
+    public function childTransitions()
+    {
+        return $this->hasMany(IntentTransition::class, 'child_intent_id');
     }
 
     public function children()
     {
-        return $this->hasMany(Intent::class, 'parent_id');
+        return $this->belongsToMany(Intent::class, 'intent_transitions', 'parent_intent_id', 'child_intent_id');
+    }
+
+    public function parents()
+    {
+        return $this->belongsToMany(Intent::class, 'intent_transitions', 'child_intent_id', 'parent_intent_id');
     }
 }

@@ -8,8 +8,10 @@ use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use Illuminate\Database\Seeder;
 use App\Models\Chatbot\Knowledge;
-use App\Models\Chatbot\EntityValue;
+use App\Models\Entity\EntityValue;
+use App\Models\Intent\IntentOption;
 use App\Models\Intent\IntentResponse;
+use App\Models\Intent\IntentTransition;
 use App\Models\Intent\IntentTrainingPhrase;
 
 class ChatbotTelecomunicationSeeder extends Seeder
@@ -19,14 +21,6 @@ class ChatbotTelecomunicationSeeder extends Seeder
      */
     public function run(): void
     {
-        // categoria de intenciones
-        // 'greetings',
-        // 'only_information',
-        // 'save_information',
-        // 'goodbyes',
-        // 'unanswered',
-        // 'errors'
-
         // $user = User::create([
         //     'name' => 'John',
         //     'email' => 'joanlejo0803@gmail.com',
@@ -42,7 +36,6 @@ class ChatbotTelecomunicationSeeder extends Seeder
 
         $chatbot = Chatbot::create($chatbotData);
 
-         // Datos de las intenciones
         $intentsData = [
             [
                 'name' => 'Saludo inicial',
@@ -70,6 +63,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         'name' => 'Obtener tipos de planes',
                         'level' => 2,
                         'intent_category_id' => 2,
+                        'is_choices' => true,
                         'phrases' => [
                             'Quiero saber sobre el plan de internet',
                             '¿Qué tipo de planes tienen?'
@@ -78,31 +72,71 @@ class ChatbotTelecomunicationSeeder extends Seeder
                             'Nuestro plan de Internet ofrece alta velocidad y precios competitivos.',
                             'Ofrecemos planes de Internet, Teléfono y TV. ¿Cuál te interesa?'
                         ],
+                        'options' => [
+                            'Internet',
+                            'Telefónía',
+                            'TV'
+                        ],
                         'children' => [
                             [
-                                'name' => 'Comprar un plan de Internet',
+                                'name' => 'Plan de Internet',
                                 'level' => 3,
                                 'intent_category_id' => 3,
                                 'phrases' => [
-                                    'Me gustaría comprar un plan de internet',
+                                    'Internet',
                                     'Quiero saber el precio del plan de internet'
                                 ],
                                 'responses' => [
-                                    'Por favor escriba su numero de documento, y lo contactaremos a la brevedad.',
-                                    'El plan de internet tiene un precio de $100.000 por mes.'
+                                    'El plan de internet tiene un precio de $100.000 por mes, 500 MB de datos y acceso a 24 horas.'
+                                ],
+                                'options' => [
+                                    'Comprar',
+                                    'Regresar a Todos los planes'
+                                ],
+                                'children' => [
+                                    [
+                                        'name' => 'Comprar plan de Internet',
+                                        'level' => 4,
+                                        'intent_category_id' => 3,
+                                        'phrases' => [
+                                            'Comprar',
+                                            'Comprar plan de internet de 100.000 por mes, 500 MB de datos y acceso a 24 horas'
+                                        ],
+                                        'responses' => [
+                                            'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
+                                        ]
+                                    ]
                                 ]
                             ],
                             [
-                                'name' => 'Comprar un plan de Telefonía',
+                                'name' => 'Plan de Telefonía',
                                 'level' => 3,
                                 'intent_category_id' => 3,
                                 'phrases' => [
-                                    'Me gustaría comprar un plan de telefonía',
+                                    'Telefonía',
                                     'Quiero saber el precio del plan de telefonía'
                                 ],
                                 'responses' => [
-                                    'Por favor escriba su numero de documento, lo contactaremos a la brevedad.',
+                                    'Por favor escriba su número de documento, lo contactaremos a la brevedad.',
                                     'El plan de telefónía tiene un precio de $40.000 por mes.'
+                                ],
+                                'options' => [
+                                    'Comprar',
+                                    'Regresar a Todos los planes'
+                                ],
+                                'children' => [
+                                    [
+                                        'name' => 'Comprar plan de telefonía',
+                                        'level' => 4,
+                                        'intent_category_id' => 3,
+                                        'phrases' => [
+                                            'Comprar',
+                                            'Comprar plan de telefónía de $40.000 por mes'
+                                        ],
+                                        'responses' => [
+                                            'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
+                                        ]
+                                    ]
                                 ]
                             ]
                         ]
@@ -173,29 +207,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'Hasta pronto, cuídate.',
                     'Que tengas un buen día, ¡nos vemos pronto!'
                 ]
-            ],
-            // [
-            //     'name' => 'No Coincidencia',
-            //     'level' => 1,
-            //     'intent_category_id' => 5,
-            //     'responses' => [
-            //         'Lo siento, no tengo una respuesta para eso. ¿Podrías intentar preguntar de otra manera?',
-            //         'No estoy seguro de cómo responder eso. Por favor, intenta con una pregunta diferente.'
-            //     ]
-            // ]
-            // [
-            //     'name' => 'Error',
-            //     'level' => 1,
-            //     'intent_category_id' => 6,
-            //     'phrases' => [
-            //         'Hubo un error',
-            //         'No entendí tu mensaje'
-            //     ],
-            //     'responses' => [
-            //         'Lo siento, ha ocurrido un error. Por favor, intenta nuevamente.',
-            //         'Parece que hubo un problema. ¿Podrías intentar decirlo de otra manera?'
-            //     ]
-            // ],
+            ]
         ];
 
         // Función para crear las intenciones recursivamente
@@ -204,7 +216,9 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 $intent = Intent::create([
                     'chatbot_id' => $chatbot->id,
                     'name' => $intentData['name'],
-                    'parent_id' => $parent ? $parent->id : null,
+                    'level' => $intentData['level'],
+                    'intent_category_id' => $intentData['intent_category_id'],
+                    'parent_id' => $parent ? $parent->id : null
                 ]);
 
                 if (isset($intentData['phrases'])) {
@@ -222,6 +236,31 @@ class ChatbotTelecomunicationSeeder extends Seeder
                             'intent_id' => $intent->id,
                             'response' => $response
                         ]);
+                    }
+                }
+
+                if (isset($intentData['options'])) {
+                    foreach ($intentData['options'] as $optionText) {
+                        $option = IntentOption::create([
+                            'intent_id' => $intent->id,
+                            'option_text' => $optionText
+                        ]);
+
+                        // Crear transición de la opción a la intención correspondiente
+                        if (isset($intentData['children'])) {
+                            foreach ($intentData['children'] as $childIntentData) {
+                                if (in_array($optionText, $childIntentData['phrases'])) {
+                                    $childIntent = Intent::where('name', $childIntentData['name'])->first();
+                                    if ($childIntent) {
+                                        IntentTransition::create([
+                                            'from_intent_id' => $intent->id,
+                                            'option_id' => $option->id,
+                                            'to_intent_id' => $childIntent->id
+                                        ]);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
 
