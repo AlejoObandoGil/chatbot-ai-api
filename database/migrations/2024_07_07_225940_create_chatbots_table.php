@@ -18,8 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->text('description');
             $table->string('type');
-            $table->boolean('enabled');
-            $table->string('script_embed');
+            $table->boolean('enabled')->default(false);
+            $table->string('script_embed')->nullable();
+            $table->string('code')->unique()->nullable();
 
             $table->timestamps();
             $table->softDeletes();

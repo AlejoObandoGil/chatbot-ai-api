@@ -21,17 +21,16 @@ class ChatbotTelecomunicationSeeder extends Seeder
      */
     public function run(): void
     {
-        // $user = User::create([
-        //     'name' => 'John',
-        //     'email' => 'joanlejo0803@gmail.com',
-        //     'password' => bcrypt('Password1234.'),
-        // ]);
+        // hybrid,
+        // natural language processing,
+        // rule based
 
         // Datos del chatbot
         $chatbotData = [
             'user_id' => 1,
             'name' => 'TelcoBot',
-            'description' => 'Chatbot para la empresa de telefonía, televisión y internet.'
+            'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
+            'type' => 'Natural language processing'
         ];
 
         $chatbot = Chatbot::create($chatbotData);
@@ -91,7 +90,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 ],
                                 'options' => [
                                     'Comprar',
-                                    'Regresar a Todos los planes'
+                                    'Regresar a todos los planes'
                                 ],
                                 'children' => [
                                     [
@@ -217,10 +216,10 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'chatbot_id' => $chatbot->id,
                     'name' => $intentData['name'],
                     'level' => $intentData['level'],
-                    'intent_category_id' => $intentData['intent_category_id'],
-                    'parent_id' => $parent ? $parent->id : null
+                    'intent_category_id' => $intentData['intent_category_id']
                 ]);
 
+                // Crear frases de entrenamiento
                 if (isset($intentData['phrases'])) {
                     foreach ($intentData['phrases'] as $phrase) {
                         IntentTrainingPhrase::create([
@@ -230,6 +229,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     }
                 }
 
+                // Crear respuestas
                 if (isset($intentData['responses'])) {
                     foreach ($intentData['responses'] as $response) {
                         IntentResponse::create([
@@ -239,23 +239,24 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     }
                 }
 
+                // Crear opciones y transiciones
                 if (isset($intentData['options'])) {
                     foreach ($intentData['options'] as $optionText) {
                         $option = IntentOption::create([
                             'intent_id' => $intent->id,
-                            'option_text' => $optionText
+                            'option' => $optionText
                         ]);
 
-                        // Crear transición de la opción a la intención correspondiente
+                        // Crear transiciones para opciones
                         if (isset($intentData['children'])) {
-                            foreach ($intentData['children'] as $childIntentData) {
-                                if (in_array($optionText, $childIntentData['phrases'])) {
-                                    $childIntent = Intent::where('name', $childIntentData['name'])->first();
+                            foreach ($intentData['children'] as $childData) {
+                                if (in_array($optionText, $childData['phrases'])) {
+                                    $childIntent = Intent::where('name', $childData['name'])->first();
                                     if ($childIntent) {
                                         IntentTransition::create([
-                                            'from_intent_id' => $intent->id,
+                                            'parent_intent_id' => $intent->id,
                                             'option_id' => $option->id,
-                                            'to_intent_id' => $childIntent->id
+                                            'child_intent_id' => $childIntent->id
                                         ]);
                                     }
                                 }
@@ -264,8 +265,17 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     }
                 }
 
+                // Crear transiciones de intención a intención
                 if (isset($intentData['children'])) {
                     $createIntents($intentData['children'], $intent);
+                    foreach ($intentData['children'] as $childData) {
+                        $childIntent = Intent::where('name', $childData['name'])->first();
+                        IntentTransition::create([
+                            'parent_intent_id' => $intent->id,
+                            'option_id' => null,
+                            'child_intent_id' => $childIntent->id
+                        ]);
+                    }
                 }
             }
         };
@@ -294,25 +304,25 @@ class ChatbotTelecomunicationSeeder extends Seeder
         $entitiesData = [
             [
                 'name' => 'Tipo de plan',
-                'type' => 'string',
+                'datatype' => 'string',
                 'save_information' => true,
                 'values' => ['Internet', 'Teléfono', 'TV']
             ],
             [
                 'name' => 'Saldo de cliente',
-                'type' => 'string',
+                'datatype' => 'string',
                 'save_information' => true,
                 'values' => ['100.000']
             ],
             [
                 'name' => 'Tipo de servicio',
-                'type' => 'string',
+                'datatype' => 'string',
                 'save_information' => true,
                 'values' => ['Instalación', 'Mantenimiento', 'Actualización']
             ],
             [
                 'name' => 'Tipo de problema',
-                'type' => 'string',
+                'datatype' => 'string',
                 'save_information' => true,
                 'values' => ['Conectividad', 'Facturación', 'Soporte técnico']
             ]
@@ -323,7 +333,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
             $entity = Entity::create([
                 'chatbot_id' => $chatbot->id,
                 'name' => $entityData['name'],
-                'type' => $entityData['type'],
+                'datatype' => $entityData['datatype'],
                 'save_information' => $entityData['save_information']
             ]);
 

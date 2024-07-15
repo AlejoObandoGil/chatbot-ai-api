@@ -12,6 +12,7 @@ class IntentTransition extends Model
 
     protected $fillable = [
         'parent_intent_id',
+        'option_id',
         'child_intent_id',
     ];
 

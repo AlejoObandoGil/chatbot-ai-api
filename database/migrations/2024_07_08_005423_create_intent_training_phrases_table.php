@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('intent_id')->constrained('intents')->onDelete('cascade');
             $table->string('phrase')->index();
-            $table->boolean('is_learning')->index();
+            $table->boolean('is_learning')->default(false)->index();
             $table->timestamps();
             $table->softDeletes();
         });

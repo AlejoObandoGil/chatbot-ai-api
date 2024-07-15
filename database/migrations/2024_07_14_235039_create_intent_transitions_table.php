@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('intent_transitions', function (Blueprint $table) {
             $table->id();
 
-            $table->foreignId('parent_intent_id')->constrained('intents')->onDelete('cascade');
-            $table->foreignId('option_id')->constrained('intent_options')->onDelete('cascade');
-            $table->foreignId('child_intent_id')->constrained('intents')->onDelete('cascade');
+            $table->foreignId('parent_intent_id')->nullable()->constrained('intents');
+            $table->foreignId('option_id')->nullable()->constrained('intent_options');
+            $table->foreignId('child_intent_id')->nullable()->constrained('intents');
 
             $table->timestamps();
             $table->softDeletes();
