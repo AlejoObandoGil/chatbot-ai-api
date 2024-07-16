@@ -8,7 +8,19 @@ use App\Http\Controllers\TalkMessageController;
 use App\Http\Controllers\Chatbot\ChatbotController;
 
 Route::get('/chatbots/index', [ChatbotController::class, 'index']);
-Route::get('/chatbots/openai-api', [OpenAIService::class, 'handleMessage']);
+// Route::get('/chatbots/openai-api', [OpenAIService::class, 'handleMessage']);
+
+Route::prefix('/chatbot/{chatbot}')->group(function () {
+    Route::prefix('/talk')->group(function () {
+        Route::get('/', [TalkController::class, 'show']);
+        Route::post('/', [TalkController::class, 'store']);
+
+        Route::prefix('/{talk}/message')->group(function () {
+            Route::get('/', [TalkMessageController::class, 'index']);
+            Route::post('/', [TalkMessageController::class, 'store']);
+        });
+    });
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -23,13 +35,13 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::prefix('/{chatbot}')->group(function () {
                 Route::prefix('/talk')->group(function () {
                     Route::get('/', [TalkController::class, 'show']);
-                    Route::post('/', [TalkController::class, 'store']);
+                    // Route::post('/', [TalkController::class, 'store']);
                     Route::put('/', [TalkController::class, 'update']);
                     Route::delete('/', [TalkController::class, 'destroy']);
 
                     Route::prefix('/{talk}/message')->group(function () {
                         Route::get('/', [TalkMessageController::class, 'index']);
-                        Route::post('/', [TalkMessageController::class, 'store']);
+                        // Route::post('/', [TalkMessageController::class, 'store']);
                         Route::put('/', [TalkMessageController::class, 'update']);
                         Route::delete('/', [TalkMessageController::class, 'destroy']);
                     });
