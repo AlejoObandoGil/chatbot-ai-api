@@ -57,7 +57,7 @@ class ChatbotController extends Controller
             ]);
         }
 
-        return response()->json(['saved' => true, 'chatbot' => $chatbot], 201);
+        return response()->json(['message' => 'Chatbot saved successfully', 'chatbot' => $chatbot], 201);
     }
 
     /**
@@ -65,7 +65,10 @@ class ChatbotController extends Controller
      */
     public function show(Chatbot $chatbot)
     {
-        //
+        if (auth()->user())
+            $chatbot = Chatbot::find($chatbot->id)->first();
+
+        return response()->json(['chatbot' => $chatbot]);
     }
 
     /**
@@ -73,7 +76,10 @@ class ChatbotController extends Controller
      */
     public function edit(Chatbot $chatbot)
     {
-        //
+        if (auth()->user())
+            $chatbot = Chatbot::find($chatbot->id)->first();
+
+        return response()->json(['chatbot' => $chatbot]);
     }
 
     /**
@@ -81,8 +87,42 @@ class ChatbotController extends Controller
      */
     public function update(Request $request, Chatbot $chatbot)
     {
-        //
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'required|string',
+            'type' => 'required|string|in:Reglas,PLN,Híbrido',
+            'knowledge_base' => 'nullable|string',
+            'link' => 'nullable|string|url',
+        ]);
+
+        $chatbot->update([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'type' => $validatedData['type'],
+        ]);
+
+        if (isset($validatedData['knowledge_base']) || isset($validatedData['link'])) {
+            $knowledge = $chatbot->knowledges()->first();
+
+            if ($knowledge) {
+                $knowledge->update([
+                    'content' => $validatedData['knowledge_base'] ?? $knowledge->content,
+                    'link' => $validatedData['link'] ?? $knowledge->link,
+                ]);
+            } else {
+                $chatbot->knowledges()->create([
+                    'content' => $validatedData['knowledge_base'] ?? null,
+                    'link' => $validatedData['link'] ?? null,
+                ]);
+            }
+        }
+
+        return response()->json([
+            'message' => 'Chatbot updated successfully',
+            'chatbot' => $chatbot,
+        ], 200);
     }
+
 
     /**
      * Remove the specified resource from storage.
