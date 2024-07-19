@@ -57,7 +57,7 @@ class ChatbotController extends Controller
             ]);
         }
 
-        return response()->json(['message' => 'Chatbot saved successfully', 'chatbot' => $chatbot], 201);
+        return response()->json(['message' => 'Chatbot guardado correctamente!', 'chatbot' => $chatbot], 201);
     }
 
     /**
@@ -118,7 +118,7 @@ class ChatbotController extends Controller
         }
 
         return response()->json([
-            'message' => 'Chatbot updated successfully',
+            'message' => 'Chatbot actualizado correctamente!',
             'chatbot' => $chatbot,
         ], 200);
     }

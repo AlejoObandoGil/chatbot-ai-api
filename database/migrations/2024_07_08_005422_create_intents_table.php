@@ -19,7 +19,7 @@ return new class extends Migration
             // $table->foreignId('parent_id')->nullable()->constrained('intents');
             $table->string('name');
             $table->boolean('is_choice')->default(false);
-            $table->string('datatype')->nullable()->index();
+            // $table->string('datatype')->nullable()->index();
             $table->integer('level')->nullable()->index();
 
             $table->timestamps();
