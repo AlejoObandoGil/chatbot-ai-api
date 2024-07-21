@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('intent_responses', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('intent_id')->constrained('intents')->onDelete('cascade');
+
+            $table->foreignUuid('intent_id');
             $table->text('response');
             $table->boolean('is_learning')->default()->index();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('intent_id')->references('id')->on('intents')->onDelete('cascade');
         });
     }
 

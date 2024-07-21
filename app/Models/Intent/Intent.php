@@ -15,7 +15,11 @@ class Intent extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'chatbot_id',
         'name',
         'is_choice',

@@ -13,6 +13,7 @@ use App\Models\Intent\IntentOption;
 use App\Models\Intent\IntentResponse;
 use App\Models\Intent\IntentTransition;
 use App\Models\Intent\IntentTrainingPhrase;
+use Illuminate\Support\Str;
 
 class ChatbotTelecomunicationSeeder extends Seeder
 {
@@ -37,9 +38,14 @@ class ChatbotTelecomunicationSeeder extends Seeder
 
         $intentsData = [
             [
+                'id' => (string) Str::uuid(),
                 'name' => 'Saludo inicial',
-                'level' => 1,
-                'intent_category_id' => 1,
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 0,
+                    'y' => 0,
+                ],
+                'data' => ['label' => 'Saludo inicial'],
                 'phrases' => [
                     'Hola',
                     'Buenos días',
@@ -51,18 +57,28 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'Buenos días, ¿cómo puedo asistirte?',
                     'Buenas tardes, ¿en qué puedo ayudarte?',
                     'Buenas noches, ¿cómo puedo asistirte?'
-                ]
+                ],
             ],
             [
+                'id' => (string) Str::uuid(),
                 'name' => 'Obtener información',
-                'level' => 1,
-                'intent_category_id' => 2,
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 100,
+                    'y' => 100,
+                ],
+                'data' => ['label' => 'Obtener información'],
                 'children' => [
                     [
+                        'id' => (string) Str::uuid(),
                         'name' => 'Obtener tipos de planes',
-                        'level' => 2,
-                        'intent_category_id' => 2,
-                        'is_choices' => true,
+                        'is_choice' => true,
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => 200,
+                            'y' => 200,
+                        ],
+                        'data' => ['label' => 'Obtener tipos de planes'],
                         'phrases' => [
                             'Quiero saber sobre el plan de internet',
                             '¿Qué tipo de planes tienen?'
@@ -78,9 +94,15 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         ],
                         'children' => [
                             [
+                                'id' => (string) Str::uuid(),
                                 'name' => 'Plan de Internet',
-                                'level' => 3,
-                                'intent_category_id' => 3,
+                                'is_choice' => true,
+                                'type' => 'customeNode',
+                                'position' => [
+                                    'x' => 300,
+                                    'y' => 300,
+                                ],
+                                'data' => ['label' => 'Plan de Internet'],
                                 'phrases' => [
                                     'Internet',
                                     'Quiero saber el precio del plan de internet'
@@ -94,30 +116,41 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 ],
                                 'children' => [
                                     [
+                                        'id' => (string) Str::uuid(),
                                         'name' => 'Comprar plan de Internet',
-                                        'level' => 4,
-                                        'intent_category_id' => 3,
+                                        'save_information' => true,
+                                        'type' => 'customeNode',
+                                        'position' => [
+                                            'x' => 400,
+                                            'y' => 400,
+                                        ],
+                                        'data' => ['label' => 'Comprar plan de Internet'],
                                         'phrases' => [
                                             'Comprar',
                                             'Comprar plan de internet de 100.000 por mes, 500 MB de datos y acceso a 24 horas'
                                         ],
                                         'responses' => [
                                             'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
-                                        ]
+                                        ],
                                     ]
                                 ]
                             ],
                             [
+                                'id' => (string) Str::uuid(),
                                 'name' => 'Plan de Telefonía',
-                                'level' => 3,
-                                'intent_category_id' => 3,
+                                'type' => 'customeNode',
+                                'is_choice' => true,
+                                'position' => [
+                                    'x' => 300,
+                                    'y' => 500,
+                                ],
+                                'data' => ['label' => 'Plan de Telefonía'],
                                 'phrases' => [
                                     'Telefonía',
                                     'Quiero saber el precio del plan de telefonía'
                                 ],
                                 'responses' => [
-                                    'Por favor escriba su número de documento, lo contactaremos a la brevedad.',
-                                    'El plan de telefónía tiene un precio de $40.000 por mes.'
+                                    'El plan de telefonía tiene un precio de $40.000 por mes.'
                                 ],
                                 'options' => [
                                     'Comprar',
@@ -125,16 +158,22 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 ],
                                 'children' => [
                                     [
+                                        'id' => (string) Str::uuid(),
                                         'name' => 'Comprar plan de telefonía',
-                                        'level' => 4,
-                                        'intent_category_id' => 3,
+                                        'save_information' => true,
+                                        'type' => 'customeNode',
+                                        'position' => [
+                                            'x' => 400,
+                                            'y' => 600,
+                                        ],
+                                        'data' => ['label' => 'Comprar plan de telefonía'],
                                         'phrases' => [
                                             'Comprar',
                                             'Comprar plan de telefónía de $40.000 por mes'
                                         ],
                                         'responses' => [
                                             'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
-                                        ]
+                                        ],
                                     ]
                                 ]
                             ]
@@ -143,14 +182,24 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 ]
             ],
             [
+                'id' => (string) Str::uuid(),
                 'name' => 'Reportar un Problema',
-                'level' => 1,
-                'intent_category_id' => 2,
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 100,
+                    'y' => 400,
+                ],
+                'data' => ['label' => 'Reportar un Problema'],
                 'children' => [
                     [
+                        'id' => (string) Str::uuid(),
                         'name' => 'Reportar un Problema de Conectividad',
-                        'level' => 2,
-                        'intent_category_id' => 2,
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => 200,
+                            'y' => 500,
+                        ],
+                        'data' => ['label' => 'Reportar un Problema de Conectividad'],
                         'phrases' => [
                             'Tengo problemas con la conexión a internet',
                             'Mi internet no funciona correctamente'
@@ -161,9 +210,14 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         ]
                     ],
                     [
+                        'id' => (string) Str::uuid(),
                         'name' => 'Reportar un Problema de Facturación',
-                        'level' => 2,
-                        'intent_category_id' => 2,
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => 200,
+                            'y' => 600,
+                        ],
+                        'data' => ['label' => 'Reportar un Problema de Facturación'],
                         'phrases' => [
                             'Tengo un problema con mi factura',
                             'Mi factura no es correcta'
@@ -176,9 +230,14 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 ]
             ],
             [
+                'id' => (string) Str::uuid(),
                 'name' => 'Solicitar un Servicio',
-                'level' => 1,
-                'intent_category_id' => 2,
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 100,
+                    'y' => 700,
+                ],
+                'data' => ['label' => 'Solicitar un Servicio'],
                 'phrases' => [
                     'Quiero solicitar un servicio',
                     'Necesito mantenimiento para mi internet'
@@ -189,9 +248,14 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 ]
             ],
             [
+                'id' => (string) Str::uuid(),
                 'name' => 'Despedida',
-                'level' => 0,
-                'intent_category_id' => 4,
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 0,
+                    'y' => 800,
+                ],
+                'data' => ['label' => 'Despedida'],
                 'phrases' => [
                     'Adiós',
                     'Hasta luego',
@@ -212,11 +276,17 @@ class ChatbotTelecomunicationSeeder extends Seeder
         // Función para crear las intenciones recursivamente
         $createIntents = function ($intents, $parent = null) use (&$createIntents, $chatbot) {
             foreach ($intents as $intentData) {
+                // Crear intención
                 $intent = Intent::create([
                     'chatbot_id' => $chatbot->id,
+                    'id' => $intentData['id'],
                     'name' => $intentData['name'],
-                    'level' => $intentData['level'],
-                    'intent_category_id' => $intentData['intent_category_id']
+                    'type' => $intentData['type'] ?? null,
+                    'position' => json_encode([
+                        'x' => $intentData['position']['x'] ?? 0,
+                        'y' => $intentData['position']['y'] ?? 0,
+                    ]),
+                    'data' => json_encode($intentData['data'] ?? []),
                 ]);
 
                 // Crear frases de entrenamiento
@@ -246,36 +316,12 @@ class ChatbotTelecomunicationSeeder extends Seeder
                             'intent_id' => $intent->id,
                             'option' => $optionText
                         ]);
-
-                        // Crear transiciones para opciones
-                        if (isset($intentData['children'])) {
-                            foreach ($intentData['children'] as $childData) {
-                                if (in_array($optionText, $childData['phrases'])) {
-                                    $childIntent = Intent::where('name', $childData['name'])->first();
-                                    if ($childIntent) {
-                                        IntentTransition::create([
-                                            'parent_intent_id' => $intent->id,
-                                            'option_id' => $option->id,
-                                            'child_intent_id' => $childIntent->id
-                                        ]);
-                                    }
-                                }
-                            }
-                        }
                     }
                 }
 
-                // Crear transiciones de intención a intención
+                // Crear nodos hijos recursivamente
                 if (isset($intentData['children'])) {
-                    $createIntents($intentData['children'], $intent);
-                    foreach ($intentData['children'] as $childData) {
-                        $childIntent = Intent::where('name', $childData['name'])->first();
-                        IntentTransition::create([
-                            'parent_intent_id' => $intent->id,
-                            'option_id' => null,
-                            'child_intent_id' => $childIntent->id
-                        ]);
-                    }
+                    $createIntents($intentData['children'], $intent->id);
                 }
             }
         };
@@ -295,8 +341,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
         foreach ($knowledgesData as $knowledgeData) {
             Knowledge::create([
                 'chatbot_id' => $chatbot->id,
-                'topic' => $knowledgeData['topic'],
-                'content' => $knowledgeData['content']
+                'content' => $knowledgeData['topic'] . ': ' . $knowledgeData['content']
             ]);
         }
 

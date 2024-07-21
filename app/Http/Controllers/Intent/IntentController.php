@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Intent;
 
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
+use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 use App\Models\Intent\IntentTrainingPhrase;
 

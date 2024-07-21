@@ -13,10 +13,13 @@ return new class extends Migration
     {
         Schema::create('intent_options', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('intent_id')->constrained()->onDelete('cascade');
+
+            $table->foreignUuid('intent_id');
             $table->string('option');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('intent_id')->references('id')->on('intents')->onDelete('cascade');
         });
     }
 

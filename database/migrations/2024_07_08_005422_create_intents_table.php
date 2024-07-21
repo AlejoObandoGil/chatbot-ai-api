@@ -12,13 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('intents', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
 
             $table->foreignId('chatbot_id')->constrained('chatbots');
             // $table->foreignId('node_id')->nullable()->constrained('nodes');
             $table->string('name');
-            $table->boolean('is_choice')->default(false);
-            $table->boolean('save_information')->nullable()->index();
+            $table->boolean('is_choice')->default(false)->index();
+            $table->boolean('save_information')->default(false)->index();
             $table->json('position')->nullable();
             $table->json('data')->nullable();
             $table->string('type');

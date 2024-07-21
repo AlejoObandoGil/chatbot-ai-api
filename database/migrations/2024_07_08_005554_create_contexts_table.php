@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('contexts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('intent_id')->constrained('intents');
+
+            $table->foreignUuid('intent_id');
             $table->string('name');
             $table->integer('lifespan');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('intent_id')->references('id')->on('intents')->onDelete('cascade');
         });
     }
 

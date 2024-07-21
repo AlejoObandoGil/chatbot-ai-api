@@ -13,11 +13,14 @@ return new class extends Migration
     {
         Schema::create('intent_training_phrases', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('intent_id')->constrained('intents')->onDelete('cascade');
+
+            $table->foreignUuid('intent_id');
             $table->string('phrase')->index();
             $table->boolean('is_learning')->default(false)->index();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('intent_id')->references('id')->on('intents')->onDelete('cascade');
         });
     }
 
