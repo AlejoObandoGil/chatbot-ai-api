@@ -99,7 +99,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 'is_choice' => true,
                                 'type' => 'customeNode',
                                 'position' => [
-                                    'x' => 300,
+                                    'x' => 500,
                                     'y' => 300,
                                 ],
                                 'data' => ['label' => 'Plan de Internet'],
@@ -121,7 +121,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                         'save_information' => true,
                                         'type' => 'customeNode',
                                         'position' => [
-                                            'x' => 400,
+                                            'x' => 600,
                                             'y' => 400,
                                         ],
                                         'data' => ['label' => 'Comprar plan de Internet'],
@@ -141,8 +141,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 'type' => 'customeNode',
                                 'is_choice' => true,
                                 'position' => [
-                                    'x' => 300,
-                                    'y' => 500,
+                                    'x' => 100,
+                                    'y' => 300,
                                 ],
                                 'data' => ['label' => 'Plan de Telefonía'],
                                 'phrases' => [
@@ -163,8 +163,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                         'save_information' => true,
                                         'type' => 'customeNode',
                                         'position' => [
-                                            'x' => 400,
-                                            'y' => 600,
+                                            'x' => -100,
+                                            'y' => 400,
                                         ],
                                         'data' => ['label' => 'Comprar plan de telefonía'],
                                         'phrases' => [
@@ -187,7 +187,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 'type' => 'customeNode',
                 'position' => [
                     'x' => 100,
-                    'y' => 400,
+                    'y' => 500,
                 ],
                 'data' => ['label' => 'Reportar un Problema'],
                 'children' => [
@@ -196,8 +196,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         'name' => 'Reportar un Problema de Conectividad',
                         'type' => 'customeNode',
                         'position' => [
-                            'x' => 200,
-                            'y' => 500,
+                            'x' => 400,
+                            'y' => 600,
                         ],
                         'data' => ['label' => 'Reportar un Problema de Conectividad'],
                         'phrases' => [
@@ -214,7 +214,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         'name' => 'Reportar un Problema de Facturación',
                         'type' => 'customeNode',
                         'position' => [
-                            'x' => 200,
+                            'x' => 0,
                             'y' => 600,
                         ],
                         'data' => ['label' => 'Reportar un Problema de Facturación'],
@@ -281,6 +281,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'chatbot_id' => $chatbot->id,
                     'id' => $intentData['id'],
                     'name' => $intentData['name'],
+                    'is_choice' => $intentData['is_choice'] ?? false,
+                    'save_information' => $intentData['save_information'] ?? false,
                     'type' => $intentData['type'] ?? null,
                     'position' => json_encode([
                         'x' => $intentData['position']['x'] ?? 0,

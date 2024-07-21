@@ -39,11 +39,6 @@ class Intent extends Model
         return $this->belongsTo(Chatbot::class);
     }
 
-    public function category()
-    {
-        return $this->belongsTo(IntentCategory::class);
-    }
-
     /**
      * Get the training phrases associated with the intent.
      *
@@ -72,25 +67,5 @@ class Intent extends Model
     public function contexts()
     {
         return $this->hasMany(Context::class);
-    }
-
-    public function parentTransitions()
-    {
-        return $this->hasMany(IntentTransition::class, 'parent_intent_id');
-    }
-
-    public function childTransitions()
-    {
-        return $this->hasMany(IntentTransition::class, 'child_intent_id');
-    }
-
-    public function children()
-    {
-        return $this->belongsToMany(Intent::class, 'intent_transitions', 'parent_intent_id', 'child_intent_id');
-    }
-
-    public function parents()
-    {
-        return $this->belongsToMany(Intent::class, 'intent_transitions', 'child_intent_id', 'parent_intent_id');
     }
 }

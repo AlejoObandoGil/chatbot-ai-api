@@ -8,15 +8,22 @@ use App\Models\Chatbot\Chatbot;
 use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 use App\Models\Intent\IntentTrainingPhrase;
+use Illuminate\Support\Facades\Log;
 
 class IntentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Chatbot $chatbot)
     {
-        //
+        $intents = Intent::where('chatbot_id', $chatbot->id)
+            ->with(['responses', 'trainingPhrases', 'options'])
+            ->get();
+
+        Log::info($intents);
+
+        return response()->json(['intents' => $intents]);
     }
 
     /**
