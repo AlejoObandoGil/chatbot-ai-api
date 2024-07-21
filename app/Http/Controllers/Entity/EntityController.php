@@ -1,18 +1,25 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Entity;
 
-use App\Models\Entity\Entity;
 use Illuminate\Http\Request;
+use App\Models\Entity\Entity;
+use App\Models\Chatbot\Chatbot;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
 
 class EntityController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Chatbot $chatbot)
     {
-        //
+        $entities = Entity::where('chatbot_id', $chatbot->id)->with(['values'])->get();
+
+        Log::info($entities);
+
+        return response()->json(['entities' => $entities]);
     }
 
     /**

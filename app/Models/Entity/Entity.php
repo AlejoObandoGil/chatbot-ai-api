@@ -31,8 +31,8 @@ class Entity extends Model
         return $this->hasMany(Intent::class);
     }
 
-    public function contactInformation()
+    public function values()
     {
-        return $this->hasMany(ContactInformation::class);
+        return $this->hasMany(EntityValue::class);
     }
 }
