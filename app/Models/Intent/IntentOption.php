@@ -19,9 +19,4 @@ class IntentOption extends Model
     {
         return $this->belongsTo(Intent::class);
     }
-
-    public function transitions()
-    {
-        return $this->hasMany(IntentTransition::class, 'option_id');
-    }
 }

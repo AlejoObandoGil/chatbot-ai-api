@@ -14,17 +14,20 @@ return new class extends Migration
         Schema::create('intents', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
-            $table->foreignId('chatbot_id')->constrained('chatbots');
-            // $table->foreignId('node_id')->nullable()->constrained('nodes');
+            $table->foreignUuid('chatbot_id');
+            $table->foreignId('entity_id')->nullable()->constrained('entities');
             $table->string('name');
             $table->boolean('is_choice')->default(false)->index();
             $table->boolean('save_information')->default(false)->index();
             $table->json('position')->nullable();
             $table->json('data')->nullable();
-            $table->string('type');
+            $table->string('type')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('chatbot_id')->references('id')->on('chatbots')->onDelete('cascade');
+
         });
     }
 

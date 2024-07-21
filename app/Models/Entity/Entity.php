@@ -2,6 +2,7 @@
 
 namespace App\Models\Entity;
 
+use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use App\Models\User\ContactInformation;
 use Illuminate\Database\Eloquent\Model;
@@ -14,14 +15,20 @@ class Entity extends Model
 
     protected $fillable = [
         'chatbot_id',
+        'intent_id',
         'name',
-        'type',
+        'datatype',
         'save'
     ];
 
     public function chatbot()
     {
         return $this->belongsTo(Chatbot::class);
+    }
+
+    public function intents()
+    {
+        return $this->hasMany(Intent::class);
     }
 
     public function contactInformation()

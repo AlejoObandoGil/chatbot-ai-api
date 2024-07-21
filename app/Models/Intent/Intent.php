@@ -4,6 +4,7 @@ namespace App\Models\Intent;
 
 use App\Models\Chatbot\Chatbot;
 use App\Models\Chatbot\Context;
+use App\Models\Entity\Entity;
 use App\Models\Intent\IntentCategory;
 use App\Models\Intent\IntentResponse;
 use Illuminate\Database\Eloquent\Model;
@@ -21,6 +22,7 @@ class Intent extends Model
     protected $fillable = [
         'id',
         'chatbot_id',
+        'entity_id',
         'name',
         'is_choice',
         'save_information',
@@ -62,6 +64,11 @@ class Intent extends Model
     public function options()
     {
         return $this->hasMany(IntentOption::class);
+    }
+
+    public function entity()
+    {
+        return $this->belongsTo(Entity::class);
     }
 
     public function contexts()

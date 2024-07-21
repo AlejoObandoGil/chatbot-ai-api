@@ -13,13 +13,14 @@ return new class extends Migration
     {
         Schema::create('entities', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chatbot_id')->constrained('chatbots');
+            $table->foreignUuid('chatbot_id');;
             $table->string('name');
             $table->string('datatype')->index();
-            // $table->string('group')->nullable()->index();
             $table->boolean('save_information')->default(false);
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('chatbot_id')->references('id')->on('chatbots')->onDelete('cascade');
         });
     }
 

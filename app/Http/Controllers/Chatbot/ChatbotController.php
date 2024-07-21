@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Chatbot;
 
 use App\Models\User\User;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\Chatbot\Chatbot;
 use App\Http\Controllers\Controller;
@@ -36,7 +37,7 @@ class ChatbotController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|string|in:Basado en Reglas,PLN,Híbrido',
+            'type' => 'required|string|in:Basado en Reglas,Natural language processing,Híbrido',
             'knowledge_base' => 'nullable|string',
             'link' => 'nullable|string|url',
         ]);
@@ -44,6 +45,7 @@ class ChatbotController extends Controller
         $user = User::find(auth()->user()->id);
 
         $chatbot = Chatbot::create([
+            'id' => (string) Str::uuid(),
             'user_id' => $user->id,
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
@@ -90,7 +92,7 @@ class ChatbotController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|string|in:Reglas,PLN,Híbrido',
+            'type' => 'required|string|in:Basado en Reglas,Natural language processing,Híbrido',
             'knowledge_base' => 'nullable|string',
             'link' => 'nullable|string|url',
         ]);

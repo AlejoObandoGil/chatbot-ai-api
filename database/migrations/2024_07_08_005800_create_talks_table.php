@@ -13,11 +13,13 @@ return new class extends Migration
     {
         Schema::create('talks', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chatbot_id')->constrained('chatbots');
+            $table->foreignUuid('chatbot_id');;
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('chatbot_id')->references('id')->on('chatbots')->onDelete('cascade');
         });
     }
 

@@ -16,7 +16,11 @@ class Chatbot extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $keyType = 'string';
+    public $incrementing = false;
+
     protected $fillable = [
+        'id',
         'user_id',
         'name',
         'description',
@@ -27,7 +31,7 @@ class Chatbot extends Model
 
     protected $casts = [
         'enabled' => 'boolean',
-
+        'script_embed' => 'json'
     ];
 
     public function user()

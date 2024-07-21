@@ -11,7 +11,6 @@ use App\Models\Chatbot\Knowledge;
 use App\Models\Entity\EntityValue;
 use App\Models\Intent\IntentOption;
 use App\Models\Intent\IntentResponse;
-use App\Models\Intent\IntentTransition;
 use App\Models\Intent\IntentTrainingPhrase;
 use Illuminate\Support\Str;
 
@@ -28,6 +27,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
 
         // Datos del chatbot
         $chatbotData = [
+            'id' => (string) Str::uuid(),
             'user_id' => 1,
             'name' => 'TelcoBot',
             'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
@@ -108,7 +108,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                     'Quiero saber el precio del plan de internet'
                                 ],
                                 'responses' => [
-                                    'El plan de internet tiene un precio de $100.000 por mes, 500 MB de datos y acceso a 24 horas.'
+                                    'El plan de internet tiene un precio de $100.000 por mes, 500 Mbps de velocidad.'
                                 ],
                                 'options' => [
                                     'Comprar',
@@ -127,7 +127,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                         'data' => ['label' => 'Comprar plan de Internet'],
                                         'phrases' => [
                                             'Comprar',
-                                            'Comprar plan de internet de 100.000 por mes, 500 MB de datos y acceso a 24 horas'
+                                            'Comprar plan de internet de 100.000 por mes, 500 Mbps de velocidad'
                                         ],
                                         'responses' => [
                                             'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
@@ -150,7 +150,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                     'Quiero saber el precio del plan de telefonía'
                                 ],
                                 'responses' => [
-                                    'El plan de telefonía tiene un precio de $40.000 por mes.'
+                                    'El plan de telefonía tiene un precio de $40.000 por mes, con minutos ilimitados y 50 GB de datos.'
                                 ],
                                 'options' => [
                                     'Comprar',
@@ -350,27 +350,28 @@ class ChatbotTelecomunicationSeeder extends Seeder
         // Datos de entidades y sus valores
         $entitiesData = [
             [
-                'name' => 'Tipo de plan',
+                'name' => 'Planes',
                 'datatype' => 'string',
-                'save_information' => true,
                 'values' => ['Internet', 'Teléfono', 'TV']
             ],
             [
-                'name' => 'Saldo de cliente',
+                'name' => 'Plan Internet',
                 'datatype' => 'string',
-                'save_information' => true,
-                'values' => ['100.000']
+                'values' => ['500 Mbps', '100.000', 'Mes']
+            ],
+            [
+                'name' => 'Plan Telefonía',
+                'datatype' => 'string',
+                'values' => ['Minutos ilimitados', '40.000', '50 GB', 'Mes']
             ],
             [
                 'name' => 'Tipo de servicio',
                 'datatype' => 'string',
-                'save_information' => true,
                 'values' => ['Instalación', 'Mantenimiento', 'Actualización']
             ],
             [
                 'name' => 'Tipo de problema',
                 'datatype' => 'string',
-                'save_information' => true,
                 'values' => ['Conectividad', 'Facturación', 'Soporte técnico']
             ]
         ];
@@ -381,7 +382,6 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 'chatbot_id' => $chatbot->id,
                 'name' => $entityData['name'],
                 'datatype' => $entityData['datatype'],
-                'save_information' => $entityData['save_information']
             ]);
 
             foreach ($entityData['values'] as $value) {

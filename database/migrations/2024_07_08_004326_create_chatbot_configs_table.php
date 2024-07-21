@@ -13,10 +13,12 @@ return new class extends Migration
     {
         Schema::create('chatbot_configs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('chatbot_id')->constrained('chatbots');
+            $table->foreignUuid('chatbot_id');
             $table->text('config_data');
             $table->timestamps();
             $table->softDeletes();
+
+            $table->foreign('chatbot_id')->references('id')->on('chatbots')->onDelete('cascade');
         });
     }
 
