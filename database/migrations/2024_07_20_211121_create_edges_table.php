@@ -11,15 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('intent_transitions', function (Blueprint $table) {
+        Schema::create('edges', function (Blueprint $table) {
             $table->id();
-
-            $table->foreignId('parent_intent_id')->nullable()->constrained('intents');
-            $table->foreignId('option_id')->nullable()->constrained('intent_options');
-            $table->foreignId('child_intent_id')->nullable()->constrained('intents');
-
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 
@@ -28,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('intent_transitions');
+        Schema::dropIfExists('edges');
     }
 };

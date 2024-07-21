@@ -13,6 +13,9 @@ return new class extends Migration
     {
         Schema::create('nodes', function (Blueprint $table) {
             $table->id();
+            $table->json('position')->nullable();
+            $table->json('data')->nullable();
+            $table->string('type');
             $table->timestamps();
         });
     }

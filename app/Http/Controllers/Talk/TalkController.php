@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Talk;
 
 use Carbon\Carbon;
 use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
 use App\Models\Chatbot\Chatbot;
+use App\Http\Controllers\Controller;
 
 class TalkController extends Controller
 {

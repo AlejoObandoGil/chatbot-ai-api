@@ -1,12 +1,13 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Talk;
 
 use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use App\Models\Talk\TalkMessage;
+use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 
 class TalkMessageController extends Controller

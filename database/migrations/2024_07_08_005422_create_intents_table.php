@@ -15,12 +15,13 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('chatbot_id')->constrained('chatbots');
-            $table->foreignId('intent_category_id')->nullable()->constrained('intent_categories');
-            // $table->foreignId('parent_id')->nullable()->constrained('intents');
+            // $table->foreignId('node_id')->nullable()->constrained('nodes');
             $table->string('name');
             $table->boolean('is_choice')->default(false);
-            // $table->string('datatype')->nullable()->index();
-            $table->integer('level')->nullable()->index();
+            $table->boolean('save_information')->nullable()->index();
+            $table->json('position')->nullable();
+            $table->json('data')->nullable();
+            $table->string('type');
 
             $table->timestamps();
             $table->softDeletes();

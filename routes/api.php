@@ -3,8 +3,8 @@
 use Illuminate\Http\Request;
 use App\Services\OpenAIService;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\TalkController;
-use App\Http\Controllers\TalkMessageController;
+use App\Http\Controllers\Talk\TalkController;
+use App\Http\Controllers\Talk\TalkMessageController;
 use App\Http\Controllers\Chatbot\ChatbotController;
 use App\Http\Controllers\ContactInformationController;
 

@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models\Chatbot;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Node extends Model
+class Edges extends Model
 {
     use HasFactory;
 }

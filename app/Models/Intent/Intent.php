@@ -17,12 +17,17 @@ class Intent extends Model
 
     protected $fillable = [
         'chatbot_id',
-        'intent_category_id',
-        'parent_id',
         'name',
         'is_choice',
-        'datatype',
-        'level'
+        'save_information',
+        'position',
+        'data',
+        'type'
+    ];
+
+    protected $casts = [
+        'position' => 'json',
+        'data' => 'json',
     ];
 
     public function chatbot()
