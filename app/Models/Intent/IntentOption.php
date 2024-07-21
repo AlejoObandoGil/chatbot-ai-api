@@ -12,7 +12,7 @@ class IntentOption extends Model
 
     protected $fillable = [
         'intent_id',
-        'option_text',
+        'option',
     ];
 
     public function intent()
