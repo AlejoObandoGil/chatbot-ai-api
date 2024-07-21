@@ -36,7 +36,7 @@ class ChatbotController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'type' => 'required|string|in:Reglas,PLN,Híbrido',
+            'type' => 'required|string|in:Basado en Reglas,PLN,Híbrido',
             'knowledge_base' => 'nullable|string',
             'link' => 'nullable|string|url',
         ]);
@@ -66,7 +66,7 @@ class ChatbotController extends Controller
     public function show(Chatbot $chatbot)
     {
         if (auth()->user())
-            $chatbot = Chatbot::find($chatbot->id)->first();
+            $chatbot = Chatbot::find($chatbot->id);
 
         return response()->json(['chatbot' => $chatbot]);
     }
@@ -77,7 +77,7 @@ class ChatbotController extends Controller
     public function edit(Chatbot $chatbot)
     {
         if (auth()->user())
-            $chatbot = Chatbot::find($chatbot->id)->first();
+            $chatbot = Chatbot::find($chatbot->id);
 
         return response()->json(['chatbot' => $chatbot]);
     }
