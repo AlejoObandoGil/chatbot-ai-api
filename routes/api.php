@@ -39,6 +39,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::put('/{chatbot}', [ChatbotController::class, 'update']);
 
             Route::prefix('/{chatbot}')->group(function () {
+                Route::prefix('/contact-information')->group(function () {
+                    Route::get('/', [ContactInformationController::class, 'index']);
+                    Route::post('/', [ContactInformationController::class, 'store']);
+                    Route::put('/', [ContactInformationController::class, 'update']);
+                });
+
                 Route::prefix('/entity')->group(function () {
                     Route::get('/', [EntityController::class, 'index']);
                     Route::post('/', [EntityController::class, 'store']);

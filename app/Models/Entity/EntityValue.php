@@ -14,7 +14,6 @@ class EntityValue extends Model
     protected $fillable = [
         'entity_id',
         'value',
-        'is_selectable'
     ];
 
     public function entity()

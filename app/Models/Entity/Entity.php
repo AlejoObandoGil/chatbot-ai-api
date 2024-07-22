@@ -35,4 +35,9 @@ class Entity extends Model
     {
         return $this->hasMany(EntityValue::class);
     }
+
+    public function contactInformation()
+    {
+        return $this->hasMany(ContactInformation::class);
+    }
 }

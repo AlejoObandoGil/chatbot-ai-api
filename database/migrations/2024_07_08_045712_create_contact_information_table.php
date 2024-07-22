@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('contact_information', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('intent_id');
-            $table->string('value');
+            $table->string('value')->nullable();
+            $table->string('status')->default('sin contactar');
             $table->timestamps();
             $table->softDeletes();
 

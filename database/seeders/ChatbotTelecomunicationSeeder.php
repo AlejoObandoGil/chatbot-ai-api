@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\User\User;
+use Illuminate\Support\Str;
 use App\Models\Entity\Entity;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
@@ -11,8 +12,8 @@ use App\Models\Chatbot\Knowledge;
 use App\Models\Entity\EntityValue;
 use App\Models\Intent\IntentOption;
 use App\Models\Intent\IntentResponse;
+use App\Models\User\ContactInformation;
 use App\Models\Intent\IntentTrainingPhrase;
-use Illuminate\Support\Str;
 
 class ChatbotTelecomunicationSeeder extends Seeder
 {
@@ -130,10 +131,29 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                             'Comprar plan de internet de 100.000 por mes, 500 Mbps de velocidad'
                                         ],
                                         'responses' => [
-                                            'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
+                                            'Por favor escriba su Nombre completo y número de teléfono separado por comas, lo contactaremos a la brevedad.'
                                         ],
+                                        'children' => [
+                                            [
+                                                'id' => (string) Str::uuid(),
+                                                'name' => 'Comprar plan de Internet respuesta final',
+                                                'type' => 'customeNode',
+                                                'position' => [
+                                                    'x' => -100,
+                                                    'y' => 400,
+                                                ],
+                                                'data' => ['label' => 'Comprar plan de Internet respuesta final'],
+                                                'phrases' => [
+                                                    'Nombre',
+                                                    'Teléfono'
+                                                ],
+                                                'responses' => [
+                                                    'Hemos guardado su información, un asesor se contactará con usted.'
+                                                ],
+                                            ]
+                                        ]
                                     ]
-                                ]
+                                ],
                             ],
                             [
                                 'id' => (string) Str::uuid(),
@@ -172,9 +192,28 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                             'Comprar plan de telefónía de $40.000 por mes'
                                         ],
                                         'responses' => [
-                                            'Por favor escriba su número de documento y lo contactaremos a la brevedad.'
+                                            'Por favor escriba su Nombre completo y número de teléfono separado por comas, lo contactaremos a la brevedad.'
                                         ],
-                                    ]
+                                        'children' => [
+                                            [
+                                                'id' => (string) Str::uuid(),
+                                                'name' => 'Comprar plan de telefonía respuesta final',
+                                                'type' => 'customeNode',
+                                                'position' => [
+                                                    'x' => -100,
+                                                    'y' => 400,
+                                                ],
+                                                'data' => ['label' => 'Comprar plan de telefonía respuesta final'],
+                                                'phrases' => [
+                                                    'Nombre',
+                                                    'Teléfono'
+                                                ],
+                                                'responses' => [
+                                                    'Hemos guardado su información, un asesor se contactará con usted.'
+                                                ],
+                                            ]
+                                        ]
+                                    ],
                                 ]
                             ]
                         ]
@@ -388,6 +427,17 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 EntityValue::create([
                     'entity_id' => $entity->id,
                     'value' => $value
+                ]);
+            }
+        }
+
+        $intentsWithSaveInformation = Intent::where('save_information', true)->get();
+
+        foreach ($intentsWithSaveInformation as $intent) {
+            for ($i = 0; $i < 5; $i++) {
+                ContactInformation::create([
+                    'intent_id' => $intent->id,
+                    'value' => "Valor de prueba {$i} para {$intent->name}"
                 ]);
             }
         }

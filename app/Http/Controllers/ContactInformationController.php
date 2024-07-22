@@ -2,8 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User\ContactInformation;
 use Illuminate\Http\Request;
+use App\Models\Intent\Intent;
+use App\Models\User\ContactInformation;
 
 class ContactInformationController extends Controller
 {
@@ -12,8 +13,13 @@ class ContactInformationController extends Controller
      */
     public function index()
     {
-        //
+        $intents = Intent::where('save_information', true)->with('contactInformations')->get();
+
+        return response()->json([
+            'intents' => $intents,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

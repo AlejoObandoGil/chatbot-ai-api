@@ -9,6 +9,7 @@ use App\Models\Intent\IntentCategory;
 use App\Models\Intent\IntentResponse;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Intent\IntentTrainingPhrase;
+use App\Models\User\ContactInformation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -74,5 +75,10 @@ class Intent extends Model
     public function contexts()
     {
         return $this->hasMany(Context::class);
+    }
+
+    public function contactInformations()
+    {
+        return $this->hasMany(ContactInformation::class);
     }
 }
