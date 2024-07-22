@@ -28,7 +28,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
 
         // Datos del chatbot
         $chatbotData = [
-            'id' => (string) Str::uuid(),
+            'id' => '4cbda66d-2ba5-470e-956e-037946e96307',
             'user_id' => 1,
             'name' => 'TelcoBot',
             'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
