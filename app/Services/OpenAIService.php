@@ -6,10 +6,11 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
-use App\Models\Learning\LearningKnowledge;
+use App\Models\Chatbot\Knowledge;
 use OpenAI\Resources\Completions;
 use OpenAI\Laravel\Facades\OpenAI;
 use Illuminate\Support\Facades\Log;
+use App\Models\Learning\LearningKnowledge;
 use OpenAI\Responses\Completions\CreateResponse;
 
 class OpenAIService
@@ -42,7 +43,7 @@ class OpenAIService
 
     public function conexionGptApiTest($context = null, $message = null)
     {
-        $content = $context . "User:" . $message. ". " . "AI:";
+        $content = $context . "User:" . $message . ". " . "AI:";
 
         OpenAI::fake([
             CreateResponse::fake([
@@ -59,9 +60,11 @@ class OpenAIService
             'prompt' => 'PHP is ',
         ]);
 
-        Log::info('$completion openai create: '.json_encode($completion));
+        Log::info('$completion openai create: ' . json_encode($completion));
 
-        expect($completion['choices'][0]['text'])->toBe('awesome!');
+        if ($completion['choices'][0]['text'] !== 'awesome!') {
+            throw new \Exception('Error: El texto de la respuesta no es el esperado.');
+        }
 
         OpenAI::assertSent(Completions::class, function (string $method, array $parameters): bool {
             return $method === 'create' &&
@@ -71,6 +74,7 @@ class OpenAIService
 
         return $completion['choices'][0]['text'];
     }
+
 
     // public function handleMessage(Request $request)
     public function handleMessage()
@@ -137,11 +141,12 @@ class OpenAIService
 
     public function createLearningKnowledge($chatbot, $context)
     {
-        $learningKnowledge = LearningKnowledge::where('chatbot_id', $chatbot->id)->first();
+        $learningKnowledge = Knowledge::where('chatbot_id', $chatbot->id)->first();
         if (!$learningKnowledge) {
-            $learningKnowledge = new LearningKnowledge();
+            $learningKnowledge = new Knowledge();
             $learningKnowledge->chatbot_id = $chatbot->id;
             $learningKnowledge->content = $context;
+            $learningKnowledge->is_learning = true;
             $learningKnowledge->save();
         }
 

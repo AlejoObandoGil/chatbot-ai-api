@@ -31,6 +31,11 @@ class Entity extends Model
         return $this->hasMany(Intent::class);
     }
 
+    /**
+     * Get the values associated with the entity.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function values()
     {
         return $this->hasMany(EntityValue::class);

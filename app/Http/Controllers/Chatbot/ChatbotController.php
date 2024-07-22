@@ -15,6 +15,7 @@ class ChatbotController extends Controller
      */
     public function index()
     {
+        $chatbots = null;
         if (auth()->user())
             $chatbots = Chatbot::where('user_id', auth()->user()->id)->get();
 

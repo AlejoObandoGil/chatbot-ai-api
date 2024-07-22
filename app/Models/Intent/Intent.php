@@ -62,6 +62,11 @@ class Intent extends Model
         return $this->hasMany(IntentResponse::class);
     }
 
+    /**
+     * Get the options associated with the intent.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function options()
     {
         return $this->hasMany(IntentOption::class);
@@ -77,6 +82,11 @@ class Intent extends Model
         return $this->hasMany(Context::class);
     }
 
+    /**
+     * Retrieves the contact information associated with the model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function contactInformations()
     {
         return $this->hasMany(ContactInformation::class);
