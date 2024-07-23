@@ -12,6 +12,7 @@ use App\Models\Chatbot\Knowledge;
 use App\Models\Entity\EntityValue;
 use App\Models\Intent\IntentOption;
 use App\Models\Intent\IntentResponse;
+use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
 use App\Models\Intent\IntentTrainingPhrase;
 
@@ -131,7 +132,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                             'Comprar plan de internet de 100.000 por mes, 500 Mbps de velocidad'
                                         ],
                                         'responses' => [
-                                            'Por favor escriba su Nombre completo y número de teléfono separado por comas, lo contactaremos a la brevedad.'
+                                            'Por favor escriba Nombre: seguido de su Nombre completo y Telefono: seguido de su número de teléfono separado por comas, lo contactaremos a la brevedad.'
                                         ],
                                         'children' => [
                                             [
@@ -144,8 +145,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                                 ],
                                                 'data' => ['label' => 'Comprar plan de Internet respuesta final'],
                                                 'phrases' => [
-                                                    'Nombre',
-                                                    'Teléfono'
+                                                    'Nombre:',
+                                                    'Teléfono:'
                                                 ],
                                                 'responses' => [
                                                     'Hemos guardado su información, un asesor se contactará con usted.'
@@ -181,6 +182,10 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                         'id' => (string) Str::uuid(),
                                         'name' => 'Comprar plan de telefonía',
                                         'save_information' => true,
+                                        'information_required' => [
+                                            TypeInformationRequired::NOMBRE_COMPLETO,
+                                            TypeInformationRequired::TELEFONO,
+                                        ],
                                         'type' => 'customeNode',
                                         'position' => [
                                             'x' => -100,
@@ -192,12 +197,13 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                             'Comprar plan de telefónía de $40.000 por mes'
                                         ],
                                         'responses' => [
-                                            'Por favor escriba su Nombre completo y número de teléfono separado por comas, lo contactaremos a la brevedad.'
+                                            'Por favor escriba Nombre: seguido de su Nombre completo y Telefono: seguido de su número de teléfono separado por comas, lo contactaremos a la brevedad.'
                                         ],
                                         'children' => [
                                             [
                                                 'id' => (string) Str::uuid(),
                                                 'name' => 'Comprar plan de telefonía respuesta final',
+                                                'save_information' => true,
                                                 'type' => 'customeNode',
                                                 'position' => [
                                                     'x' => -100,
@@ -205,8 +211,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                                 ],
                                                 'data' => ['label' => 'Comprar plan de telefonía respuesta final'],
                                                 'phrases' => [
-                                                    'Nombre',
-                                                    'Teléfono'
+                                                    'Nombre:',
+                                                    'Teléfono:'
                                                 ],
                                                 'responses' => [
                                                     'Hemos guardado su información, un asesor se contactará con usted.'

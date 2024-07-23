@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('talk_messages', function (Blueprint $table) {
             $table->id();
+            $table->foreignUuid('intent_id')->nullable()->constrained('intents');
             $table->foreignId('talk_id')->constrained('talks')->onDelete('cascade');
             $table->string('sender');
             $table->text('message');

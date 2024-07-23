@@ -2,9 +2,10 @@
 
 namespace App\Models\Talk;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\Intent\Intent;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class TalkMessage extends Model
 {
@@ -12,6 +13,7 @@ class TalkMessage extends Model
 
     protected $fillable = [
         'chatbot_talk_id',
+        'intent_id',
         'sender',
         'message'
     ];
@@ -19,5 +21,10 @@ class TalkMessage extends Model
     public function talk()
     {
         return $this->belongsTo(Talk::class);
+    }
+
+    public function intent()
+    {
+        return $this->belongsTo(Intent::class);
     }
 }

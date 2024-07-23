@@ -8,7 +8,7 @@ use App\Http\Controllers\Talk\TalkController;
 use App\Http\Controllers\Intent\IntentController;
 use App\Http\Controllers\Chatbot\ChatbotController;
 use App\Http\Controllers\Talk\TalkMessageController;
-use App\Http\Controllers\ContactInformationController;
+use App\Http\Controllers\User\ContactInformationController;
 
 Route::get('/chatbots/index', [ChatbotController::class, 'index']);
 // Route::get('/chatbots/openai-api', [OpenAIService::class, 'handleMessage']);
@@ -20,7 +20,7 @@ Route::prefix('/chatbot/{chatbot}')->group(function () {
 
         Route::prefix('/{talk}/message')->group(function () {
             Route::get('/', [TalkMessageController::class, 'index']);
-            Route::post('/', [TalkMessageController::class, 'store']);
+            Route::post('/{intent?}', [TalkMessageController::class, 'store']);
         });
     });
 });
@@ -63,7 +63,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
 
                     Route::prefix('/{talk}/message')->group(function () {
                         Route::get('/', [TalkMessageController::class, 'index']);
-                        Route::post('/', [TalkMessageController::class, 'store']);
+                        Route::post('/{intent?}', [TalkMessageController::class, 'store']);
                     });
                 });
             });

@@ -1,9 +1,11 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
+use App\Http\Controllers\Controller;
+use App\Models\Chatbot\Chatbot;
 use App\Models\User\ContactInformation;
 
 class ContactInformationController extends Controller
@@ -11,9 +13,9 @@ class ContactInformationController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Chatbot $chatbot)
     {
-        $intents = Intent::where('save_information', true)->with('contactInformations')->get();
+        $intents = Intent::where('chatbot_id', $chatbot->id)->where('save_information', true)->with('contactInformations')->get();
 
         return response()->json([
             'intents' => $intents,
