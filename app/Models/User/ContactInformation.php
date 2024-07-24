@@ -14,7 +14,7 @@ class ContactInformation extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'entity_id',
+        'intent_id',
         'value'
     ];
 

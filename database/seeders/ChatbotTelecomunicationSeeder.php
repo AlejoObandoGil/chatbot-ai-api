@@ -121,6 +121,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                         'id' => (string) Str::uuid(),
                                         'name' => 'Comprar plan de Internet',
                                         'type' => 'customeNode',
+                                        'save_information' => true,
+                                        'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
                                         'position' => [
                                             'x' => 600,
                                             'y' => 400,
@@ -138,17 +140,11 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                                 'id' => (string) Str::uuid(),
                                                 'name' => 'Comprar plan de Internet respuesta final',
                                                 'type' => 'customeNode',
-                                                'save_information' => true,
-                                                'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
                                                 'position' => [
                                                     'x' => -100,
                                                     'y' => 400,
                                                 ],
                                                 'data' => ['label' => 'Comprar plan de Internet respuesta final'],
-                                                'phrases' => [
-                                                    'Nombre:',
-                                                    'Teléfono:'
-                                                ],
                                                 'responses' => [
                                                     'Gracias por proporcionar su información, un asesor se contactará con usted.'
                                                 ],
@@ -183,6 +179,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                         'id' => (string) Str::uuid(),
                                         'name' => 'Comprar plan de telefonía',
                                         'type' => 'customeNode',
+                                        'save_information' => true,
+                                        'information_required' => TypeInformationRequired::TELEFONO,
                                         'position' => [
                                             'x' => -100,
                                             'y' => 400,
@@ -199,8 +197,6 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                             [
                                                 'id' => (string) Str::uuid(),
                                                 'name' => 'Comprar plan de telefonía respuesta final',
-                                                'save_information' => true,
-                                                'information_required' => TypeInformationRequired::TELEFONO,
                                                 'type' => 'customeNode',
                                                 'position' => [
                                                     'x' => -100,

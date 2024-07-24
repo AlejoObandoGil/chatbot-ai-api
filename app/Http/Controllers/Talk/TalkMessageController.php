@@ -9,6 +9,7 @@ use App\Models\Chatbot\Chatbot;
 use App\Models\Talk\TalkMessage;
 use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
+use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
 
 class TalkMessageController extends Controller
@@ -41,53 +42,75 @@ class TalkMessageController extends Controller
         $message = $validated['message'];
 
         $talk->messages()->create([
-            'intentId' => $intentId,
+            'intent_id' => $intentId,
             'message' => $message,
             'sender' => 'user',
         ]);
 
-        $response = $this->processMessage($message, $chatbot->id);
+        $response = $this->processMessage($message, $chatbot->id, $intentId);
 
         $talk->messages()->create([
-            'intentId' => $intentId,
+            'intent_id' => $intentId,
             'message' => $response->response ?? $response,
             'sender' => 'bot',
         ]);
 
-        if ($intentId) {
-            $intent = Intent::find($intentId);
-            if ($intent && $intent->save_information) {
-                ContactInformation::create([
-                    'intent_id' => $intent->id,
-                    'value' => $message
-                ]);
-            }
+        if (is_object($response) && method_exists($response, 'load')) {
+            $response = $response->load('intent');
         }
 
-        return response()->json(['response' => $response->load('intent')]);
+        return response()->json(['response' => $response]);
     }
 
-    protected function processMessage($message, $chatbotId)
+    protected function processMessage($message, $chatbotId, $intentId)
     {
-        $intent = Intent::where('chatbot_id', $chatbotId)
-            ->whereHas('trainingPhrases', function($query) use ($message) {
-                $query->where('phrase', 'like', '%' . $message . '%');
-            })->first();
+        $intent = $intentId ? Intent::find($intentId) : null;
 
-        if ($intent) {
-            $response = IntentResponse::where('intent_id', $intent->id)->inRandomOrder()->first();
+        $matchedIntent = $this->findMatchingIntent($message, $chatbotId);
 
-            // if ($intent->save_information) {
-            //     ContactInformation::create([
-            //         'intent_id' => $intent->id,
-            //         'value' => $message
-            //     ]);
-            // }
+        if ($matchedIntent) {
+            $response = IntentResponse::where('intent_id', $matchedIntent->id)->inRandomOrder()->first();
 
             return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
         }
 
-        return 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
+        if ($intent && $intent->save_information) {
+            $response = $this->handleInformationSaving($message, $intent);
+            if ($response) {
+                return $response;
+            }
+        }
+
+        return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
+    }
+
+    private function handleInformationSaving($message, Intent $intent)
+    {
+        if (in_array($intent->information_required, TypeInformationRequired::getValues(), true)) {
+            $typeInformationRequired = TypeInformationRequired::from($intent->information_required);
+            $pattern = $typeInformationRequired->getRegexPattern();
+
+            if (preg_match($pattern, $message)) {
+                ContactInformation::create([
+                    'intent_id' => $intent->id,
+                    'value' => $message
+                ]);
+
+                return 'Hemos guardado su información, un asesor se contactará con usted';
+            } else {
+                return 'La información proporcionada no coincide con el formato requerido, Por favor escribe solo la información solicitada sin ningún tipo de caracter especial.';
+            }
+
+            return false;
+        }
+    }
+
+    private function findMatchingIntent($message, $chatbotId)
+    {
+        return Intent::where('chatbot_id', $chatbotId)
+            ->whereHas('trainingPhrases', function($query) use ($message) {
+                $query->where('phrase', 'like', '%' . $message . '%');
+            })->first();
     }
 
     /**
