@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->boolean('is_choice')->default(false)->index();
             $table->boolean('save_information')->default(false)->index();
+            $table->string('information_required')->nullable();
             $table->json('position')->nullable();
             $table->json('data')->nullable();
             $table->string('type')->nullable();

@@ -6,45 +6,50 @@ enum TypeInformationRequired: string
 {
     case NOMBRE = 'nombre';
     case APELLIDO = 'apellido';
-    case NOMBRE_COMPLETO = 'nombre_completo';
+    case NOMBRE_COMPLETO = 'nombre completo';
     case TELEFONO = 'telefono';
     case CORREO = 'correo';
     case EDAD = 'edad';
-    case FECHA_NACIMIENTO = 'fecha_nacimiento';
+    case FECHA_NACIMIENTO = 'fecha nacimiento';
     case DIRECCION = 'direccion';
     case CIUDAD = 'ciudad';
     case PAIS = 'pais';
-    case CODIGO_POSTAL = 'codigo_postal';
-    case DNI = 'dni';
+    case CODIGO_POSTAL = 'codigo postal';
+    case NUMERO_DE_DOCUMENTO = 'numero de documento';
     case PASAPORTE = 'pasaporte';
     case PROFESION = 'profesion';
     case EMPRESA = 'empresa';
-    case SITIO_WEB = 'sitio_web';
-    case REDES_SOCIALES = 'redes_sociales';
+    case SITIO_WEB = 'sitio web';
+    case REDES_SOCIALES = 'redes sociales';
     case GENERO = 'genero';
     case IDIOMA = 'idioma';
-    case NUMERO_TARJETA = 'numero_tarjeta';
+    case NUMERO_TARJETA = 'numero tarjeta';
+
+    public static function getValues(): array
+    {
+        return array_column(self::cases(), 'value');
+    }
 
     public function getRegexPattern(): string
     {
         return match($this) {
-            self::NOMBRE => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/',
-            self::APELLIDO => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/',
+            self::NOMBRE => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
+            self::APELLIDO => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
             self::NOMBRE_COMPLETO => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
             self::TELEFONO => '/^\+?[0-9]{8,15}$/',
-            self::CORREO => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/',
+            self::CORREO => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,100}$/',
             self::EDAD => '/^[0-9]{1,3}$/',
             self::FECHA_NACIMIENTO => '/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/',
             self::DIRECCION => '/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s,.-]{5,100}$/',
-            self::CIUDAD => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]{2,50}$/',
-            self::PAIS => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/',
+            self::CIUDAD => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s-]{2,100}$/',
+            self::PAIS => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
             self::CODIGO_POSTAL => '/^[0-9]{4,10}$/',
-            self::DNI => '/^[0-9]{8}[a-zA-Z]$/',
+            self::NUMERO_DE_DOCUMENTO => '/^[0-9]{8}[a-zA-Z]$/',
             self::PASAPORTE => '/^[a-zA-Z0-9]{6,12}$/',
-            self::PROFESION => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,50}$/',
+            self::PROFESION => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
             self::EMPRESA => '/^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑ\s&.-]{2,100}$/',
             self::SITIO_WEB => '/^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/',
-            self::REDES_SOCIALES => '/^@?[a-zA-Z0-9_]{1,50}$/',
+            self::REDES_SOCIALES => '/^@?[a-zA-Z0-9_]{1,100}$/',
             self::GENERO => '/^(masculino|femenino|otro)$/i',
             self::IDIOMA => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ]{2,20}$/',
             self::NUMERO_TARJETA => '/^[0-9]{13,19}$/',
@@ -65,7 +70,7 @@ enum TypeInformationRequired: string
             self::CIUDAD => 'Por favor, ingrese una ciudad válida.',
             self::PAIS => 'Por favor, ingrese un país válido.',
             self::CODIGO_POSTAL => 'Por favor, ingrese un código postal válido.',
-            self::DNI => 'Por favor, ingrese un DNI válido.',
+            self::NUMERO_DE_DOCUMENTO => 'Por favor, ingrese un nuemro de documento válido.',
             self::PASAPORTE => 'Por favor, ingrese un número de pasaporte válido.',
             self::PROFESION => 'Por favor, ingrese una profesión válida.',
             self::EMPRESA => 'Por favor, ingrese un nombre de empresa válido.',

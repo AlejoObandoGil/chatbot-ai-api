@@ -12,6 +12,7 @@ use App\Models\Intent\IntentOption;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
+use App\Enums\TypeInformationRequired;
 use App\Models\Intent\IntentTrainingPhrase;
 
 class IntentController extends Controller
@@ -27,8 +28,14 @@ class IntentController extends Controller
 
         Log::info($intents);
 
-        return response()->json(['intents' => $intents]);
+        $enumValues = TypeInformationRequired::getValues();
+
+        return response()->json([
+            'intents' => $intents,
+            'type_information_required' => $enumValues,
+        ]);
     }
+
 
     /**
      * Show the form for creating a new resource.
@@ -52,10 +59,12 @@ class IntentController extends Controller
             'position.x' => 'required|numeric',
             'position.y' => 'required|numeric',
             'data.label' => 'required|string|max:255',
-            'training_phrases' => 'required|array',
+            'save_information' => 'nullable|boolean',
+            'information_required' => 'nullable|in:' . implode(',', TypeInformationRequired::getValues()),
+            'training_phrases' => 'nullable|array',
             'training_phrases.*.id' => 'nullable|numeric',
             'training_phrases.*.phrase' => 'string|max:255',
-            'responses' => 'required|array',
+            'responses' => 'nullable|array',
             'responses.*.id' => 'nullable|numeric',
             'responses.*.response' => 'string|max:255',
             'options' => 'array',
@@ -91,6 +100,7 @@ class IntentController extends Controller
                 'name' => $data['name'],
                 'is_choice' => $data['is_choice'] ?? false,
                 'save_information' => $data['save_information'] ?? false,
+                'information_required' => $data['information_required'] ?? null,
                 'position' => json_encode($data['position']),
                 'data' => json_encode($data['data']),
                 'type' => $data['type'] ?? 'customNode',
