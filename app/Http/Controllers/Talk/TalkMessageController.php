@@ -70,7 +70,7 @@ class TalkMessageController extends Controller
     {
         $intent = $intentId ? Intent::find($intentId) : null;
 
-        $matchedIntent = $this->findMatchingIntent($message, $chatbotId);
+        $matchedIntent = $this->findBestMatchIntent($message, $chatbotId);
 
         if ($matchedIntent) {
             $response = IntentResponse::where('intent_id', $matchedIntent->id)->inRandomOrder()->first();
@@ -109,11 +109,13 @@ class TalkMessageController extends Controller
         }
     }
 
-    private function findMatchingIntent($message, $chatbotId)
+    private function findBestMatchIntent($message, $chatbotId)
     {
         $intents = Intent::where('chatbot_id', $chatbotId)->with('trainingPhrases')->get();
         $bestMatch = null;
         $bestSimilarity = -1;
+        $bestSimilarText = 0;
+        $bestLevenshtein = PHP_INT_MAX;
 
         $tokenizer = new WhitespaceTokenizer();
         $vectorizer = new TokenCountVectorizer($tokenizer);
@@ -134,8 +136,17 @@ class TalkMessageController extends Controller
 
         foreach ($phrases as $i => $phraseVector) {
             $similarity = $this->similarity($messageVector, $phraseVector);
-            if ($similarity > $bestSimilarity) {
+            similar_text($message, $phrases[$i], $percent);
+            $levenshtein = levenshtein($message, $phrases[$i]);
+
+            if (
+                $similarity > $bestSimilarity ||
+                ($similarity == $bestSimilarity && $percent > $bestSimilarText) ||
+                ($similarity == $bestSimilarity && $percent == $bestSimilarText && $levenshtein < $bestLevenshtein)
+            ) {
                 $bestSimilarity = $similarity;
+                $bestSimilarText = $percent;
+                $bestLevenshtein = $levenshtein;
                 $bestMatch = $intentMap[$phrases[$i]];
             }
         }
