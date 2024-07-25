@@ -11,9 +11,13 @@ use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
+use Phpml\Tokenization\WhitespaceTokenizer;
+use Phpml\FeatureExtraction\TokenCountVectorizer;
+use App\Traits\CosineSimilarityTrait;
 
 class TalkMessageController extends Controller
 {
+    use CosineSimilarityTrait;
     /**
      * Display a listing of the resource.
      */
@@ -47,7 +51,7 @@ class TalkMessageController extends Controller
             'sender' => 'user',
         ]);
 
-        $response = $this->processMessage($message, $chatbot->id, $intentId);
+        $response = $this->handleMessage($message, $chatbot->id, $intentId);
 
         $talk->messages()->create([
             'intent_id' => $intentId,
@@ -62,7 +66,7 @@ class TalkMessageController extends Controller
         return response()->json(['response' => $response]);
     }
 
-    protected function processMessage($message, $chatbotId, $intentId)
+    protected function handleMessage($message, $chatbotId, $intentId)
     {
         $intent = $intentId ? Intent::find($intentId) : null;
 
@@ -75,7 +79,7 @@ class TalkMessageController extends Controller
         }
 
         if ($intent && $intent->save_information) {
-            $response = $this->handleInformationSaving($message, $intent);
+            $response = $this->handleContactInformationSaving($message, $intent);
             if ($response) {
                 return $response;
             }
@@ -84,7 +88,7 @@ class TalkMessageController extends Controller
         return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
     }
 
-    private function handleInformationSaving($message, Intent $intent)
+    private function handleContactInformationSaving($message, Intent $intent)
     {
         if (in_array($intent->information_required, TypeInformationRequired::getValues(), true)) {
             $typeInformationRequired = TypeInformationRequired::from($intent->information_required);
@@ -107,10 +111,36 @@ class TalkMessageController extends Controller
 
     private function findMatchingIntent($message, $chatbotId)
     {
-        return Intent::where('chatbot_id', $chatbotId)
-            ->whereHas('trainingPhrases', function($query) use ($message) {
-                $query->where('phrase', 'like', '%' . $message . '%');
-            })->first();
+        $intents = Intent::where('chatbot_id', $chatbotId)->with('trainingPhrases')->get();
+        $bestMatch = null;
+        $bestSimilarity = -1;
+
+        $tokenizer = new WhitespaceTokenizer();
+        $vectorizer = new TokenCountVectorizer($tokenizer);
+
+        $phrases = [];
+        $intentMap = [];
+        foreach ($intents as $intent) {
+            foreach ($intent->trainingPhrases as $phrase) {
+                $phrases[] = $phrase->phrase;
+                $intentMap[$phrase->phrase] = $intent;
+            }
+        }
+
+        $vectorizer->fit($phrases);
+        $vectorizer->transform($phrases);
+
+        $messageVector = $vectorizer->transform([$message])[0];
+
+        foreach ($phrases as $i => $phraseVector) {
+            $similarity = $this->similarity($messageVector, $phraseVector);
+            if ($similarity > $bestSimilarity) {
+                $bestSimilarity = $similarity;
+                $bestMatch = $intentMap[$phrases[$i]];
+            }
+        }
+
+        return $bestMatch;
     }
 
     /**
