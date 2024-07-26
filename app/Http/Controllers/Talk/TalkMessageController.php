@@ -7,17 +7,18 @@ use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use App\Models\Talk\TalkMessage;
+use MathPHP\Statistics\Distance;
 use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
-use App\Traits\CosineSimilarityTrait;
+// use App\Traits\CosineSimilarityTrait;
 
 class TalkMessageController extends Controller
 {
-    use CosineSimilarityTrait;
+    // use CosineSimilarityTrait;
     /**
      * Display a listing of the resource.
      */
@@ -129,13 +130,17 @@ class TalkMessageController extends Controller
             }
         }
 
-        $vectorizer->fit($phrases);
-        $vectorizer->transform($phrases);
+        $phrasesSamples = [...$phrases];
 
-        $messageVector = $vectorizer->transform([$message])[0];
+        $allSamples = array_merge([$message], $phrasesSamples);
+        $vectorizer->fit($allSamples);
+        $vectorizer->transform($allSamples);
 
-        foreach ($phrases as $i => $phraseVector) {
-            $similarity = $this->similarity($messageVector, $phraseVector);
+        $messageSample = $allSamples[0];
+        $phraseVectors = array_slice($allSamples, 1);
+
+        foreach ($phraseVectors as $i => $phraseVector) {
+            $similarity = Distance::cosineSimilarity($messageSample, $phraseVector);
             similar_text($message, $phrases[$i], $percent);
             $levenshtein = levenshtein($message, $phrases[$i]);
 
@@ -153,6 +158,33 @@ class TalkMessageController extends Controller
 
         return $bestMatch;
     }
+
+    // function CosineSimilarity($vector1, $vector2) {
+        // [1,1,1,0,0]
+        // [0,1,0,1,1]
+
+        // Producto Punto = (1×0)+(1×1)+(1×0)+(0×1)+(0×1)
+        // Producto Punto = 0+1+0+0+0 = 1
+
+        // sqrt(1,1,1,0,0)
+        // sqrt(3)
+        // sqrt(0+1+0+0+0=1)
+        // sqrt(3)
+        // 1 / sqrt(3) x sqrt(3)
+
+        // 1 / 3 = 0.3333
+
+    //     $dotProduct = 0;
+    //     $magnitude1 = 0;
+    //     $magnitude2 = 0;
+    //     foreach ($vector1 as $key => $value) {
+    //         $dotProduct += $value * ($vector2[$key] ?? 0);
+    //         $magnitude1 += $value * $value;
+    //         $magnitude2 += ($vector2[$key] ?? 0) * ($vector2[$key] ?? 0);
+    //     }
+    //     $magnitude = sqrt($magnitude1) * sqrt($magnitude2);
+    //     return $magnitude ? $dotProduct / $magnitude : 0;
+    // }
 
     /**
      * Display the specified resource.
