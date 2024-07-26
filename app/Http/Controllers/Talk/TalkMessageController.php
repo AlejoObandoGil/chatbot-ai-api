@@ -8,11 +8,13 @@ use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use App\Models\Talk\TalkMessage;
 use MathPHP\Statistics\Distance;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
 use Phpml\Tokenization\WhitespaceTokenizer;
+use Phpml\FeatureExtraction\TfIdfTransformer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
 // use App\Traits\CosineSimilarityTrait;
 
@@ -72,7 +74,6 @@ class TalkMessageController extends Controller
         $intent = $intentId ? Intent::find($intentId) : null;
 
         $matchedIntent = $this->findBestMatchIntent($message, $chatbotId);
-
         if ($matchedIntent) {
             $response = IntentResponse::where('intent_id', $matchedIntent->id)->inRandomOrder()->first();
 
@@ -113,36 +114,53 @@ class TalkMessageController extends Controller
     private function findBestMatchIntent($message, $chatbotId)
     {
         $intents = Intent::where('chatbot_id', $chatbotId)->with('trainingPhrases')->get();
-        $bestMatch = null;
-        $bestSimilarity = -1;
-        $bestSimilarText = 0;
-        $bestLevenshtein = PHP_INT_MAX;
 
         $tokenizer = new WhitespaceTokenizer();
         $vectorizer = new TokenCountVectorizer($tokenizer);
 
+        $bestMatch = null;
+        $bestSimilarity = -1;
+        $bestSimilarText = 0;
+        $bestLevenshtein = PHP_INT_MAX;
         $phrases = [];
+        $normalizedPhrases = [];
         $intentMap = [];
+
         foreach ($intents as $intent) {
             foreach ($intent->trainingPhrases as $phrase) {
+                $normalizedPhrase = $this->normalizeText($phrase->phrase);
+                $normalizedPhrases[] = $normalizedPhrase;
                 $phrases[] = $phrase->phrase;
                 $intentMap[$phrase->phrase] = $intent;
             }
         }
 
-        $phrasesSamples = [...$phrases];
+        $normalizedMessage = $this->normalizeText($message);
+        $phrasesSamples = [...$normalizedPhrases];
+        $allSamples = array_merge([$normalizedMessage], $phrasesSamples);
 
-        $allSamples = array_merge([$message], $phrasesSamples);
+        // $phrasesSamples = [...$phrases];
+        // $allSamples = array_merge([$message], $phrasesSamples);
+
         $vectorizer->fit($allSamples);
         $vectorizer->transform($allSamples);
+        $tfIdfTransformer = new TfIdfTransformer($allSamples);
+        $tfIdfTransformer->transform($allSamples);
 
         $messageSample = $allSamples[0];
         $phraseVectors = array_slice($allSamples, 1);
+        Log::info('Begin Comparing with message: ' . json_encode($messageSample));
 
         foreach ($phraseVectors as $i => $phraseVector) {
             $similarity = Distance::cosineSimilarity($messageSample, $phraseVector);
             similar_text($message, $phrases[$i], $percent);
             $levenshtein = levenshtein($message, $phrases[$i]);
+
+            Log::info('Comparing with phrase: ' . $phrases[$i]);
+            Log::info('phrase vector: ' . json_encode($phraseVector));
+            Log::info('Cosine Similarity: ' . $similarity);
+            Log::info('Similar Text Percent: ' . $percent);
+            Log::info('Levenshtein Distance: ' . $levenshtein);
 
             if (
                 $similarity > $bestSimilarity ||
@@ -153,11 +171,17 @@ class TalkMessageController extends Controller
                 $bestSimilarText = $percent;
                 $bestLevenshtein = $levenshtein;
                 $bestMatch = $intentMap[$phrases[$i]];
+                Log::info($phrases[$i] . ' ' . $percent . ' ' . $levenshtein . ' ' . $similarity);
             }
         }
 
         return $bestMatch;
     }
+
+    private function normalizeText($text) {
+        return strtolower(preg_replace('/[^a-z0-9\s]/', '', preg_replace('/\s+/', ' ', trim($text))));
+    }
+
 
     // function CosineSimilarity($vector1, $vector2) {
         // [1,1,1,0,0]
