@@ -13,6 +13,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Intent\IntentResponse;
 use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
+use App\Services\ChatbotTalkProcessService;
 use Phpml\Tokenization\WhitespaceTokenizer;
 use Phpml\FeatureExtraction\TfIdfTransformer;
 use Phpml\FeatureExtraction\TokenCountVectorizer;
@@ -20,7 +21,12 @@ use Phpml\FeatureExtraction\TokenCountVectorizer;
 
 class TalkMessageController extends Controller
 {
-    // use CosineSimilarityTrait;
+    protected $intentMatcherService;
+
+    public function __construct(ChatbotTalkProcessService $intentMatcherService)
+    {
+        $this->intentMatcherService = $intentMatcherService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -54,7 +60,7 @@ class TalkMessageController extends Controller
             'sender' => 'user',
         ]);
 
-        $response = $this->handleMessage($message, $chatbot->id, $intentId);
+        $response = $this->handleMessageProcess($message, $chatbot->id, $intentId);
 
         $talk->messages()->create([
             // 'intent_id' => $intentId,
@@ -69,11 +75,11 @@ class TalkMessageController extends Controller
         return response()->json(['response' => $response]);
     }
 
-    protected function handleMessage($message, $chatbotId, $intentId)
+    protected function handleMessageProcess($message, $chatbotId, $intentId)
     {
         $intent = $intentId ? Intent::find($intentId) : null;
 
-        $matchedIntent = $this->findBestMatchIntent($message, $chatbotId);
+        $matchedIntent = $this->intentMatcherService->findBestMatchIntent($message, $chatbotId);
         if ($matchedIntent) {
             $response = IntentResponse::where('intent_id', $matchedIntent->id)->inRandomOrder()->first();
 
@@ -110,105 +116,6 @@ class TalkMessageController extends Controller
             return false;
         }
     }
-
-    private function findBestMatchIntent($message, $chatbotId)
-    {
-        $intents = Intent::where('chatbot_id', $chatbotId)->with('trainingPhrases')->get();
-
-        $tokenizer = new WhitespaceTokenizer();
-        $vectorizer = new TokenCountVectorizer($tokenizer);
-
-        $bestMatch = null;
-        $bestSimilarity = -1;
-        $bestSimilarText = 0;
-        $bestLevenshtein = PHP_INT_MAX;
-        $phrases = [];
-        $normalizedPhrases = [];
-        $intentMap = [];
-
-        foreach ($intents as $intent) {
-            foreach ($intent->trainingPhrases as $phrase) {
-                $normalizedPhrase = $this->normalizeText($phrase->phrase);
-                $normalizedPhrases[] = $normalizedPhrase;
-                $phrases[] = $phrase->phrase;
-                $intentMap[$phrase->phrase] = $intent;
-            }
-        }
-
-        $normalizedMessage = $this->normalizeText($message);
-        $phrasesSamples = [...$normalizedPhrases];
-        $allSamples = array_merge([$normalizedMessage], $phrasesSamples);
-
-        // $phrasesSamples = [...$phrases];
-        // $allSamples = array_merge([$message], $phrasesSamples);
-
-        $vectorizer->fit($allSamples);
-        $vectorizer->transform($allSamples);
-        $tfIdfTransformer = new TfIdfTransformer($allSamples);
-        $tfIdfTransformer->transform($allSamples);
-
-        $messageSample = $allSamples[0];
-        $phraseVectors = array_slice($allSamples, 1);
-        Log::info('Begin Comparing with message: ' . json_encode($messageSample));
-
-        foreach ($phraseVectors as $i => $phraseVector) {
-            $similarity = Distance::cosineSimilarity($messageSample, $phraseVector);
-            similar_text($message, $phrases[$i], $percent);
-            $levenshtein = levenshtein($message, $phrases[$i]);
-
-            Log::info('Comparing with phrase: ' . $phrases[$i]);
-            Log::info('phrase vector: ' . json_encode($phraseVector));
-            Log::info('Cosine Similarity: ' . $similarity);
-            Log::info('Similar Text Percent: ' . $percent);
-            Log::info('Levenshtein Distance: ' . $levenshtein);
-
-            if (
-                $similarity > $bestSimilarity ||
-                ($similarity == $bestSimilarity && $percent > $bestSimilarText) ||
-                ($similarity == $bestSimilarity && $percent == $bestSimilarText && $levenshtein < $bestLevenshtein)
-            ) {
-                $bestSimilarity = $similarity;
-                $bestSimilarText = $percent;
-                $bestLevenshtein = $levenshtein;
-                $bestMatch = $intentMap[$phrases[$i]];
-                Log::info($phrases[$i] . ' ' . $percent . ' ' . $levenshtein . ' ' . $similarity);
-            }
-        }
-
-        return $bestMatch;
-    }
-
-    private function normalizeText($text) {
-        return strtolower(preg_replace('/[^a-z0-9\s]/', '', preg_replace('/\s+/', ' ', trim($text))));
-    }
-
-
-    // function CosineSimilarity($vector1, $vector2) {
-        // [1,1,1,0,0]
-        // [0,1,0,1,1]
-
-        // Producto Punto = (1×0)+(1×1)+(1×0)+(0×1)+(0×1)
-        // Producto Punto = 0+1+0+0+0 = 1
-
-        // sqrt(1,1,1,0,0)
-        // sqrt(3)
-        // sqrt(0+1+0+0+0=1)
-        // sqrt(3)
-        // 1 / sqrt(3) x sqrt(3)
-
-        // 1 / 3 = 0.3333
-
-    //     $dotProduct = 0;
-    //     $magnitude1 = 0;
-    //     $magnitude2 = 0;
-    //     foreach ($vector1 as $key => $value) {
-    //         $dotProduct += $value * ($vector2[$key] ?? 0);
-    //         $magnitude1 += $value * $value;
-    //         $magnitude2 += ($vector2[$key] ?? 0) * ($vector2[$key] ?? 0);
-    //     }
-    //     $magnitude = sqrt($magnitude1) * sqrt($magnitude2);
-    //     return $magnitude ? $dotProduct / $magnitude : 0;
-    // }
 
     /**
      * Display the specified resource.
