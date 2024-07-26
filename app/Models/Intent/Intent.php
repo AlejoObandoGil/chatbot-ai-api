@@ -27,6 +27,7 @@ class Intent extends Model
         'name',
         'is_choice',
         'save_information',
+        'category',
         'information_required',
         'position',
         'data',

@@ -7,6 +7,7 @@ use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
 use App\Models\Chatbot\Chatbot;
 use App\Http\Controllers\Controller;
+use OpenAI\Resources\Chat;
 
 class TalkController extends Controller
 {
@@ -21,9 +22,17 @@ class TalkController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Chatbot $chatbot)
     {
-        //
+        $chatbot = Chatbot::with(['intents' => function ($query) {
+            $query->where('category', 'saludo')
+                ->with(['responses' => function ($responseQuery) {
+                    $responseQuery->inRandomOrder()->limit(1);
+                }])
+                ->first();
+        }])->find($chatbot->id);
+
+        return response()->json(['chatbot' => $chatbot], 200);
     }
 
     /**

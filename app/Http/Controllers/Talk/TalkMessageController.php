@@ -46,7 +46,7 @@ class TalkMessageController extends Controller
         $message = $validated['message'];
 
         $talk->messages()->create([
-            'intent_id' => $intentId,
+            // 'intent_id' => $intentId,
             'message' => $message,
             'sender' => 'user',
         ]);
@@ -54,7 +54,7 @@ class TalkMessageController extends Controller
         $response = $this->handleMessage($message, $chatbot->id, $intentId);
 
         $talk->messages()->create([
-            'intent_id' => $intentId,
+            // 'intent_id' => $intentId,
             'message' => $response->response ?? $response,
             'sender' => 'bot',
         ]);

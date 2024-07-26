@@ -43,6 +43,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 'id' => (string) Str::uuid(),
                 'name' => 'Saludo inicial',
                 'type' => 'customeNode',
+                'category' => 'saludo',
                 'position' => [
                     'x' => 0,
                     'y' => 0,
@@ -285,6 +286,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 'id' => (string) Str::uuid(),
                 'name' => 'Despedida',
                 'type' => 'customeNode',
+                'category' => 'despedida',
                 'position' => [
                     'x' => 0,
                     'y' => 800,
@@ -317,6 +319,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'name' => $intentData['name'],
                     'is_choice' => $intentData['is_choice'] ?? false,
                     'save_information' => $intentData['save_information'] ?? false,
+                    'category' => $intentData['category'] ?? null,
                     'information_required' => $intentData['information_required'] ?? null,
                     'type' => $intentData['type'] ?? null,
                     'position' => json_encode([
