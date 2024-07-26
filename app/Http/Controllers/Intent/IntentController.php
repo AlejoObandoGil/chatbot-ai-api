@@ -53,23 +53,24 @@ class IntentController extends Controller
 
         $validatedData = $request->validate([
             'id' => 'required|uuid',
-            'name' => 'required|string|max:255',
-            'type' => 'required|string|max:255',
+            'name' => 'required|string|max:100',
+            'type' => 'required|string|max:100',
             'is_choice' => 'required|boolean',
             'position.x' => 'required|numeric',
             'position.y' => 'required|numeric',
-            'data.label' => 'required|string|max:255',
+            'data.label' => 'required|string|max:100',
+            'category' => 'nullable|string',
             'save_information' => 'nullable|boolean',
             'information_required' => 'nullable|in:' . implode(',', TypeInformationRequired::getValues()),
             'training_phrases' => 'nullable|array',
             'training_phrases.*.id' => 'nullable|numeric',
-            'training_phrases.*.phrase' => 'string|max:255',
+            'training_phrases.*.phrase' => 'string|max:100',
             'responses' => 'nullable|array',
             'responses.*.id' => 'nullable|numeric',
-            'responses.*.response' => 'string|max:255',
+            'responses.*.response' => 'string|max:100',
             'options' => 'array',
             'options.*.id' => 'nullable|numeric',
-            'options.*.option' => 'string|max:255',
+            'options.*.option' => 'string|max:100',
         ]);
 
         DB::beginTransaction();
@@ -99,6 +100,7 @@ class IntentController extends Controller
                 'chatbot_id' => $chatbot->id,
                 'name' => $data['name'],
                 'is_choice' => $data['is_choice'] ?? false,
+                'category' => $data['category'] ?? null,
                 'save_information' => $data['save_information'] ?? false,
                 'information_required' => $data['information_required'] ?? null,
                 'position' => json_encode($data['position']),
