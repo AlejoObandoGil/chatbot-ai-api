@@ -53,7 +53,7 @@ class EdgeController extends Controller
         DB::beginTransaction();
 
         try {
-            $intents = $validatedData['intents'];
+            $intents = $validatedData['nodes'];
             foreach ($intents as $intentData) {
                 Intent::updateOrCreate(
                     ['id' => $intentData['id']],
@@ -61,17 +61,17 @@ class EdgeController extends Controller
                         'name' => $intentData['name'],
                         'type' => $intentData['type'],
                         'is_choice' => $intentData['is_choice'],
-                        'position' => [
-                            'x' => $intentData['position']['x'],
-                            'y' => $intentData['position']['y']
-                        ],
-                        'data' => ['label' => $intentData['data']['label']],
+                        'position' => json_encode($intentData['position']),
+                        'data' => json_encode($intentData['data']),
                         'category' => $intentData['category'] ?? null,
                         'save_information' => $intentData['save_information'] ?? null,
                         'information_required' => $intentData['information_required'] ?? null,
                     ]
                 );
             }
+
+            $edgeIdsInRequest = collect($validatedData['edges'])->pluck('id')->filter()->toArray();
+            Edge::whereNotIn('id', $edgeIdsInRequest)->delete();
 
             $edges = $validatedData['edges'] ?? [];
             foreach ($edges as $edgeData) {

@@ -16,6 +16,7 @@ return new class extends Migration
 
             $table->uuid('source')->nullable();
             $table->string('sourceHandle')->nullable();
+            $table->strign('type')->nullable();
             $table->uuid('target')->nullable();
 
             $table->timestamps();

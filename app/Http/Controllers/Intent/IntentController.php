@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Intent;
 
+use App\Models\Intent\Edge;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
@@ -17,21 +18,27 @@ use App\Models\Intent\IntentTrainingPhrase;
 
 class IntentController extends Controller
 {
-    /**
-     * Display a listing of the resource.
+/**
+     * Display a listing of intents and edges for a specific chatbot.
+     *
+     * @param  \App\Models\Chatbot  $chatbot
+     * @return \Illuminate\Http\Response
      */
     public function index(Chatbot $chatbot)
     {
         $intents = Intent::where('chatbot_id', $chatbot->id)
-            ->with(['responses', 'trainingPhrases', 'options'])
             ->get();
 
-        Log::info($intents);
+        $edgeIds = $intents->pluck('id');
+        $edges = Edge::whereIn('source', $edgeIds)
+            ->orWhereIn('target', $edgeIds)
+            ->get();
 
         $enumValues = TypeInformationRequired::getValues();
 
         return response()->json([
             'intents' => $intents,
+            'edges' => $edges,
             'type_information_required' => $enumValues,
         ]);
     }
