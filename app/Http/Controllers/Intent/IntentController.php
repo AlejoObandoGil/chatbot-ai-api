@@ -50,7 +50,6 @@ class IntentController extends Controller
      */
     public function store(Request $request, Chatbot $chatbot)
     {
-
         $validatedData = $request->validate([
             'id' => 'required|uuid',
             'name' => 'required|string|max:100',

@@ -2,14 +2,15 @@
 
 namespace App\Models\Intent;
 
+use App\Models\Intent\Edge;
+use App\Models\Entity\Entity;
 use App\Models\Chatbot\Chatbot;
 use App\Models\Chatbot\Context;
-use App\Models\Entity\Entity;
 use App\Models\Intent\IntentCategory;
 use App\Models\Intent\IntentResponse;
+use App\Models\User\ContactInformation;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Intent\IntentTrainingPhrase;
-use App\Models\User\ContactInformation;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -42,6 +43,22 @@ class Intent extends Model
     public function chatbot()
     {
         return $this->belongsTo(Chatbot::class);
+    }
+
+    /**
+     * Get the edges where this intent is the source.
+     */
+    public function edgesAsSource()
+    {
+        return $this->hasMany(Edge::class, 'source');
+    }
+
+    /**
+     * Get the edges where this intent is the target.
+     */
+    public function edgesAsTarget()
+    {
+        return $this->hasMany(Edge::class, 'target');
     }
 
     /**

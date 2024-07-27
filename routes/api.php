@@ -3,8 +3,9 @@
 use Illuminate\Http\Request;
 use App\Services\OpenAIService;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Entity\EntityController;
 use App\Http\Controllers\Talk\TalkController;
+use App\Http\Controllers\Intent\EdgeController;
+use App\Http\Controllers\Entity\EntityController;
 use App\Http\Controllers\Intent\IntentController;
 use App\Http\Controllers\Chatbot\ChatbotController;
 use App\Http\Controllers\Talk\TalkMessageController;
@@ -56,6 +57,12 @@ Route::middleware(['auth:sanctum'])->group(function () {
                     Route::get('/', [IntentController::class, 'index']);
                     Route::post('/', [IntentController::class, 'store']);
                     Route::delete('/', [IntentController::class, 'destroy']);
+                });
+
+                Route::prefix('/edge')->group(function () {
+                    Route::get('/', [EdgeController::class, 'index']);
+                    Route::post('/', [EdgeController::class, 'store']);
+                    Route::delete('/', [EdgeController::class, 'destroy']);
                 });
 
                 // Route::prefix('/talk')->group(function () {
