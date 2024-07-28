@@ -126,6 +126,15 @@ class ChatbotController extends Controller
         ], 200);
     }
 
+    public function updateEnable(Chatbot $chatbot)
+    {
+        $chatbot->enabled = !$chatbot->enabled;
+        $chatbot->save();
+
+        return response()->json([
+            'chatbot' => $chatbot,
+        ], 200);
+    }
 
     /**
      * Remove the specified resource from storage.
