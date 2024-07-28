@@ -14,9 +14,11 @@ class TalkController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Talk $talk)
     {
-        //
+        $talk = $talk->load('messages');
+
+        response()->json(['talk' => $talk]);
     }
 
     /**

@@ -30,7 +30,7 @@ class TalkMessageController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Talk $talk)
     {
         //
     }
@@ -60,7 +60,7 @@ class TalkMessageController extends Controller
             'sender' => 'user',
         ]);
 
-        $response = $this->handleMessageProcess($message, $chatbot->id, $intentId);
+        $response = $this->handleMessageProcess($message, $chatbot->id, $intentId, $talk);
 
         $talk->messages()->create([
             // 'intent_id' => $intentId,
@@ -75,7 +75,7 @@ class TalkMessageController extends Controller
         return response()->json(['response' => $response]);
     }
 
-    protected function handleMessageProcess($message, $chatbotId, $intentId)
+    protected function handleMessageProcess($message, $chatbotId, $intentId, $talk)
     {
         $intent = $intentId ? Intent::find($intentId) : null;
 
@@ -87,7 +87,7 @@ class TalkMessageController extends Controller
         }
 
         if ($intent && $intent->save_information) {
-            $response = $this->handleContactInformationSaving($message, $intent);
+            $response = $this->handleContactInformationSaving($message, $intent, $talk);
             if ($response) {
                 return $response;
             }
@@ -96,7 +96,7 @@ class TalkMessageController extends Controller
         return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
     }
 
-    private function handleContactInformationSaving($message, Intent $intent)
+    private function handleContactInformationSaving($message, Intent $intent, Talk $talk)
     {
         if (in_array($intent->information_required, TypeInformationRequired::getValues(), true)) {
             $typeInformationRequired = TypeInformationRequired::from($intent->information_required);
@@ -105,6 +105,7 @@ class TalkMessageController extends Controller
             if (preg_match($pattern, $message)) {
                 ContactInformation::create([
                     'intent_id' => $intent->id,
+                    'talk_id' => $talk->id,
                     'value' => $message
                 ]);
 

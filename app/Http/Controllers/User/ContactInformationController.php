@@ -15,7 +15,7 @@ class ContactInformationController extends Controller
      */
     public function index(Chatbot $chatbot)
     {
-        $intents = Intent::where('chatbot_id', $chatbot->id)->where('save_information', true)->with('contactInformations')->get();
+        $intents = Intent::where('chatbot_id', $chatbot->id)->where('save_information', true)->with('contactInformations.talk')->get();
 
         return response()->json([
             'intents' => $intents,

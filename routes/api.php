@@ -21,7 +21,6 @@ Route::prefix('/chatbot/{chatbot}')->group(function () {
         Route::post('/', [TalkController::class, 'store']);
 
         Route::prefix('/{talk}/message')->group(function () {
-            Route::get('/', [TalkMessageController::class, 'index']);
             Route::post('/{intent?}', [TalkMessageController::class, 'store']);
         });
     });
@@ -65,15 +64,15 @@ Route::middleware(['auth:sanctum'])->group(function () {
                     Route::delete('/', [EdgeController::class, 'destroy']);
                 });
 
-                // Route::prefix('/talk')->group(function () {
-                //     Route::get('/', [TalkController::class, 'index']);
-                //     Route::post('/', [TalkController::class, 'store']);
+                Route::prefix('/talk')->group(function () {
+                    Route::get('/{talk}', [TalkController::class, 'index']);
+                    Route::post('/', [TalkController::class, 'store']);
 
-                //     Route::prefix('/{talk}/message')->group(function () {
-                //         Route::get('/', [TalkMessageController::class, 'index']);
-                //         Route::post('/{intent?}', [TalkMessageController::class, 'store']);
-                //     });
-                // });
+                    Route::prefix('/{talk}/message')->group(function () {
+                        Route::get('/', [TalkMessageController::class, 'index']);
+                        Route::post('/{intent?}', [TalkMessageController::class, 'store']);
+                    });
+                });
             });
         });
     });

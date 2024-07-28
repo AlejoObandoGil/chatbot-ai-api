@@ -27,6 +27,7 @@ class IntentController extends Controller
     public function index(Chatbot $chatbot)
     {
         $intents = Intent::where('chatbot_id', $chatbot->id)
+            ->with(['responses', 'trainingPhrases', 'options'])
             ->get();
 
         $edgeIds = $intents->pluck('id');
