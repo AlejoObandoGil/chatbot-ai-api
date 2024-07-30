@@ -184,6 +184,7 @@ class ChatbotTalkProcessService
         $cosineSimilarityScore = $bestMatchData['bestCosineSimilarity'];
         $similarTextScore = $bestMatchData['bestSimilarText'] / 100;
         $levenshteinScore = 1 - ($bestMatchData['bestLevenshtein'] / max(1, strlen($normalizedMessage)));
+        // 1 - (2) / max(1, 10) = 1 - (2) / 10 = 1 - 0.2 = 0.8
 
         $weightedScore = (
             $cosineWeight * $cosineSimilarityScore +
@@ -224,6 +225,13 @@ class ChatbotTalkProcessService
         }
     }
 
+    /**
+     * Normalizes text by converting it to lowercase, removing extra whitespace,
+     * and stripping out non-alphanumeric characters except for spaces and 'H'.
+     *
+     * @param string $text The text to normalize.
+     * @return string The normalized text.
+     */
     private function normalizeText($text)
     {
         $text = strtolower($text);
@@ -232,8 +240,6 @@ class ChatbotTalkProcessService
 
         return $text;
     }
-
-
 
     // function CosineSimilarity($vector1, $vector2) {
         // [1,1,1,0,0]

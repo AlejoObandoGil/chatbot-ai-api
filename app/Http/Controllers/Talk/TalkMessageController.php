@@ -54,7 +54,7 @@ class TalkMessageController extends Controller
         ]);
 
         if (is_object($response) && method_exists($response, 'load')) {
-            $response = $response->load('intent');
+            $response = $response->load('intent.options');
         }
 
         return response()->json(['response' => $response]);
