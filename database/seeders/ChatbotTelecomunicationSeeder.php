@@ -31,7 +31,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
         $chatbotData = [
             'id' => '4cbda66d-2ba5-470e-956e-037946e96307',
             'user_id' => 1,
-            'name' => 'TelcoBot',
+            'name' => 'SkynetBot',
             'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
             'type' => 'Natural language processing'
         ];
@@ -53,13 +53,13 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'Hola',
                     'Buenos días',
                     'Buenas tardes',
-                    'Buenas noches'
+                    'Buenas noches',
+                    'Hello',
+                    'Hi',
                 ],
                 'responses' => [
-                    '¡Hola! ¿En qué puedo ayudarte hoy?',
-                    'Buenos días, ¿cómo puedo asistirte?',
-                    'Buenas tardes, ¿en qué puedo ayudarte?',
-                    'Buenas noches, ¿cómo puedo asistirte?'
+                    '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy?',
+                    '¡Hola soy SkynetBot! ¿cómo puedo asistirte el dia de hoy?',
                 ],
             ],
             [
@@ -83,11 +83,13 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         ],
                         'data' => ['label' => 'Obtener tipos de planes'],
                         'phrases' => [
-                            'Quiero saber sobre el plan de internet',
-                            '¿Qué tipo de planes tienen?'
+                            'Quiero saber que tipos de planes tienen',
+                            '¿Cuales son los tipos de planes que manejan?',
+                            'Información de planes',
+                            'Conocer planes'
                         ],
                         'responses' => [
-                            'Nuestro plan de Internet ofrece alta velocidad y precios competitivos.',
+                            'Tenemos planes de Internet, Telefónía y TV ¿En cual estás interesad@.',
                             'Ofrecemos planes de Internet, Teléfono y TV. ¿Cuál te interesa?'
                         ],
                         'options' => [
