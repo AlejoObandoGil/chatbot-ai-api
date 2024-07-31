@@ -110,10 +110,12 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 'data' => ['label' => 'Plan de Internet'],
                                 'phrases' => [
                                     'Internet',
+                                    'Quiero información de Internet',
+                                    'Información de internet',
                                     'Quiero saber el precio del plan de internet'
                                 ],
                                 'responses' => [
-                                    'El plan de internet tiene un precio de $100.000 por mes, 500 Mbps de velocidad.'
+                                    'El plan de internet tiene un precio de $100.000 por mes, cuenta con 500 Mbps de velocidad.'
                                 ],
                                 'options' => [
                                     'Comprar',

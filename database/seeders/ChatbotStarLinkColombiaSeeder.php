@@ -315,6 +315,55 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Saber más sobre sin contratos',
                     'Preguntar sobre otro tema'
                 ]
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Cómo funciona el internet de Starlink',
+                'is_choice' => true,
+                'type' => 'customNode',
+                'position' => [
+                    'x' => 4000,
+                    'y' => 200,
+                ],
+                'data' => ['label' => 'Cómo funciona el internet de Starlink'],
+                'phrases' => [
+                    'Quiero saber cómo funciona el internet de Starlink',
+                    '¿Cómo se conecta el internet de Starlink?',
+                    'Información sobre la tecnología de Starlink'
+                ],
+                'responses' => [
+                    'Starlink utiliza una constelación de satélites en órbita baja para proporcionar internet de alta velocidad. La antena de Starlink se conecta a los satélites y envía la señal a un router, que distribuye la conexión a los dispositivos en el hogar. La tecnología de Starlink utiliza la banda de frecuencia Ka para proporcionar velocidades de internet rápidas y confiables. ¿Te interesa saber más?',
+                    'Nuestra tecnología es innovadora y permite una conexión rápida y segura. ¿Quieres saber más sobre nuestros planes?'
+                ],
+                'options' => [
+                    'Saber más sobre la tecnología de Starlink',
+                    'Preguntar sobre otro tema'
+                ]
+            ],
+                // Nodo 2: Otra información relevante
+            [
+                'id' => Str::uuid(),
+                'name' => 'Otra información relevante',
+                'is_choice' => true,
+                'type' => 'customNode',
+                'position' => [
+                    'x' => 4200,
+                    'y' => 200,
+                ],
+                'data' => ['label' => 'Otra información relevante'],
+                'phrases' => [
+                    'Quiero saber más sobre la cobertura de Starlink',
+                    '¿Cuál es la latencia de Starlink?',
+                    'Información sobre los datos ilimitados de Starlink'
+                ],
+                'responses' => [
+                    'Starlink está disponible en la mayoría de las áreas de Colombia, excepto en algunas zonas muy remotas. La latencia de Starlink es de alrededor de 20-30 ms, lo que es comparable a los servicios de internet por cable. Además, Starlink no tiene límites de datos, por lo que puedes usar el internet sin preocuparte por exceder un límite. La antena de Starlink es portátil, por lo que puedes llevarte el internet contigo a cualquier lugar. ¿Te interesa saber más?',
+                    'Nuestros servicios son ideales para aquellos que buscan una conexión rápida y segura. ¿Quieres saber más sobre nuestros planes?'
+                ],
+                'options' => [
+                    'Saber más sobre la cobertura de Starlink',
+                    'Preguntar sobre otro tema'
+                ]
             ]
         ];
 
