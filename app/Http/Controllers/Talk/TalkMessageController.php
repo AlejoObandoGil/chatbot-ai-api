@@ -40,6 +40,7 @@ class TalkMessageController extends Controller
         ]);
 
         $message = $validated['message'];
+        $option = $validated;
 
         $talk->messages()->create([
             'intent_id' => $intent !== 'false' ? $intent : null,
@@ -47,7 +48,7 @@ class TalkMessageController extends Controller
             'sender' => 'user',
         ]);
 
-        $response = $this->chatbotTalkProcessService->handleMessageProcess($message, $chatbot->id, $intent, $talk);
+        $response = $this->chatbotTalkProcessService->handleMessageProcess($message, $option, $chatbot->id, $intent, $talk);
 
         $talk->messages()->create([
             'intent_id' => $intent !== 'false' ? $intent : null,

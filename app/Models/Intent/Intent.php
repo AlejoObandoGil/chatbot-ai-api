@@ -45,18 +45,12 @@ class Intent extends Model
         return $this->belongsTo(Chatbot::class);
     }
 
-    /**
-     * Get the edges where this intent is the source.
-     */
-    public function edgesAsSource()
+    public function sourceEdges()
     {
         return $this->hasMany(Edge::class, 'source');
     }
 
-    /**
-     * Get the edges where this intent is the target.
-     */
-    public function edgesAsTarget()
+    public function targetEdges()
     {
         return $this->hasMany(Edge::class, 'target');
     }

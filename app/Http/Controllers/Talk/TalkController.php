@@ -31,7 +31,7 @@ class TalkController extends Controller
                 ->with(['responses' => function ($responseQuery) {
                     $responseQuery->inRandomOrder()->limit(1);
                 }])
-                ->first();
+                ->with('options');
         }])->find($chatbot->id);
 
         return response()->json(['chatbot' => $chatbot], 200);

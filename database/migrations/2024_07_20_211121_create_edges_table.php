@@ -15,14 +15,15 @@ return new class extends Migration
             $table->uuid('id')->primary();
 
             $table->uuid('source')->nullable();
-            $table->string('sourceHandle')->nullable();
-            $table->string('type')->nullable();
+            $table->uuid('source_handle')->nullable();
             $table->uuid('target')->nullable();
+            $table->string('type')->nullable();
 
             $table->timestamps();
             $table->softDeletes();
 
             $table->foreign('source')->references('id')->on('intents')->onDelete('cascade')->nullable();
+            $table->foreign('source_handle')->references('id')->on('intent_options')->onDelete('cascade')->nullable();
             $table->foreign('target')->references('id')->on('intents')->onDelete('cascade')->nullable();
         });
     }

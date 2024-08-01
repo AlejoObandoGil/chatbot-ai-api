@@ -76,7 +76,7 @@ class IntentController extends Controller
             'responses.*.id' => 'nullable|numeric',
             'responses.*.response' => 'string|max:100',
             'options' => 'array',
-            'options.*.id' => 'nullable|numeric',
+            'options.*.id' => 'required|uuid',
             'options.*.option' => 'string|max:100',
         ]);
 
@@ -147,7 +147,7 @@ class IntentController extends Controller
     {
         $newOptionsIds = Arr::pluck($options, 'id');
         foreach ($options as $optionData) {
-            $optionId = $optionData['id'] ?? null;
+            $optionId = $optionData['id'];
             IntentOption::updateOrCreate(
                 ['id' => $optionId],
                 ['option' => $optionData['option'], 'intent_id' => $intent->id]

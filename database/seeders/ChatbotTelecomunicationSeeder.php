@@ -58,8 +58,8 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'Hi',
                 ],
                 'responses' => [
-                    '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy?',
-                    '¡Hola soy SkynetBot! ¿cómo puedo asistirte el dia de hoy?',
+                    '¡Hola soy ComcelTelmexBot! ¿En qué puedo ayudarte hoy?',
+                    '¡Hola soy ComcelTelmexBot! ¿cómo puedo asistirte el dia de hoy?',
                 ],
             ],
             [
@@ -357,6 +357,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 if (isset($intentData['options'])) {
                     foreach ($intentData['options'] as $optionText) {
                         $option = IntentOption::create([
+                            'id' => Str::uuid(),
                             'intent_id' => $intent->id,
                             'option' => $optionText
                         ]);

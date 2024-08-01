@@ -44,6 +44,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                 'name' => 'Saludo inicial',
                 'is_choice' => true,
                 'type' => 'customNode',
+                'category' => 'saludo',
                 'position' => [
                     'x' => -100,
                     'y' => 100,
@@ -483,6 +484,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
             [
                 'id' => 'f7e4a474-9ab7-4019-8f2a-3340efbb08f4', // Despedida
                 'name' => 'Despedida',
+                'category' => 'despedida',
                 'is_choice' => false,
                 'type' => 'customNode',
                 'position' => [
@@ -547,6 +549,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                 if (isset($intentData['options'])) {
                     foreach ($intentData['options'] as $optionText) {
                         $option = IntentOption::create([
+                            'id' => Str::uuid(),
                             'intent_id' => $intent->id,
                             'option' => $optionText
                         ]);

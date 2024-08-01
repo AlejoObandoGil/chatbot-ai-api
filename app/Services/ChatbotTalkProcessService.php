@@ -16,11 +16,15 @@ use Phpml\FeatureExtraction\TokenCountVectorizer;
 
 class ChatbotTalkProcessService
 {
-    public function handleMessageProcess($message, $chatbotId, $intentId, $talk)
+    public function handleMessageProcess($message, $option, $chatbotId, $intentId, $talk)
     {
         $intent = $intentId ? Intent::find($intentId) : null;
 
         Log::info($intent);
+
+        // if ($option['is_option']) {
+
+        // }
 
         $matchedIntent = $this->findBestMatchIntent($message, $chatbotId, $intentId);
         if ($matchedIntent) {

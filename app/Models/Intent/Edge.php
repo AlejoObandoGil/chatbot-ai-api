@@ -16,7 +16,7 @@ class Edge extends Model
     protected $fillable = [
         'id',
         'source',
-        'sourceHandle',
+        'source_handle',
         'target',
     ];
 
@@ -28,6 +28,14 @@ class Edge extends Model
         return $this->belongsTo(Intent::class, 'source');
     }
 
+        /**
+     * Get the target intent associated with the edge.
+     */
+    public function sourceHandleOption()
+    {
+        return $this->belongsTo(IntentOption::class, 'source_handle');
+    }
+
     /**
      * Get the target intent associated with the edge.
      */
@@ -35,4 +43,5 @@ class Edge extends Model
     {
         return $this->belongsTo(Intent::class, 'target');
     }
+
 }
