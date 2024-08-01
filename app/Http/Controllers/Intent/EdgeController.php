@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Intent;
 use App\Models\Intent\Edge;
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
+use App\Models\Chatbot\Chatbot;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
@@ -29,7 +30,7 @@ class EdgeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Chatbot $chatbot)
     {
         $validatedData = $request->validate([
             'nodes' => 'required|array',
@@ -58,6 +59,7 @@ class EdgeController extends Controller
                 Intent::updateOrCreate(
                     ['id' => $intentData['id']],
                     [
+                        'chatbot_id' => $chatbot->id,
                         'name' => $intentData['name'],
                         'type' => $intentData['type'],
                         'is_choice' => $intentData['is_choice'],

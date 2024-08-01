@@ -3,8 +3,10 @@
 namespace App\Services;
 
 use App\Models\Talk\Talk;
+use App\Models\Intent\Edge;
 use App\Models\Intent\Intent;
 use MathPHP\Statistics\Distance;
+use App\Models\Intent\IntentOption;
 use Illuminate\Support\Facades\Log;
 use App\Models\Intent\IntentResponse;
 use App\Enums\TypeInformationRequired;
@@ -22,9 +24,15 @@ class ChatbotTalkProcessService
 
         Log::info($intent);
 
-        // if ($option['is_option']) {
-
-        // }
+        if ($option['is_option']) {
+            $optionFind = Edge::where('source_handle', $option['id'])->first();
+            $intentTargetResponse = null;
+            if ($optionFind) {
+                $intentTargetResponse = IntentResponse::where('intent_id', $optionFind->target)->inRandomOrder()->first();
+                return $intentTargetResponse ?? 'Lo siento, parece qeu aun no hay una respuesta disponible.';
+            }
+            return $intentTargetResponse;
+        }
 
         $matchedIntent = $this->findBestMatchIntent($message, $chatbotId, $intentId);
         if ($matchedIntent) {
