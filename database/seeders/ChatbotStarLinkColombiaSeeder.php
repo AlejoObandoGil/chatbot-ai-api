@@ -23,30 +23,30 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
      */
     public function run(): void
     {
-        // hybrid,
-        // natural language processing,
-        // rule based
+        // Híbrido,
+        // PLN,
+        // Basado en reglas
 
         // Datos del chatbot
         $chatbotData = [
-            'id' => '4cbda66d-2ba5-470e-956e-037946e96307',
+            'id' => '06e4e314-f510-44df-a849-71d2d85dd568',
             'user_id' => 1,
             'name' => 'SkynetBot',
-            'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
-            'type' => 'Natural language processing'
+            'description' => 'Chatbot para la empresa de elon mocs.',
+            'type' => 'Basado en reglas'
         ];
 
         $chatbot = Chatbot::create($chatbotData);
 
         $intentsData = [
             [
-                'id' => (string) Str::uuid(),
+                'id' => 'ffeb4039-581f-4baa-82a9-92184733a127',
                 'name' => 'Saludo inicial',
-                'type' => 'customeNode',
-                'category' => 'saludo',
+                'is_choice' => true,
+                'type' => 'customNode',
                 'position' => [
-                    'x' => 0,
-                    'y' => 0,
+                    'x' => -100,
+                    'y' => 100,
                 ],
                 'data' => ['label' => 'Saludo inicial'],
                 'phrases' => [
@@ -56,49 +56,62 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Buenas noches',
                     'Hello',
                     'Hi',
+                    'Preguntar sobre otro tema',
+                    'Quiero saber más sobre otro tema',
+                    'Otro tema de interés'
                 ],
                 'responses' => [
-                    '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy?',
-                    '¡Hola soy SkynetBot! ¿cómo puedo asistirte el dia de hoy?',
+                    '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy? Selecciona una opción:',
+                    '¡Hola soy SkynetBot! Tenemos varios temas que podrían interesarte. ¿Cuál te gustaría explorar?'
                 ],
+                'options' => [
+                    'Tipos de planes de internet',
+                    'Cómo funciona el internet de Starlink',
+                    'Tipo de contrato',
+                    'Información sobre la cobertura',
+                    'Otra información relevante',
+                ]
             ],
-
             // Nodo 1: Obtener tipos de planes
             [
-                'id' => Str::uuid(),
+                'id' => '4b80ee8b-0f64-490c-9bf0-67e1ae8731b2',
                 'name' => 'Obtener tipos de planes',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 200,
-                    'y' => 200,
+                    'x' => -500,
+                    'y' => 300,
                 ],
                 'data' => ['label' => 'Obtener tipos de planes'],
                 'phrases' => [
-                    'Quiero saber qué tipos de planes tienen',
+                    'Quiero saber qué tipos de planes de internet',
                     '¿Cuáles son los tipos de planes que manejan?',
                     'Información de planes',
-                    'Conocer planes'
+                    'Tipos de planes de internet',
+                    'Planes de internet para hogares',
+                    'Preguntar sobre otro plan',
                 ],
                 'responses' => [
-                    'Tenemos planes de Internet de $169.000, $249.000 y $349.000 COP al mes. ¿En cuál estás interesado?',
-                    'Ofrecemos planes de Internet de 100 Mbps, 200 Mbps y 500 Mbps. ¿Cuál te interesa?'
+                    'Tenemos planes de Internet de $154.000, $239.000, $329.000, $449.000 y 649.000 COP al mes. ¿En cuál estás interesado?',
+                    'Ofrecemos planes de Internet de 50 Mbps, 150 Mbps, 300 Mbps, 500 Mbps y 1 Gbps. ¿Cuál te interesa?'
                 ],
                 'options' => [
-                    'Plan de $169.000 COP al mes',
-                    'Plan de $249.000 COP al mes',
-                    'Plan de $349.000 COP al mes'
+                    'Plan de $154.000 COP al mes',
+                    'Plan de $239.000 COP al mes',
+                    'Plan de $329.000 COP al mes',
+                    'Plan de $449.000 COP al mes',
+                    'Plan de $649.000 COP al mes',
                 ]
             ],
             // Preguntas sobre el plan de $169.000 COP al mes
             [
-                'id' => Str::uuid(),
+                'id' => '556bd4d9-6579-4923-9494-2e2de059a3c7',
                 'name' => 'Plan de 50 Mbps',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 3000,
-                    'y' => 200,
+                    'x' => -2000,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Plan de 50 Mbps'],
                 'phrases' => [
@@ -111,19 +124,42 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Este plan es ideal para una persona o pareja. ¿Quieres saber más?'
                 ],
                 'options' => [
-                    'Saber más sobre el plan de 50 Mbps',
+                    'Comprar',
                     'Preguntar sobre otro plan'
+                ],
+                'children' => [
+                    [
+                        'id' => '010d935d-f891-43d6-8b18-ae58fcf699e2',
+                        'name' => 'Comprar Plan de 50 Mbps',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::TELEFONO,
+                        'position' => [
+                            'x' => -2000,
+                            'y' => 900,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 50 Mbps'],
+                        'phrases' => [
+                            'Comprar',
+                            'Comprar Plan de 50 Mbps',
+                            'Comprar plan de 154.000',
+                            'Comprar plan de 50 Mbps de $154.000 COP'
+                        ],
+                        'responses' => [
+                            'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
+                        ],
+                    ],
                 ]
             ],
             // Nodo 2: Plan de 150 Mbps
             [
-                'id' => Str::uuid(),
+                'id' => '9977b1c6-d663-4b95-8f52-498e530eef4b',
                 'name' => 'Plan de 150 Mbps',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 3200,
-                    'y' => 200,
+                    'x' => -1700,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Plan de 150 Mbps'],
                 'phrases' => [
@@ -136,19 +172,42 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Este plan es ideal para hogares con varias personas. ¿Quieres saber más?'
                 ],
                 'options' => [
-                    'Saber más sobre el plan de 150 Mbps',
+                    'Comprar',
                     'Preguntar sobre otro plan'
+                ],
+                'children' => [
+                    [
+                        'id' => 'f036fb9c-a088-4554-819b-b142804365fe',
+                        'name' => 'Comprar Plan de 150 Mbps',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::TELEFONO,
+                        'position' => [
+                            'x' => -1700,
+                            'y' => 900,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 150 Mbps'],
+                        'phrases' => [
+                            'Comprar',
+                            'Comprar Plan de 150 Mbps',
+                            'Comprar plan de 239.000',
+                            'Comprar plan de 150 Mbps de $239.000 COP'
+                        ],
+                        'responses' => [
+                            'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
+                        ],
+                    ],
                 ]
             ],
             // Nodo 3: Plan de 300 Mbps
             [
-                'id' => Str::uuid(),
+                'id' => 'b9d965d0-a98a-4539-ac89-4b01d0a52552',
                 'name' => 'Plan de 300 Mbps',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 3400,
-                    'y' => 200,
+                    'x' => -1400,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Plan de 300 Mbps'],
                 'phrases' => [
@@ -161,19 +220,42 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Este plan es ideal para hogares con varias personas y uso intensivo. ¿Quieres saber más?'
                 ],
                 'options' => [
-                    'Saber más sobre el plan de 300 Mbps',
+                    'Comprar',
                     'Preguntar sobre otro plan'
+                ],
+                'children' => [
+                    [
+                        'id' => '137fa06d-b7dc-4be2-b09d-4ccbe8c8584a',
+                        'name' => 'Comprar Plan de 300 Mbps',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::TELEFONO,
+                        'position' => [
+                            'x' => -1400,
+                            'y' => 900,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 300 Mbps'],
+                        'phrases' => [
+                            'Comprar',
+                            'Comprar Plan de 300 Mbps',
+                            'Comprar plan de 329.000',
+                            'Comprar plan de 300 Mbps de $329.000 COP'
+                        ],
+                        'responses' => [
+                            'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
+                        ],
+                    ],
                 ]
             ],
             // Nodo 4: Plan de 500 Mbps
             [
-                'id' => Str::uuid(),
+                'id' => '3c2949e3-eb69-498a-9f15-1b74c75b1677',
                 'name' => 'Plan de 500 Mbps',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 3600,
-                    'y' => 200,
+                    'x' => -1100,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Plan de 500 Mbps'],
                 'phrases' => [
@@ -186,19 +268,42 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Este plan es ideal para hogares con varias personas y uso intensivo. ¿Quieres saber más?'
                 ],
                 'options' => [
-                    'Saber más sobre el plan de 500 Mbps',
+                    'Comprar',
                     'Preguntar sobre otro plan'
+                ],
+                'children' => [
+                    [
+                        'id' => '5ec2b4c5-a690-48d3-a1a9-3fe6944c2f55',
+                        'name' => 'Comprar Plan de 500 Mbps',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::TELEFONO,
+                        'position' => [
+                            'x' => -1100,
+                            'y' => 900,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 500 Mbps'],
+                        'phrases' => [
+                            'Comprar',
+                            'Comprar Plan de 500 Mbps',
+                            'Comprar plan de 449.000',
+                            'Comprar plan de 500 Mbps de $449.000 COP'
+                        ],
+                        'responses' => [
+                            'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
+                        ],
+                    ],
                 ]
             ],
             // Nodo 5: Plan de 1 Gbps
             [
-                'id' => Str::uuid(),
+                'id' => 'be112d5b-a84e-455b-a3ff-1b7cee708256',
                 'name' => 'Plan de 1 Gbps',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 3800,
-                    'y' => 200,
+                    'x' => -800,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Plan de 1 Gbps'],
                 'phrases' => [
@@ -211,19 +316,42 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Este plan es ideal para hogares con varias personas y uso intensivo. ¿Quieres saber más?'
                 ],
                 'options' => [
-                    'Saber más sobre el plan de 1 Gbps',
+                    'Comprar',
                     'Preguntar sobre otro plan'
+                ],
+                'children' => [
+                    [
+                        'id' => 'ebe91c60-f981-4a83-b6a3-99a1bec0466b',
+                        'name' => 'Comprar Plan de 1 Gbps',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::TELEFONO,
+                        'position' => [
+                            'x' => -800,
+                            'y' => 900,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 1 Gbps'],
+                        'phrases' => [
+                            'Comprar',
+                            'Comprar Plan de 1 Gbps',
+                            'Comprar plan de 649.000',
+                            'Comprar plan de 1 Gbps de $649.000 COP'
+                        ],
+                        'responses' => [
+                            'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
+                        ],
+                    ],
                 ]
             ],
             // Preguntas sobre la cobertura
             [
-                'id' => Str::uuid(),
+                'id' => '8c66c072-c2c6-4976-bfce-10e6fb2b7a36',
                 'name' => 'Preguntas sobre la cobertura',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 1000,
-                    'y' => 200,
+                    'x' => -500,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Preguntas sobre la cobertura'],
                 'phrases' => [
@@ -242,16 +370,17 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
             ],
             // Conectividad en lugares remotos
             [
-                'id' => Str::uuid(),
+                'id' => 'b7911db4-7305-48f1-b2c6-e2118daabb79',
                 'name' => 'Conectividad en lugares remotos',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 2400,
-                    'y' => 200,
+                    'x' => -200,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Conectividad en lugares remotos'],
                 'phrases' => [
+                    'Verificar cobertura',
                     'Quiero saber si puedo conectarme en lugares remotos',
                     '¿Es posible hacer streaming en lugares remotos con Starlink?',
                     'Información sobre conectividad en lugares remotos'
@@ -260,21 +389,16 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Sí, puedes conectarte en lugares remotos con Starlink. ¿Te interesa?',
                     'Nuestro sistema de internet es ideal para lugares remotos. ¿Quieres saber más?'
                 ],
-                'options' => [
-                    'Saber más sobre conectividad en lugares remotos',
-                    'Preguntar sobre otro tema'
-                ]
-                ],
-
+            ],
             // Nodo 2: Instalación rápida
             [
-                'id' => Str::uuid(),
+                'id' => '23fcc54f-4c04-41d6-b43f-3986fe189eab',
                 'name' => 'Instalación rápida',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 2600,
-                    'y' => 200,
+                    'x' => -200,
+                    'y' => 900,
                 ],
                 'data' => ['label' => 'Instalación rápida'],
                 'phrases' => [
@@ -286,84 +410,96 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Puedes instalar Starlink en solo dos pasos. ¿Te interesa?',
                     'Nuestra instalación es rápida y fácil. ¿Quieres saber más?'
                 ],
-                'options' => [
-                    'Saber más sobre instalación rápida',
-                    'Preguntar sobre otro tema'
-                ]
             ],
             // Nodo 3: Sin contratos
             [
-                'id' => Str::uuid(),
+                'id' => '94219252-f4b7-4943-971a-5b31b7d7b77e',
                 'name' => 'Sin contratos',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 2800,
-                    'y' => 200,
+                    'x' => 100,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Sin contratos'],
                 'phrases' => [
                     'Quiero saber si tengo que firmar un contrato',
                     '¿Hay contratos a largo plazo con Starlink?',
-                    'Información sobre sin contratos'
+                    'Información sobre sin contratos',
+                    'Tipo de contrato'
                 ],
                 'responses' => [
                     'No hay contratos a largo plazo con Starlink. ¿Te interesa?',
                     'Puedes cancelar en cualquier momento sin penalizaciones. ¿Quieres saber más?'
                 ],
-                'options' => [
-                    'Saber más sobre sin contratos',
-                    'Preguntar sobre otro tema'
-                ]
             ],
             [
-                'id' => Str::uuid(),
+                'id' => 'b1f8f67a-6d3f-471f-85de-aa5236efd978',
                 'name' => 'Cómo funciona el internet de Starlink',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 4000,
-                    'y' => 200,
+                    'x' => 400,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Cómo funciona el internet de Starlink'],
                 'phrases' => [
+                    'Cómo funciona el internet de Starlink',
                     'Quiero saber cómo funciona el internet de Starlink',
                     '¿Cómo se conecta el internet de Starlink?',
                     'Información sobre la tecnología de Starlink'
                 ],
                 'responses' => [
-                    'Starlink utiliza una constelación de satélites en órbita baja para proporcionar internet de alta velocidad. La antena de Starlink se conecta a los satélites y envía la señal a un router, que distribuye la conexión a los dispositivos en el hogar. La tecnología de Starlink utiliza la banda de frecuencia Ka para proporcionar velocidades de internet rápidas y confiables. ¿Te interesa saber más?',
+                    'Starlink utiliza una constelación de satélites en órbita baja para proporcionar internet de alta velocidad. La antena de Starlink se conecta a los satélites y envía la señal a un router, que distribuye la conexión a los dispositivos en el hogar. La tecnología de Starlink utiliza la banda de frecuencia Ka para proporcionar velocidades de internet rápidas y confiables.',
                     'Nuestra tecnología es innovadora y permite una conexión rápida y segura. ¿Quieres saber más sobre nuestros planes?'
                 ],
-                'options' => [
-                    'Saber más sobre la tecnología de Starlink',
-                    'Preguntar sobre otro tema'
-                ]
             ],
                 // Nodo 2: Otra información relevante
             [
-                'id' => Str::uuid(),
+                'id' => '2789f73b-d11d-4399-af79-5c00810a6ebb',
                 'name' => 'Otra información relevante',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 4200,
-                    'y' => 200,
+                    'x' => 700,
+                    'y' => 600,
                 ],
                 'data' => ['label' => 'Otra información relevante'],
                 'phrases' => [
+                    'Información',
+                    'Información sobre Starlink',
+                    'Información sobre internet de Starlink',
+                    'Información sobre cobertura de Starlink',
                     'Quiero saber más sobre la cobertura de Starlink',
                     '¿Cuál es la latencia de Starlink?',
-                    'Información sobre los datos ilimitados de Starlink'
+                    'Información sobre los datos ilimitados de Starlink',
+                    'Saber más sobre la tecnología de Starlink'
                 ],
                 'responses' => [
-                    'Starlink está disponible en la mayoría de las áreas de Colombia, excepto en algunas zonas muy remotas. La latencia de Starlink es de alrededor de 20-30 ms, lo que es comparable a los servicios de internet por cable. Además, Starlink no tiene límites de datos, por lo que puedes usar el internet sin preocuparte por exceder un límite. La antena de Starlink es portátil, por lo que puedes llevarte el internet contigo a cualquier lugar. ¿Te interesa saber más?',
-                    'Nuestros servicios son ideales para aquellos que buscan una conexión rápida y segura. ¿Quieres saber más sobre nuestros planes?'
+                    'Starlink está disponible en la mayoría de las áreas de Colombia, excepto en algunas zonas muy remotas. La latencia de Starlink es de alrededor de 20-30 ms, lo que es comparable a los servicios de internet por cable. Además, Starlink no tiene límites de datos, por lo que puedes usar el internet sin preocuparte por exceder un límite. La antena de Starlink es portátil, por lo que puedes llevarte el internet contigo a cualquier lugar.',
+                    'Nuestros servicios son ideales para aquellos que buscan una conexión rápida y segura.'
                 ],
-                'options' => [
-                    'Saber más sobre la cobertura de Starlink',
-                    'Preguntar sobre otro tema'
-                ]
+            ],
+            [
+                'id' => 'f7e4a474-9ab7-4019-8f2a-3340efbb08f4', // Despedida
+                'name' => 'Despedida',
+                'is_choice' => false,
+                'type' => 'customNode',
+                'position' => [
+                    'x' => 1000,
+                    'y' => 600,
+                ],
+                'data' => ['label' => 'Despedida'],
+                'phrases' => [
+                    'Gracias',
+                    'Eso es todo por ahora',
+                    'Adiós',
+                    'Hasta luego',
+                ],
+                'responses' => [
+                    '¡Gracias por utilizar SkynetBot! Estamos aquí para ayudarte en cualquier momento.',
+                    '¡Que tengas un excelente día! No dudes en volver si necesitas más información.',
+                ],
             ]
         ];
 

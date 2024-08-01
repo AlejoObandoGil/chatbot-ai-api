@@ -23,17 +23,17 @@ class ChatbotTelecomunicationSeeder extends Seeder
      */
     public function run(): void
     {
-        // hybrid,
-        // natural language processing,
-        // rule based
+        // Híbrido,
+        // PLN,
+        // Basado en reglas
 
         // Datos del chatbot
         $chatbotData = [
             'id' => '4cbda66d-2ba5-470e-956e-037946e96307',
             'user_id' => 1,
-            'name' => 'SkynetBot',
+            'name' => 'ComcelTelmexBot',
             'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
-            'type' => 'Natural language processing'
+            'type' => 'Híbrido'
         ];
 
         $chatbot = Chatbot::create($chatbotData);
