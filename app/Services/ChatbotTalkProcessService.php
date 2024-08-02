@@ -29,7 +29,7 @@ class ChatbotTalkProcessService
             $intentTargetResponse = null;
             if ($optionFind) {
                 $intentTargetResponse = IntentResponse::where('intent_id', $optionFind->target)->inRandomOrder()->first();
-                return $intentTargetResponse ?? 'Lo siento, parece qeu aun no hay una respuesta disponible.';
+                return $intentTargetResponse ?? 'Lo siento, aún no hay una respuesta disponible para esta pregunta.';
             }
             return $intentTargetResponse;
         }

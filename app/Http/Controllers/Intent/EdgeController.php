@@ -81,7 +81,7 @@ class EdgeController extends Controller
                     ['id' => $edgeData['id'] ?? null],
                     [
                         'source' => $edgeData['source'] ?? null,
-                        'sourceHandle' => $edgeData['sourceHandle'] ?? null,
+                        'source_handle' => $edgeData['sourceHandle'] !== 'default' ? $edgeData['sourceHandle'] : null,
                         'target' => $edgeData['target'] ?? null,
                     ]
                 );
