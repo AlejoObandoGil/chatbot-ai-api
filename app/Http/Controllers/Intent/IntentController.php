@@ -74,7 +74,7 @@ class IntentController extends Controller
             'training_phrases.*.phrase' => 'string|max:100',
             'responses' => 'nullable|array',
             'responses.*.id' => 'nullable|numeric',
-            'responses.*.response' => 'string|max:100',
+            'responses.*.response' => 'nullable|string|max:100',
             'options' => 'array',
             'options.*.id' => 'required|uuid',
             'options.*.option' => 'string|max:100',

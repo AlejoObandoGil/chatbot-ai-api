@@ -25,13 +25,7 @@ class ChatbotTalkProcessService
         Log::info($intent);
 
         if ($option['is_option']) {
-            $optionFind = Edge::where('source_handle', $option['id'])->first();
-            $intentTargetResponse = null;
-            if ($optionFind) {
-                $intentTargetResponse = IntentResponse::where('intent_id', $optionFind->target)->inRandomOrder()->first();
-                return $intentTargetResponse ?? 'Lo siento, aún no hay una respuesta disponible para esta pregunta.';
-            }
-            return $intentTargetResponse;
+            return $this->handleOption($option);
         }
 
         $matchedIntent = $this->findBestMatchIntent($message, $chatbotId, $intentId);
@@ -51,6 +45,17 @@ class ChatbotTalkProcessService
         return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
     }
 
+    private function handleOption($option)
+    {
+        $edgeOptionFind = Edge::where('source_handle', $option['id'])->first();
+        $defaultResponse = 'Lo siento, aún no hay una respuesta disponible para esta pregunta.';
+        if ($edgeOptionFind) {
+            $intentTargetResponse = $edgeOptionFind->targetIntent->responses()->inRandomOrder()->first();
+            return $intentTargetResponse ?? $defaultResponse;
+        }
+        return $defaultResponse;
+    }
+
     public function handleContactInformationSaving($message, Intent $intent, Talk $talk)
     {
         if (in_array($intent->information_required, TypeInformationRequired::getValues(), true)) {
@@ -63,8 +68,13 @@ class ChatbotTalkProcessService
                     'talk_id' => $talk->id,
                     'value' => $message
                 ]);
-
-                return 'Hemos guardado su información, un asesor se contactará con usted';
+                $edgeIntentFind = Edge::where('source', $intent->id)->first();
+                $defaultResponse  = 'Hemos guardado su información, un asesor se contactará con usted';
+                if ($edgeIntentFind) {
+                    $intentTargetResponse = $edgeIntentFind->targetIntent->responses()->inRandomOrder()->first();
+                    return $intentTargetResponse ?? $defaultResponse;
+                }
+                return $defaultResponse;
             } else {
                 return 'La información proporcionada no coincide con el formato requerido, Por favor escribe solo la información solicitada sin ningún tipo de caracter especial.';
             }
