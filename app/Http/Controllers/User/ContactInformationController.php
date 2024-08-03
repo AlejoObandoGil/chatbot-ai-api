@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\User;
 
+use App\Models\Talk\Talk;
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
-use App\Http\Controllers\Controller;
 use App\Models\Chatbot\Chatbot;
+use App\Http\Controllers\Controller;
 use App\Models\User\ContactInformation;
 
 class ContactInformationController extends Controller
@@ -15,59 +16,30 @@ class ContactInformationController extends Controller
      */
     public function index(Chatbot $chatbot)
     {
-        $intents = Intent::where('chatbot_id', $chatbot->id)->where('save_information', true)->with('contactInformations.talk')->get();
+        $talks = Talk::whereHas('contactInformation')
+            ->where('chatbot_id', $chatbot->id)
+            ->with('contactInformation.intent')
+            ->get();
 
         return response()->json([
-            'intents' => $intents,
+            'talks' => $talks,
         ]);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(ContactInformation $contactInformation)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(ContactInformation $contactInformation)
-    {
-        //
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, ContactInformation $contactInformation)
+    public function update(Request $request, Chatbot $chatbot, ContactInformation $contactInformation)
     {
-        //
-    }
+        $validated = $request->validate([
+            'status' => 'required|string'
+        ]);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(ContactInformation $contactInformation)
-    {
-        //
+        $contactInformation->update(['status' => $validated['status']]);
+
+        return response()->json([
+            'contact_information' => $contactInformation,
+            'message' => 'Estado de contacto actualizado!'
+        ], 200);
     }
 }

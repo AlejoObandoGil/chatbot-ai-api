@@ -4,6 +4,7 @@ namespace App\Models\Talk;
 
 use App\Models\Entity\Entity;
 use App\Models\Talk\TalkMessage;
+use App\Models\User\ContactInformation;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -38,5 +39,7 @@ class Talk extends Model
         return $this->belongsTo(Entity::class);
     }
 
-
+    public function contactInformation() {
+        return $this->hasMany(ContactInformation::class);
+    }
 }

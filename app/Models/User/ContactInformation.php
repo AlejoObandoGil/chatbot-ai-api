@@ -16,6 +16,7 @@ class ContactInformation extends Model
     protected $fillable = [
         'intent_id',
         'talk_id',
+        'status',
         'value'
     ];
 

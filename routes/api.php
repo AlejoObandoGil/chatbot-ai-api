@@ -19,6 +19,7 @@ Route::prefix('/chatbot/{chatbot}')->group(function () {
         Route::get('/create', [TalkController::class, 'create']);
         Route::get('/', [TalkController::class, 'show']);
         Route::post('/', [TalkController::class, 'store']);
+        Route::put('/{talk}/close', [TalkController::class, 'close']);
 
         Route::prefix('/{talk}/message')->group(function () {
             Route::post('/{intent?}', [TalkMessageController::class, 'store']);
@@ -44,7 +45,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::prefix('/contact-information')->group(function () {
                     Route::get('/', [ContactInformationController::class, 'index']);
                     Route::post('/', [ContactInformationController::class, 'store']);
-                    Route::put('/', [ContactInformationController::class, 'update']);
+                    Route::put('/{contactInformation}', [ContactInformationController::class, 'update']);
                 });
 
                 Route::prefix('/entity')->group(function () {
@@ -68,6 +69,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
                 Route::prefix('/talk')->group(function () {
                     Route::get('/{talk}', [TalkController::class, 'index']);
                     Route::post('/', [TalkController::class, 'store']);
+                    Route::put('/{talk}/close', [TalkController::class, 'close']);
 
                     Route::prefix('/{talk}/message')->group(function () {
                         Route::get('/', [TalkMessageController::class, 'index']);

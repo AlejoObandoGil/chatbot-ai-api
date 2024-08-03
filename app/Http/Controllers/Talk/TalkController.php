@@ -53,9 +53,11 @@ class TalkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Talk $talk)
+    public function close(Talk $talk)
     {
-        //
+        $talk->update(['ended_at' => Carbon::now()]);
+
+        return response()->json(['talk' => $talk], 200);
     }
 
     /**
