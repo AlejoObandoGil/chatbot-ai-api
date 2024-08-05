@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignUuid('chatbot_id');
             $table->text('content')->nullable();
             $table->string('link')->nullable();
-            $table->string('document_path')->nullable();
+            $table->string('document')->nullable();
             $table->boolean('is_learning')->default(false);
             $table->timestamps();
             $table->softDeletes();

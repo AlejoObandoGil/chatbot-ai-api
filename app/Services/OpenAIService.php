@@ -32,7 +32,7 @@ class OpenAIService
                     'content' => $content
                 ],
             ],
-            'temperature' => 0.2, // permitir al usaurio calibrar
+            'temperature' => 0.2, // permitir al usuario calibrar
             'max_tokens' => 30, // agregar que se pueda calcular el promedio de toikens que se vayan a usar segun la info de la empresa para ahorrar tokens
         ]);
 
@@ -41,6 +41,27 @@ class OpenAIService
         return $result['choices'][0]['message']['content'];
     }
 
+    public function uploadFileGptApi($file)
+    {
+        try {
+            $response = OpenAI::files()->upload([
+                'purpose' => 'assistants',
+                'file' => fopen($file->path(), 'r'),
+            ]);
+
+            if ($response->id === null) {
+                $fileId = $response->id;
+                return $fileId;
+                // $file = OpenAI::files()->retrieve($fileId);
+                // $fileContent = OpenAI::files()->download($fileId);
+            }
+
+            return null;
+        } catch (\Exception $e) {
+            Log::error('Error uploading file: ' . $e->getMessage());
+            return response()->json(['error' => 'Error uploading file'], 500);
+        }
+    }
     // public function conexionGptApiTest($context = null, $message = null)
     // {
     //     $content = $context . "User:" . $message . ". " . "AI:";

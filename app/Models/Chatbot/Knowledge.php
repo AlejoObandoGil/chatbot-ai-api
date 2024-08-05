@@ -14,7 +14,7 @@ class Knowledge extends Model
     protected $fillable = [
         'chatbot_id',
         'content',
-        'document_path',
+        'document',
         'is_learning',
         'link'
     ];

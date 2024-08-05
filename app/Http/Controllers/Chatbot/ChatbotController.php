@@ -5,11 +5,22 @@ namespace App\Http\Controllers\Chatbot;
 use App\Models\User\User;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Smalot\PdfParser\Parser;
 use App\Models\Chatbot\Chatbot;
+use App\Services\OpenAIService;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ChatbotRequest;
+use Illuminate\Support\Facades\Storage;
 
 class ChatbotController extends Controller
 {
+
+    protected $OpenAIService;
+
+    public function __construct(OpenAIService $OpenAIService)
+    {
+        $this->OpenAIService = $OpenAIService;
+    }
     /**
      * Display a listing of the resource.
      */
@@ -33,15 +44,9 @@ class ChatbotController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ChatbotRequest  $request)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => 'required|string|in:Basado en Reglas,PLN,Híbrido',
-            'knowledge_base' => 'nullable|string',
-            'link' => 'nullable|string|url',
-        ]);
+        $validatedData = $request->validated();
 
         $user = User::find(auth()->user()->id);
 
@@ -51,15 +56,27 @@ class ChatbotController extends Controller
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
             'type' => $validatedData['type'],
+            'temperature' => $request->input('temperature'),
+            'max_tokens' => $request->input('maxTokens'),
         ]);
 
-        if (isset($validatedData['knowledge_base']) || isset($validatedData['link'])) {
-            $chatbot->knowledges()->create([
-                'content' => $validatedData['knowledge_base'] ?? null,
+        if (isset($validatedData['knowledge_base']) || isset($validatedData['link']) || $request->hasFile('document')) {
+            $documentPath = null;
+            $content = $validatedData['knowledge_base'] ?? null;
+
+            if ($request->hasFile('document')) {
+                $documentPath = $request->file('document')->store('documents', 'public');
+                $content = $this->extractText($documentPath);
+            }
+
+            $chatbot->knowledge()->create([
+                'content' => $content,
                 'link' => $validatedData['link'] ?? null,
+                'document' => $documentPath,
             ]);
         }
 
+        // Devolver una respuesta exitosa
         return response()->json(['message' => 'Chatbot guardado correctamente!', 'chatbot' => $chatbot], 201);
     }
 
@@ -80,7 +97,7 @@ class ChatbotController extends Controller
     public function edit(Chatbot $chatbot)
     {
         if (auth()->user())
-            $chatbot = Chatbot::find($chatbot->id);
+            $chatbot = Chatbot::where('id', $chatbot->id)->with('knowledge')->first();
 
         return response()->json(['chatbot' => $chatbot]);
     }
@@ -88,36 +105,45 @@ class ChatbotController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Chatbot $chatbot)
+    public function update(ChatbotRequest $request, Chatbot $chatbot)
     {
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'required|string',
-            'type' => 'required|string|in:Basado en Reglas,Natural language processing,Híbrido',
-            'knowledge_base' => 'nullable|string',
-            'link' => 'nullable|string|url',
-        ]);
+        $validatedData = $request->validated();
 
         $chatbot->update([
             'name' => $validatedData['name'],
             'description' => $validatedData['description'],
             'type' => $validatedData['type'],
+            'temperature' => $request->input('temperature'),
+            'max_tokens' => $request->input('maxTokens'),
         ]);
 
-        if (isset($validatedData['knowledge_base']) || isset($validatedData['link'])) {
-            $knowledge = $chatbot->knowledges()->first();
+        $documentPath = null;
+        $content = $validatedData['knowledge_base'] ?? null;
 
-            if ($knowledge) {
-                $knowledge->update([
-                    'content' => $validatedData['knowledge_base'] ?? $knowledge->content,
-                    'link' => $validatedData['link'] ?? $knowledge->link,
-                ]);
-            } else {
-                $chatbot->knowledges()->create([
-                    'content' => $validatedData['knowledge_base'] ?? null,
-                    'link' => $validatedData['link'] ?? null,
-                ]);
-            }
+        if ($request->hasFile('document')) {
+            // if ($chatbot->knowledge()->exists() && $chatbot->knowledges->document) {
+            //     Storage::disk('public')->delete($chatbot->knowledges->document);
+            // }
+
+            $documentPath = $request->file('document')->store('documents', 'public');
+            $documentPath = $this->OpenAIService->uploadFileGptApi($request->file('document'));
+            // $content = $this->extractText($documentPath);
+        }
+
+        $knowledge = $chatbot->knowledge()->first();
+
+        if ($knowledge) {
+            $knowledge->update([
+                'content' => $content,
+                'link' => $validatedData['link'] ?? $knowledge->link,
+                'document' => $documentPath ?? $knowledge->document,
+            ]);
+        } else {
+            $chatbot->knowledge()->create([
+                'content' => $content,
+                'link' => $validatedData['link'] ?? null,
+                'document' => $documentPath,
+            ]);
         }
 
         return response()->json([
@@ -134,6 +160,14 @@ class ChatbotController extends Controller
         return response()->json([
             'chatbot' => $chatbot,
         ], 200);
+    }
+
+    private function extractText($filePath)
+    {
+        $filePath = storage_path('app/public/' . $filePath);
+        // $parser = new Parser();
+        $pdf = file_get_contents($filePath);
+        return $pdf;
     }
 
     /**
