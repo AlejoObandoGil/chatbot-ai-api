@@ -13,9 +13,10 @@ return new class extends Migration
     {
         Schema::create('knowledge', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('chatbot_id');;
+            $table->foreignUuid('chatbot_id');
             $table->text('content')->nullable();
-            $table->text('links')->nullable();
+            $table->string('link')->nullable();
+            $table->string('document_path')->nullable();
             $table->boolean('is_learning')->default(false);
             $table->timestamps();
             $table->softDeletes();

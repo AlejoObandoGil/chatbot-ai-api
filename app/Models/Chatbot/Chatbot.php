@@ -26,12 +26,12 @@ class Chatbot extends Model
         'description',
         'type',
         'enabled',
-        'script_embed'
+        'temperature',
+        'max_tokens'
     ];
 
     protected $casts = [
         'enabled' => 'boolean',
-        'script_embed' => 'json'
     ];
 
     public function user()
