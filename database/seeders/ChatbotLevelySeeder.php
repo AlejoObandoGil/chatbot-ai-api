@@ -34,7 +34,7 @@ class ChatbotLevelySeeder extends Seeder
             'name' => 'LevelBot',
             'description' => 'Eres un chatbot encargado de brindar asistencia a los usuarios sobre la plataforma de levely.',
             'type' => 'Híbrido',
-            'assistant_openai_id' => 'asst_Xg7hWFKehhdFP8PWhAXBTqGU',
+            'assistant_openai_id' => 'asst_96RBTTingTHmqV2VBhvXaM5z',
             'temperature' => 0.5,
             'max_tokens' => 50
         ];
@@ -424,9 +424,9 @@ class ChatbotLevelySeeder extends Seeder
             'chatbot_id' => $chatbot->id,
             'content' => $knowledgesData,
             'document' => 'documents/RH4TsaZCULOC8tBlWftDLC9Npark1B4FpVydcAnw.pdf',
-            'vector_store_openai_id' => 'vs_GZzCoLWJZcPCDDc3Tk6Q9Zr3',
-            'file_openai_id' => 'file-EUO8tKeKSafX5jyJlArdlVLQ',
-            'file_vector_openai_id' => 'file-8iHh4VW9ZL9nX5JlArdlVLQ',
+            'vector_store_openai_id' => 'vs_e6vTaTUi0iJ1j0t7IEPZPXKf',
+            'file_openai_id' => 'file-Q9lZOEzMDGU4ElScYCyzHvRa',
+            'file_vector_openai_id' => 'file-Q9lZOEzMDGU4ElScYCyzHvRa',
             'content_file_openai_id' => 'BasedeConocimientoChatbotAsistenteparalaPlataformaLevely
                 DescripcióndeLevelyLevelyesunsoftwarequetransformalagestióndelconocimientoen
                 lasorganizaciones.Ofrecemosunaplataformaintuitivaqueempoderaacolegios,

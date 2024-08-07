@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Smalot\PdfParser\Parser;
 use App\Models\Chatbot\Chatbot;
 use App\Services\OpenAIService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChatbotRequest;
@@ -49,64 +50,75 @@ class ChatbotController extends Controller
     {
         $validatedData = $request->validated();
 
-        $user = User::find(auth()->user()->id);
+        DB::beginTransaction();
 
-        $chatbot = Chatbot::create([
-            'id' => (string) Str::uuid(),
-            'user_id' => $user->id,
-            'name' => $validatedData['name'],
-            'description' => $validatedData['description'],
-            'type' => $validatedData['type'],
-            'temperature' => $request->input('temperature'),
-            'max_tokens' => $request->input('maxTokens'),
-        ]);
+        try {
+            $user = User::find(auth()->user()->id);
 
-        if (isset($validatedData['knowledgeBase']) || isset($validatedData['link']) || $request->hasFile('document')) {
-            $documentPath = null;
+            $chatbot = Chatbot::create([
+                'id' => (string) Str::uuid(),
+                'user_id' => $user->id,
+                'name' => $validatedData['name'],
+                'description' => $validatedData['description'],
+                'type' => $validatedData['type'],
+                'temperature' => $request->input('temperature'),
+                'max_tokens' => $request->input('maxTokens'),
+            ]);
 
-            if ($request->hasFile('document')) {
-                $documentPath = $request->file('document')->store('documents', 'public');
-                $fileId = $this->openAIService->uploadFileGptApi($request->file('document'));
-                if ($fileId) {
-                    $content_file_openai_id = $this->extractTextFromPdf($documentPath);
-                }
-            }
+            if (isset($validatedData['knowledgeBase']) || isset($validatedData['link']) || $request->hasFile('document')) {
+                $documentPath = null;
 
-            if ($fileId) {
-                $vectorStore = $this->openAIService->createVectorStore($chatbot, $fileId);
-                $attempts = 0;
-                do {
-                    sleep(2);
-                    $vectorStore = $this->openAIService->retrieveVectorStore($vectorStore->id);
-                    $attempts++;
-                } while ($vectorStore->status === 'in_progress' && $attempts < 10);
-
-                if ($vectorStore->status !== 'in_progress') {
-                    $file_vector_openai_id = $this->openAIService->uploadFileVectorStore($fileId, $vectorStore->id);
-
-                    if (!$chatbot->assistant_openai_id) {
-                        $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
-                        $chatbot->update([
-                            'assistant_openai_id' => $assistant->id,
-                        ]);
+                if ($request->hasFile('document') && ($validatedData['type'] === 'Híbrido' || $validatedData['type'] === 'PLN')) {
+                    // $file = $request->file('document');
+                    $documentPath = $request->file('document')->store('documents', 'public');
+                    $fileId = $this->openAIService->uploadFileGptApi($documentPath);
+                    if ($fileId) {
+                        $content_file_openai_id = $this->extractTextFromPdf($documentPath);
                     }
-                } else {
-                    Log::error('El vector store sigue en progreso después de 10 intentos');
+                }
+
+                if ($fileId) {
+                    $vectorStore = $this->openAIService->createVectorStore($validatedData['name'], $fileId);
+                    $attempts = 0;
+                    do {
+                        sleep(2);
+                        $vectorStore = $this->openAIService->retrieveVectorStore($vectorStore->id);
+                        $attempts++;
+                    } while ($vectorStore->status === 'in_progress' && $attempts < 10);
+
+                    if ($vectorStore->status !== 'in_progress') {
+                        $file_vector_openai_id = $this->openAIService->uploadFileVectorStore($fileId, $vectorStore->id);
+
+                        if (!$chatbot->assistant_openai_id) {
+                            $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
+                            $chatbot->update([
+                                'assistant_openai_id' => $assistant->id,
+                            ]);
+                        }
+                    } else {
+                        Log::error('El vector store sigue en progreso después de 10 intentos');
+                    }
                 }
             }
+
+            $chatbot->knowledges()->create([
+                'content' => $validatedData['knowledgeBase'] ?? null,
+                'link' => $validatedData['link'] ?? null,
+                'document' => $documentPath ?? null,
+                'vector_store_openai_id' => $vectorStore->id ?? null,
+                'file_openai_id' => $fileId ?? null,
+                'content_file_openai_id' => $content_file_openai_id ?? null,
+                'file_vector_openai_id' => $file_vector_openai_id ?? null,
+            ]);
+
+            DB::commit();
+
+            return response()->json(['message' => 'Chatbot guardado correctamente!', 'chatbot' => $chatbot->load('knowledges')], 201);
+
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json(['message' => 'Error al guardar chatbot.', 'error' => $e->getMessage()], 500);
         }
-
-        $chatbot->knowledges()->create([
-            'content' => $validatedData['knowledgeBase'] ?? null,
-            'link' => $validatedData['link'] ?? null,
-            'document' => $documentPath ?? null,
-            'vector_store_openai_id' => $vectorStore->id ?? null,
-            'file_openai_id' => $fileId ?? null,
-            'content_file_openai_id' => $content_file_openai_id ?? null,
-            'file_vector_openai_id' => $file_vector_openai_id ?? null,
-        ]);
-
-        return response()->json(['message' => 'Chatbot guardado correctamente!', 'chatbot' => $chatbot->load('knowledges')], 201);
     }
 
     /**
@@ -159,14 +171,14 @@ class ChatbotController extends Controller
             }
             $knowledge->document = $request->file('document')->store('documents', 'public');
             $knowledge->file_openai_id = $this->openAIService->uploadFileGptApi($request->file('document'));
-            if ($knowledge->file_openai_id) {
-                $knowledge->content_file_openai_id = $this->extractTextFromPdf($knowledge->document);
-            }
+            // if ($knowledge->file_openai_id) {
+            //     $knowledge->content_file_openai_id = $this->extractTextFromPdf($knowledge->document);
+            // }
         }
 
         if ($knowledge->file_openai_id) {
+            $vectorStore = $this->openAIService->retrieveVectorStore($knowledge->vector_store_openai_id);
             if (!$knowledge->vector_store_openai_id) {
-                $vectorStore = $this->openAIService->retrieveVectorStore($knowledge->vector_store_openai_id);
                 if (!$vectorStore?->id) {
                     $vectorStore = $this->openAIService->createVectorStore($chatbot, $knowledge->file_openai_id);
                     $knowledge->vector_store_openai_id = $vectorStore->id;
@@ -184,7 +196,7 @@ class ChatbotController extends Controller
                         'assistant_openai_id' => $assistant->id,
                     ]);
                 } else {
-                    $this->openAIService->modifyAssistant($chatbot, $validatedData['knowledgeBase'], $chatbot->assistant_openai_id, $knowledge->vectorStore->id);
+                    $this->openAIService->modifyAssistant($chatbot, $validatedData['knowledgeBase'], $chatbot->assistant_openai_id, $knowledge->vector_store_openai_id);
                 }
             }
         }
