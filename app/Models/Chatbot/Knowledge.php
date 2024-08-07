@@ -15,6 +15,10 @@ class Knowledge extends Model
         'chatbot_id',
         'content',
         'document',
+        'file_openai_id',
+        'vector_store_openai_id',
+        'file_vector_openai_id',
+        'content_file_openai_id',
         'is_learning',
         'link'
     ];

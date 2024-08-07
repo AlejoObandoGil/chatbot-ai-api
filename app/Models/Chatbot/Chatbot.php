@@ -26,8 +26,9 @@ class Chatbot extends Model
         'description',
         'type',
         'enabled',
+        'assistant_openai_id',
         'temperature',
-        'max_tokens'
+        'max_tokens',
     ];
 
     protected $casts = [
@@ -49,9 +50,9 @@ class Chatbot extends Model
         return $this->hasMany(Intent::class);
     }
 
-    public function knowledge()
+    public function knowledges()
     {
-        return $this->HasOne(Knowledge::class);
+        return $this->HasMany(Knowledge::class);
     }
 
     public function entities()

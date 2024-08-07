@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Smalot\PdfParser\Parser;
 use App\Models\Chatbot\Chatbot;
 use App\Services\OpenAIService;
+use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ChatbotRequest;
 use Illuminate\Support\Facades\Storage;
@@ -15,11 +16,11 @@ use Illuminate\Support\Facades\Storage;
 class ChatbotController extends Controller
 {
 
-    protected $OpenAIService;
+    protected $openAIService;
 
-    public function __construct(OpenAIService $OpenAIService)
+    public function __construct(OpenAIService $openAIService)
     {
-        $this->OpenAIService = $OpenAIService;
+        $this->openAIService = $openAIService;
     }
     /**
      * Display a listing of the resource.
@@ -60,24 +61,52 @@ class ChatbotController extends Controller
             'max_tokens' => $request->input('maxTokens'),
         ]);
 
-        if (isset($validatedData['knowledge_base']) || isset($validatedData['link']) || $request->hasFile('document')) {
+        if (isset($validatedData['knowledgeBase']) || isset($validatedData['link']) || $request->hasFile('document')) {
             $documentPath = null;
-            $content = $validatedData['knowledge_base'] ?? null;
 
             if ($request->hasFile('document')) {
                 $documentPath = $request->file('document')->store('documents', 'public');
-                $content = $this->extractText($documentPath);
+                $fileId = $this->openAIService->uploadFileGptApi($request->file('document'));
+                if ($fileId) {
+                    $content_file_openai_id = $this->extractTextFromPdf($documentPath);
+                }
             }
 
-            $chatbot->knowledge()->create([
-                'content' => $content,
-                'link' => $validatedData['link'] ?? null,
-                'document' => $documentPath,
-            ]);
+            if ($fileId) {
+                $vectorStore = $this->openAIService->createVectorStore($chatbot, $fileId);
+                $attempts = 0;
+                do {
+                    sleep(2);
+                    $vectorStore = $this->openAIService->retrieveVectorStore($vectorStore->id);
+                    $attempts++;
+                } while ($vectorStore->status === 'in_progress' && $attempts < 10);
+
+                if ($vectorStore->status !== 'in_progress') {
+                    $file_vector_openai_id = $this->openAIService->uploadFileVectorStore($fileId, $vectorStore->id);
+
+                    if (!$chatbot->assistant_openai_id) {
+                        $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
+                        $chatbot->update([
+                            'assistant_openai_id' => $assistant->id,
+                        ]);
+                    }
+                } else {
+                    Log::error('El vector store sigue en progreso después de 10 intentos');
+                }
+            }
         }
 
-        // Devolver una respuesta exitosa
-        return response()->json(['message' => 'Chatbot guardado correctamente!', 'chatbot' => $chatbot], 201);
+        $chatbot->knowledges()->create([
+            'content' => $validatedData['knowledgeBase'] ?? null,
+            'link' => $validatedData['link'] ?? null,
+            'document' => $documentPath ?? null,
+            'vector_store_openai_id' => $vectorStore->id ?? null,
+            'file_openai_id' => $fileId ?? null,
+            'content_file_openai_id' => $content_file_openai_id ?? null,
+            'file_vector_openai_id' => $file_vector_openai_id ?? null,
+        ]);
+
+        return response()->json(['message' => 'Chatbot guardado correctamente!', 'chatbot' => $chatbot->load('knowledges')], 201);
     }
 
     /**
@@ -96,8 +125,13 @@ class ChatbotController extends Controller
      */
     public function edit(Chatbot $chatbot)
     {
-        if (auth()->user())
-            $chatbot = Chatbot::where('id', $chatbot->id)->with('knowledge')->first();
+        if (auth()->user()) {
+            $chatbot = Chatbot::where('id', $chatbot->id)
+                ->with(['knowledges' => function ($query) {
+                    $query->where('is_learning', false)->first();
+                }])
+                ->first();
+        }
 
         return response()->json(['chatbot' => $chatbot]);
     }
@@ -117,38 +151,61 @@ class ChatbotController extends Controller
             'max_tokens' => $request->input('maxTokens'),
         ]);
 
-        $documentPath = null;
-        $content = $validatedData['knowledge_base'] ?? null;
+        $knowledge = $chatbot->knowledges()->first();
 
         if ($request->hasFile('document')) {
-            // if ($chatbot->knowledge()->exists() && $chatbot->knowledges->document) {
-            //     Storage::disk('public')->delete($chatbot->knowledges->document);
-            // }
-
-            $documentPath = $request->file('document')->store('documents', 'public');
-            $documentPath = $this->OpenAIService->uploadFileGptApi($request->file('document'));
-            // $content = $this->extractText($documentPath);
+            if ($knowledge && $knowledge->document) {
+                Storage::disk('public')->delete($knowledge->document);
+            }
+            $knowledge->document = $request->file('document')->store('documents', 'public');
+            $knowledge->file_openai_id = $this->openAIService->uploadFileGptApi($request->file('document'));
+            if ($knowledge->file_openai_id) {
+                $knowledge->content_file_openai_id = $this->extractTextFromPdf($knowledge->document);
+            }
         }
 
-        $knowledge = $chatbot->knowledge()->first();
+        if ($knowledge->file_openai_id) {
+            if (!$knowledge->vector_store_openai_id) {
+                $vectorStore = $this->openAIService->createVectorStore($chatbot, $knowledge->file_openai_id);
+                $knowledge->vector_store_openai_id = $vectorStore->id;
+            }
+            $vectorStore = $this->openAIService->retrieveVectorStore($knowledge->vector_store_openai_id);
+
+            if ($vectorStore->status !== 'in_progress') {
+                if (!$knowledge->file_vector_openai_id) {
+                    $knowledge->file_vector_openai_id = $this->openAIService->uploadFileVectorStore($knowledge->file_openai_id, $knowledge->vector_store_openai_id);
+                }
+                if (!$chatbot->assistant_openai_id) {
+                    $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
+                    $knowledge->assistant_openai_id = $assistant->id;
+                    $chatbot->update([
+                        'assistant_openai_id' => $assistant->id,
+                    ]);
+                }
+            } else {
+                $this->openAIService->modifyAssistant($chatbot, $validatedData['knowledgeBase'], $chatbot->assistant_openai_id, $knowledge->vectorStore->id);
+            }
+        }
+
+        $data = [
+            'content' => $validatedData['knowledge_base'] ?? $knowledge->content,
+            'link' => $validatedData['link'] ?? $knowledge->link,
+            'document' => $knowledge->document ?? null,
+            'vector_store_openai_id' => $knowledge->vector_store_openai_id ?? null,
+            'file_openai_id' => $knowledge->file_openai_id ?? null,
+            'file_vector_openai_id' => $knowledge->file_vector_openai_id ?? null,
+            'content_file_openai_id' => $knowledge->content_file_openai_id ?? null,
+        ];
 
         if ($knowledge) {
-            $knowledge->update([
-                'content' => $content,
-                'link' => $validatedData['link'] ?? $knowledge->link,
-                'document' => $documentPath ?? $knowledge->document,
-            ]);
+            $knowledge->update($data);
         } else {
-            $chatbot->knowledge()->create([
-                'content' => $content,
-                'link' => $validatedData['link'] ?? null,
-                'document' => $documentPath,
-            ]);
+            $chatbot->knowledges()->create($data);
         }
 
         return response()->json([
             'message' => 'Chatbot actualizado correctamente!',
-            'chatbot' => $chatbot,
+            'chatbot' => $chatbot->load('knowledges'),
         ], 200);
     }
 
@@ -162,13 +219,21 @@ class ChatbotController extends Controller
         ], 200);
     }
 
-    private function extractText($filePath)
+    private function extractTextFromPdf($filePath)
     {
-        $filePath = storage_path('app/public/' . $filePath);
-        // $parser = new Parser();
-        $pdf = file_get_contents($filePath);
-        return $pdf;
+        $fullPath = Storage::disk('public')->path($filePath);
+
+        if (!file_exists($fullPath)) {
+            throw new \Exception("El archivo PDF no se encuentra en la ubicación esperada: {$fullPath}");
+        }
+
+        $parser = new Parser();
+        $pdf = $parser->parseFile($fullPath);
+        $text = $pdf->getText();
+
+        return $text;
     }
+
 
     /**
      * Remove the specified resource from storage.
