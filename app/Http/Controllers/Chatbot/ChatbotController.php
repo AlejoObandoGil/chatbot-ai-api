@@ -166,10 +166,12 @@ class ChatbotController extends Controller
 
         if ($knowledge->file_openai_id) {
             if (!$knowledge->vector_store_openai_id) {
-                $vectorStore = $this->openAIService->createVectorStore($chatbot, $knowledge->file_openai_id);
-                $knowledge->vector_store_openai_id = $vectorStore->id;
+                $vectorStore = $this->openAIService->retrieveVectorStore($knowledge->vector_store_openai_id);
+                if (!$vectorStore?->id) {
+                    $vectorStore = $this->openAIService->createVectorStore($chatbot, $knowledge->file_openai_id);
+                    $knowledge->vector_store_openai_id = $vectorStore->id;
+                }
             }
-            $vectorStore = $this->openAIService->retrieveVectorStore($knowledge->vector_store_openai_id);
 
             if ($vectorStore->status !== 'in_progress') {
                 if (!$knowledge->file_vector_openai_id) {
@@ -181,9 +183,9 @@ class ChatbotController extends Controller
                     $chatbot->update([
                         'assistant_openai_id' => $assistant->id,
                     ]);
+                } else {
+                    $this->openAIService->modifyAssistant($chatbot, $validatedData['knowledgeBase'], $chatbot->assistant_openai_id, $knowledge->vectorStore->id);
                 }
-            } else {
-                $this->openAIService->modifyAssistant($chatbot, $validatedData['knowledgeBase'], $chatbot->assistant_openai_id, $knowledge->vectorStore->id);
             }
         }
 

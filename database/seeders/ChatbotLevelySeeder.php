@@ -94,8 +94,6 @@ class ChatbotLevelySeeder extends Seeder
                         'responses' => [
                             'Por favor escriba su correo electrónico para brindarle una subscripción.'
                         ],
-                    ],
-                    'children' => [
                         [
                             'name' => 'Comprar una subscripción guardar nombre',
                             'type' => 'customeNode',
@@ -111,8 +109,6 @@ class ChatbotLevelySeeder extends Seeder
                                 'Por favor escriba su nombre completo.'
                             ],
                         ],
-                    ],
-                    'children' => [
                         [
                             'name' => 'Comprar una subscripción guardar nombre empresa',
                             'type' => 'customeNode',
@@ -126,6 +122,20 @@ class ChatbotLevelySeeder extends Seeder
                             'phrases' => [],
                             'responses' => [
                                 'Por último por favor escriba el nombre de su institución y lo contactaremos enseguida.'
+                            ],
+                        ],
+                        [
+                            'id' => Str::uuid(),
+                            'name' => 'Comprar una subscripción respuesta final',
+                            'type' => 'customeNode',
+                            'position' => [
+                                'x' => 0,
+                                'y' => 1300,
+                            ],
+                            'data' => ['label' => 'Comprar una subscripción respuesta final'],
+                            'phrases' => [],
+                            'responses' => [
+                                'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra ayuda?.',
                             ],
                         ],
                     ]
@@ -150,8 +160,6 @@ class ChatbotLevelySeeder extends Seeder
                         'responses' => [
                             'Por favor escriba su número de teléfono para brindarle soporte técnico.'
                         ],
-                    ],
-                    'children' => [
                         [
                             'name' => 'Soporte técnico guardar empresa',
                             'type' => 'customeNode',
@@ -165,6 +173,20 @@ class ChatbotLevelySeeder extends Seeder
                             'phrases' => [],
                             'responses' => [
                                 'Por favor escriba su número de nombre completo y lo contactaremos enseguida.'
+                            ],
+                        ],
+                        [
+                            'id' => Str::uuid(),
+                            'name' => 'Soporte técnico respuesta final',
+                            'type' => 'customeNode',
+                            'position' => [
+                                'x' => 0,
+                                'y' => 1300,
+                            ],
+                            'data' => ['label' => 'Soporte técnico respuesta final'],
+                            'phrases' => [],
+                            'responses' => [
+                                'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra ayuda?.',
                             ],
                         ],
                     ]
@@ -190,10 +212,8 @@ class ChatbotLevelySeeder extends Seeder
                         'responses' => [
                             'Le pediremos algunos datos para agendar su demo, Por favor escriba su nombre completo'
                         ],
-                    ],
-                    'children' => [
                         [
-                            'name' => 'Comprar una subscripción guardar teléfono',
+                            'name' => 'Agendar una demo guardar teléfono',
                             'type' => 'customeNode',
                             'save_information' => true,
                             'information_required' => TypeInformationRequired::TELEFONO,
@@ -201,16 +221,14 @@ class ChatbotLevelySeeder extends Seeder
                                 'x' => 500,
                                 'y' => 900,
                             ],
-                            'data' => ['label' => 'Comprar una subscripción guardar teléfono'],
+                            'data' => ['label' => 'Agendar una demo guardar teléfono'],
                             'phrases' => [],
                             'responses' => [
                                 'Por favor escriba su número de teléfono.'
                             ],
                         ],
-                    ],
-                    'children' => [
                         [
-                            'name' => 'Comprar una subscripción guardar correo',
+                            'name' => 'Agendar una demo guardar correo',
                             'type' => 'customeNode',
                             'save_information' => true,
                             'information_required' => TypeInformationRequired::CORREO,
@@ -218,7 +236,7 @@ class ChatbotLevelySeeder extends Seeder
                                 'x' => 500,
                                 'y' => 1200,
                             ],
-                            'data' => ['label' => 'Comprar una subscripción guardar correo'],
+                            'data' => ['label' => 'Agendar una demo guardar correo'],
                             'phrases' => [],
                             'responses' => [
                                 'Por último favor escriba su correo.'
@@ -226,7 +244,7 @@ class ChatbotLevelySeeder extends Seeder
                         ],
                         'children' => [
                             [
-                                'name' => 'Comprar una subscripción guardar país',
+                                'name' => 'Agendar una demo guardar país',
                                 'type' => 'customeNode',
                                 'save_information' => true,
                                 'information_required' => TypeInformationRequired::PAIS,
@@ -234,7 +252,7 @@ class ChatbotLevelySeeder extends Seeder
                                     'x' => 500,
                                     'y' => 1600,
                                 ],
-                                'data' => ['label' => 'Comprar una subscripción guardar país'],
+                                'data' => ['label' => 'Agendar una demo guardar país'],
                                 'phrases' => [],
                                 'responses' => [
                                     'Por último favor escriba el nombre de su institución y lo contactaremos enseguida.'
@@ -243,7 +261,7 @@ class ChatbotLevelySeeder extends Seeder
                         ],
                         'children' => [
                             [
-                                'name' => 'Comprar una subscripción guardar posición',
+                                'name' => 'Agendar una demo guardar posición',
                                 'type' => 'customeNode',
                                 'save_information' => true,
                                 'information_required' => TypeInformationRequired::PROFESION,
@@ -251,13 +269,29 @@ class ChatbotLevelySeeder extends Seeder
                                     'x' => -500,
                                     'y' => 1200,
                                 ],
-                                'data' => ['label' => 'Comprar una subscripción guardar posición'],
+                                'data' => ['label' => 'Agendar una demo guardar posición'],
                                 'phrases' => [],
                                 'responses' => [
                                     'Por último favor escriba su posición y lo contactaremos enseguida.'
                                 ],
                             ],
-                        ]
+                        ],
+                        'children' => [
+                            [
+                                'id' => Str::uuid(),
+                                'name' => 'Agendar una demo respuesta final',
+                                'type' => 'customeNode',
+                                'position' => [
+                                    'x' => -500,
+                                    'y' => 1600,
+                                ],
+                                'data' => ['label' => 'Agendar una demo respuesta final'],
+                                'phrases' => [],
+                                'responses' => [
+                                    'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra información?.',
+                                ],
+                            ],
+                        ],
                     ]
                 ],
             ],
@@ -348,8 +382,8 @@ class ChatbotLevelySeeder extends Seeder
         $createIntents($intentsData);
 
         // Datos de conocimientos
-        $knowledgesData = [
-            ['topic' => '¿Cómo crear un curso en Levely?', 'content' => '
+        $knowledgesData =
+            '¿Cómo crear un curso en Levely?
                 1. Dirígete a crear curso.
                 2. Agrega un título a tu curso.
                 3. Agrega una descripción.
@@ -375,7 +409,7 @@ class ChatbotLevelySeeder extends Seeder
                     - Reuniones
                     - Foros
                 16. Como último paso, publica tu curso.
-                Funciones adicionales de la plataforma', 'content' => '
+                Funciones adicionales de la plataforma
                 1. Agregar recursos a favoritos.
                 2. Calificar el desempeño de tus estudiantes.
                 3. Crear roles y permisos para tus usuarios.
@@ -384,17 +418,16 @@ class ChatbotLevelySeeder extends Seeder
                 6. Personalizar tu rango de notas.
                 7. Chatear con tus profesores o alumnos a través del inbox de Levely.
                 8. Estar al tanto de tus exámenes, tareas y reuniones a través del calendario de Levely.
-                9. Ver el historial de tus licencias y suscripciones, y mucho más.
-            '],
-        ];
+                9. Ver el historial de tus licencias y suscripciones, y mucho más';
 
         // Crear Conocimientos
         Knowledge::create([
             'chatbot_id' => $chatbot->id,
-            'content' => $knowledgesData['topic'] . ': ' . $knowledgesData['content'],
+            'content' => $knowledgesData,
             'document' => 'documents/RH4TsaZCULOC8tBlWftDLC9Npark1B4FpVydcAnw.pdf',
             'vector_store_openai_id' => 'vs_GZzCoLWJZcPCDDc3Tk6Q9Zr3',
-            'file_open_id' => 'file-EUO8tKeKSafX5jyJlArdlVLQ',
+            'file_openai_id' => 'file-EUO8tKeKSafX5jyJlArdlVLQ',
+            'file_vector_openai_id' => 'file-8iHh4VW9ZL9nX5JlArdlVLQ',
             'content_file_openai_id' => 'BasedeConocimientoChatbotAsistenteparalaPlataformaLevely
                 DescripcióndeLevelyLevelyesunsoftwarequetransformalagestióndelconocimientoen
                 lasorganizaciones.Ofrecemosunaplataformaintuitivaqueempoderaacolegios,

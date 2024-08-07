@@ -178,8 +178,8 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                 ],
                 'children' => [
                     [
-                        'id' => 'f036fb9c-a088-4554-819b-b142804365fe',
-                        'name' => 'Comprar Plan de 150 Mbps',
+                        'id' => Str::uuid(),
+                        'name' => 'Comprar Plan de 150 Mbps guardar teléfono',
                         'type' => 'customeNode',
                         'save_information' => true,
                         'information_required' => TypeInformationRequired::TELEFONO,
@@ -187,7 +187,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                             'x' => -1700,
                             'y' => 900,
                         ],
-                        'data' => ['label' => 'Comprar Plan de 150 Mbps'],
+                        'data' => ['label' => 'Comprar Plan de 150 Mbps guardar teléfono'],
                         'phrases' => [
                             'Comprar',
                             'Comprar Plan de 150 Mbps',
@@ -195,7 +195,53 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                             'Comprar plan de 150 Mbps de $239.000 COP'
                         ],
                         'responses' => [
-                            'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
+                            'Por favor escriba los siguientes datos: Escriba su número de teléfono.'
+                        ],
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Comprar Plan de 150 Mbps guardar documento',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::NUMERO_DE_DOCUMENTO,
+                        'position' => [
+                            'x' => -1700,
+                            'y' => 1300,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 150 Mbps guardar documento'],
+                        'phrases' => [],
+                        'responses' => [
+                            'Escriba su número de documento.'
+                        ],
+                    ],
+                    [
+                        'id' => 'f036fb9c-a088-4554-819b-b142804365fe',
+                        'name' => 'Comprar Plan de 150 Mbps guardar nombre completo',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
+                        'position' => [
+                            'x' => -1700,
+                            'y' => 1800,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 150 Mbps guardar nombre completo'],
+                        'phrases' => [],
+                        'responses' => [
+                            'Por último escriba su nombre completo, y lo contactaremos a la brevedad.'
+                        ],
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Comprar Plan de 150 Mbps respuesta',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -1700,
+                            'y' => 2100,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 150 Mbps respuesta'],
+                        'phrases' => [],
+                        'responses' => [
+                            'Hemos guardado tu información, un asesor se pondará en contacto, garcias por preferir Starlink, ¿Tienes alguna otra pregunta?.',
                         ],
                     ],
                 ]
@@ -342,6 +388,20 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                             'Por favor escriba su número de teléfono, lo contactaremos a la brevedad.'
                         ],
                     ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Comprar Plan de 1 Gbps respuesta',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -800,
+                            'y' => 1300,
+                        ],
+                        'data' => ['label' => 'Comprar Plan de 1 Gbps respuesta'],
+                        'phrases' => [],
+                        'responses' => [
+                            'Hemos guardado su información, garcias por usar Starlink, ¿Tienes alguna otra pregunta?.',
+                        ],
+                    ],
                 ]
             ],
             // Preguntas sobre la cobertura
@@ -367,6 +427,42 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                 'options' => [
                     'Verificar cobertura',
                     'Preguntar sobre otro tema'
+                ],
+                'children' => [
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Verificar cobertura y guardar ciudad',
+                        'type' => 'customeNode',
+                        'save_information' => true,
+                        'information_required' => TypeInformationRequired::CIUDAD,
+                        'position' => [
+                            'x' => -500,
+                            'y' => 900,
+                        ],
+                        'data' => ['label' => 'Verificar cobertura y guardar ciudad'],
+                        'phrases' => [
+                            'Verificar cobertura',
+                            'Verificar cobertura en mi ciudad',
+                        ],
+                        'responses' => [
+                            'Por favor escriba su ciudad, para verificar la cobertura.'
+                        ],
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Verificar cobertura respuesta',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -500,
+                            'y' => 1300,
+                        ],
+                        'data' => ['label' => 'Verificar cobertura respuesta'],
+                        'phrases' => [],
+                        'responses' => [
+                            'Su ciudad cuenta con cobertura de Starlink.',
+                            'Su ciudad no cuenta con cobertura de Starlink.'
+                        ],
+                    ],
                 ]
             ],
             // Conectividad en lugares remotos
@@ -377,11 +473,10 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                 'type' => 'customNode',
                 'position' => [
                     'x' => -200,
-                    'y' => 600,
+                    'y' => 1200,
                 ],
                 'data' => ['label' => 'Conectividad en lugares remotos'],
                 'phrases' => [
-                    'Verificar cobertura',
                     'Quiero saber si puedo conectarme en lugares remotos',
                     '¿Es posible hacer streaming en lugares remotos con Starlink?',
                     'Información sobre conectividad en lugares remotos'

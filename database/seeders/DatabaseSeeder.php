@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             ChatbotTelecomunicationSeeder::class,
             ChatbotStarLinkColombiaSeeder::class,
+            ChatbotLevelySeeder::class
             // ChatbotSeeder::class,
             // EntitySeeder::class,
             // EntityValueSeeder::class,

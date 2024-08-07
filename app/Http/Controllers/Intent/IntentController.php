@@ -60,24 +60,24 @@ class IntentController extends Controller
     {
         $validatedData = $request->validate([
             'id' => 'required|uuid',
-            'name' => 'required|string|max:100',
-            'type' => 'required|string|max:100',
+            'name' => 'required|string|max:191',
+            'type' => 'required|string|max:191',
             'is_choice' => 'required|boolean',
             'position.x' => 'required|numeric',
             'position.y' => 'required|numeric',
-            'data.label' => 'required|string|max:100',
+            'data.label' => 'required|string|max:191',
             'category' => 'nullable|string',
             'save_information' => 'nullable|boolean',
             'information_required' => 'nullable|in:' . implode(',', TypeInformationRequired::getValues()),
             'training_phrases' => 'nullable|array',
             'training_phrases.*.id' => 'nullable|numeric',
-            'training_phrases.*.phrase' => 'string|max:100',
+            'training_phrases.*.phrase' => 'string|max:191',
             'responses' => 'nullable|array',
             'responses.*.id' => 'nullable|numeric',
-            'responses.*.response' => 'nullable|string|max:100',
+            'responses.*.response' => 'nullable|string|max:191',
             'options' => 'array',
             'options.*.id' => 'required|uuid',
-            'options.*.option' => 'string|max:100',
+            'options.*.option' => 'string|max:191',
         ]);
 
         DB::beginTransaction();

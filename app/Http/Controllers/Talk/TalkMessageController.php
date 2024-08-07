@@ -34,7 +34,7 @@ class TalkMessageController extends Controller
     public function store(Request $request, Chatbot $chatbot, Talk $talk, $intent = null)
     {
         $validated = $request->validate([
-            'message' => 'required|string|max:100',
+            'message' => 'required|string|max:191',
             'is_option' => 'nullable|boolean',
             'id' => 'nullable',
         ]);

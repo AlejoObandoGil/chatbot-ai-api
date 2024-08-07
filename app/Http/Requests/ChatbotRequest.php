@@ -14,9 +14,8 @@ class ChatbotRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return true; // Cambia esto si necesitas autorización específica
+        return true;
     }
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -25,7 +24,7 @@ class ChatbotRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:191',
             'description' => 'required|string',
             'type' => 'required|string|in:Basado en Reglas,PLN,Híbrido',
             'knowledgeBase' => 'nullable|string',
