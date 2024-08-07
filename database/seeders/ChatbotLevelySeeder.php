@@ -31,7 +31,7 @@ class ChatbotLevelySeeder extends Seeder
         $chatbotData = [
             'id' => 'eed9f0aa-add0-433f-a497-927a792a0c0a',
             'user_id' => 1,
-            'name' => 'levelBot',
+            'name' => 'LevelBot',
             'description' => 'Eres un chatbot encargado de brindar asistencia a los usuarios sobre la plataforma de levely.',
             'type' => 'Híbrido',
             'assistant_openai_id' => 'asst_Xg7hWFKehhdFP8PWhAXBTqGU',
@@ -43,12 +43,13 @@ class ChatbotLevelySeeder extends Seeder
 
         $intentsData = [
             [
+                'id' => Str::uuid(),
                 'name' => 'Saludo inicial',
                 'is_choice' => true,
                 'type' => 'customNode',
                 'category' => 'saludo',
                 'position' => [
-                    'x' => -100,
+                    'x' => 0,
                     'y' => 100,
                 ],
                 'data' => ['label' => 'Saludo inicial'],
@@ -64,8 +65,8 @@ class ChatbotLevelySeeder extends Seeder
                     'Otro tema de interés'
                 ],
                 'responses' => [
-                    '¡Hola soy levelBot! ¿En qué puedo asesorarte el dia de hoy? Selecciona una opción:',
-                    '¡Hola soy levelBot! Tenemos varios temas que podrían interesarte. ¿Cuál te gustaría explorar?'
+                    '¡Hola soy levelBot! ¿En qué puedo asesorarte el dia de hoy? Selecciona una opción o escribe tu pregunta',
+                    '¡Hola soy levelBot! Tenemos varios temas que podrían interesarte. ¿Cuál te gustaría explorar? Selecciona una opción o escribe tu pregunta'
                 ],
                 'options' => [
                     'Comprar una subscripción',
@@ -73,238 +74,236 @@ class ChatbotLevelySeeder extends Seeder
                     'Agendar una demo',
                     'Información sobre Levely',
                     'Aprender a usar Levely',
+                ]
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Comprar una subscripción guardar correo',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::CORREO,
+                'position' => [
+                    'x' => -400,
+                    'y' => 300,
                 ],
-                'children' => [
-                    [
-                        'name' => 'Comprar una subscripción guardar correo',
-                        'type' => 'customeNode',
-                        'save_information' => true,
-                        'information_required' => TypeInformationRequired::CORREO,
-                        'position' => [
-                            'x' => -500,
-                            'y' => 500,
-                        ],
-                        'data' => ['label' => 'Comprar una subscripción guardar correo'],
-                        'phrases' => [
-                            'Comprar',
-                            'Comprar una subscripción',
-                            'Comprar licencias',
-                            'Comprar levely'
-                        ],
-                        'responses' => [
-                            'Por favor escriba su correo electrónico para brindarle una subscripción.'
-                        ],
-                        [
-                            'name' => 'Comprar una subscripción guardar nombre',
-                            'type' => 'customeNode',
-                            'save_information' => true,
-                            'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
-                            'position' => [
-                                'x' => -500,
-                                'y' => 900,
-                            ],
-                            'data' => ['label' => 'Comprar una subscripción guardar nombre'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Por favor escriba su nombre completo.'
-                            ],
-                        ],
-                        [
-                            'name' => 'Comprar una subscripción guardar nombre empresa',
-                            'type' => 'customeNode',
-                            'save_information' => true,
-                            'information_required' => TypeInformationRequired::EMPRESA,
-                            'position' => [
-                                'x' => -500,
-                                'y' => 1200,
-                            ],
-                            'data' => ['label' => 'Comprar una subscripción guardar nombre empresa'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Por último por favor escriba el nombre de su institución y lo contactaremos enseguida.'
-                            ],
-                        ],
-                        [
-                            'id' => Str::uuid(),
-                            'name' => 'Comprar una subscripción respuesta final',
-                            'type' => 'customeNode',
-                            'position' => [
-                                'x' => 0,
-                                'y' => 1300,
-                            ],
-                            'data' => ['label' => 'Comprar una subscripción respuesta final'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra ayuda?.',
-                            ],
-                        ],
-                    ]
+                'data' => ['label' => 'Comprar una subscripción guardar correo'],
+                'phrases' => [
+                    'Comprar',
+                    'Comprar una subscripción',
+                    'Comprar licencias',
+                    'Comprar levely'
                 ],
-                'children' => [
-                    [
-                        'name' => 'Soporte técnico guardar teléfono',
-                        'type' => 'customeNode',
-                        'save_information' => true,
-                        'information_required' => TypeInformationRequired::TELEFONO,
-                        'position' => [
-                            'x' => 0,
-                            'y' => 500,
-                        ],
-                        'data' => ['label' => 'Soporte técnico guardar teléfono'],
-                        'phrases' => [
-                            'Soporte técnico',
-                            'Necesito ayuda',
-                            'Necesito soporte técnico',
-                            'Necesito soporte'
-                        ],
-                        'responses' => [
-                            'Por favor escriba su número de teléfono para brindarle soporte técnico.'
-                        ],
-                        [
-                            'name' => 'Soporte técnico guardar empresa',
-                            'type' => 'customeNode',
-                            'save_information' => true,
-                            'information_required' => TypeInformationRequired::EMPRESA,
-                            'position' => [
-                                'x' => 0,
-                                'y' => 900,
-                            ],
-                            'data' => ['label' => 'Soporte técnico guardar empresa'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Por favor escriba su número de nombre completo y lo contactaremos enseguida.'
-                            ],
-                        ],
-                        [
-                            'id' => Str::uuid(),
-                            'name' => 'Soporte técnico respuesta final',
-                            'type' => 'customeNode',
-                            'position' => [
-                                'x' => 0,
-                                'y' => 1300,
-                            ],
-                            'data' => ['label' => 'Soporte técnico respuesta final'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra ayuda?.',
-                            ],
-                        ],
-                    ]
+                'responses' => [
+                    'Por favor escriba su correo electrónico para brindarle una subscripción.'
+                ]
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Comprar una subscripción guardar nombre',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
+                'position' => [
+                    'x' => -400,
+                    'y' => 600,
                 ],
-                'children' => [
-                    [
-                        'name' => 'Agendar una demo guardar nombre completo',
-                        'type' => 'customeNode',
-                        'save_information' => true,
-                        'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
-                        'position' => [
-                            'x' => 500,
-                            'y' => 500,
-                        ],
-                        'data' => ['label' => 'Agendar una demo guardar nombre completo'],
-                        'phrases' => [
-                            'Agendar una demo',
-                            'Quiero una demo',
-                            'Quiero agendar una demo',
-                            'Quiero una prueba',
-                            'Agendar prueba'
-                        ],
-                        'responses' => [
-                            'Le pediremos algunos datos para agendar su demo, Por favor escriba su nombre completo'
-                        ],
-                        [
-                            'name' => 'Agendar una demo guardar teléfono',
-                            'type' => 'customeNode',
-                            'save_information' => true,
-                            'information_required' => TypeInformationRequired::TELEFONO,
-                            'position' => [
-                                'x' => 500,
-                                'y' => 900,
-                            ],
-                            'data' => ['label' => 'Agendar una demo guardar teléfono'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Por favor escriba su número de teléfono.'
-                            ],
-                        ],
-                        [
-                            'name' => 'Agendar una demo guardar correo',
-                            'type' => 'customeNode',
-                            'save_information' => true,
-                            'information_required' => TypeInformationRequired::CORREO,
-                            'position' => [
-                                'x' => 500,
-                                'y' => 1200,
-                            ],
-                            'data' => ['label' => 'Agendar una demo guardar correo'],
-                            'phrases' => [],
-                            'responses' => [
-                                'Por último favor escriba su correo.'
-                            ],
-                        ],
-                        'children' => [
-                            [
-                                'name' => 'Agendar una demo guardar país',
-                                'type' => 'customeNode',
-                                'save_information' => true,
-                                'information_required' => TypeInformationRequired::PAIS,
-                                'position' => [
-                                    'x' => 500,
-                                    'y' => 1600,
-                                ],
-                                'data' => ['label' => 'Agendar una demo guardar país'],
-                                'phrases' => [],
-                                'responses' => [
-                                    'Por último favor escriba el nombre de su institución y lo contactaremos enseguida.'
-                                ],
-                            ],
-                        ],
-                        'children' => [
-                            [
-                                'name' => 'Agendar una demo guardar posición',
-                                'type' => 'customeNode',
-                                'save_information' => true,
-                                'information_required' => TypeInformationRequired::PROFESION,
-                                'position' => [
-                                    'x' => -500,
-                                    'y' => 1200,
-                                ],
-                                'data' => ['label' => 'Agendar una demo guardar posición'],
-                                'phrases' => [],
-                                'responses' => [
-                                    'Por último favor escriba su posición y lo contactaremos enseguida.'
-                                ],
-                            ],
-                        ],
-                        'children' => [
-                            [
-                                'id' => Str::uuid(),
-                                'name' => 'Agendar una demo respuesta final',
-                                'type' => 'customeNode',
-                                'position' => [
-                                    'x' => -500,
-                                    'y' => 1600,
-                                ],
-                                'data' => ['label' => 'Agendar una demo respuesta final'],
-                                'phrases' => [],
-                                'responses' => [
-                                    'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra información?.',
-                                ],
-                            ],
-                        ],
-                    ]
+                'data' => ['label' => 'Comprar una subscripción guardar nombre'],
+                'phrases' => [],
+                'responses' => [
+                    'Por favor escriba su nombre completo.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Comprar una subscripción guardar nombre empresa',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::EMPRESA,
+                'position' => [
+                    'x' => -400,
+                    'y' => 900,
+                ],
+                'data' => ['label' => 'Comprar una subscripción guardar nombre empresa'],
+                'phrases' => [],
+                'responses' => [
+                    'Por último por favor escriba el nombre de su institución y lo contactaremos enseguida.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Comprar una subscripción respuesta final',
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => -400,
+                    'y' => 1100,
+                ],
+                'data' => ['label' => 'Comprar una subscripción respuesta final'],
+                'phrases' => [],
+                'responses' => [
+                    'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra ayuda?.',
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Soporte técnico guardar teléfono',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::TELEFONO,
+                'position' => [
+                    'x' => 0,
+                    'y' => 300,
+                ],
+                'data' => ['label' => 'Soporte técnico guardar teléfono'],
+                'phrases' => [
+                    'Soporte técnico',
+                    'Necesito ayuda',
+                    'Necesito soporte técnico',
+                    'Necesito soporte'
+                ],
+                'responses' => [
+                    'Por favor escriba su número de teléfono para brindarle soporte técnico.'
+                ]
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Soporte técnico guardar empresa',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::EMPRESA,
+                'position' => [
+                    'x' => 0,
+                    'y' => 600,
+                ],
+                'data' => ['label' => 'Soporte técnico guardar empresa'],
+                'phrases' => [],
+                'responses' => [
+                    'Por favor escriba su número de nombre completo y lo contactaremos enseguida.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Soporte técnico respuesta final',
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 0,
+                    'y' => 800,
+                ],
+                'data' => ['label' => 'Soporte técnico respuesta final'],
+                'phrases' => [],
+                'responses' => [
+                    'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra ayuda?.',
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Agendar una demo guardar nombre completo',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
+                'position' => [
+                    'x' => 400,
+                    'y' => 300,
+                ],
+                'data' => ['label' => 'Agendar una demo guardar nombre completo'],
+                'phrases' => [
+                    'Agendar una demo',
+                    'Quiero una demo',
+                    'Quiero agendar una demo',
+                    'Quiero una prueba',
+                    'Agendar prueba'
+                ],
+                'responses' => [
+                    'Le pediremos algunos datos para agendar su demo, Por favor escriba su nombre completo'
+                ]
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Agendar una demo guardar teléfono',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::TELEFONO,
+                'position' => [
+                    'x' => 400,
+                    'y' => 600,
+                ],
+                'data' => ['label' => 'Agendar una demo guardar teléfono'],
+                'phrases' => [],
+                'responses' => [
+                    'Por favor escriba su número de teléfono.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Agendar una demo guardar correo',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::CORREO,
+                'position' => [
+                    'x' => 400,
+                    'y' => 900,
+                ],
+                'data' => ['label' => 'Agendar una demo guardar correo'],
+                'phrases' => [],
+                'responses' => [
+                    'Por último favor escriba su correo.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Agendar una demo guardar país',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::PAIS,
+                'position' => [
+                    'x' => 400,
+                    'y' => 1100,
+                ],
+                'data' => ['label' => 'Agendar una demo guardar país'],
+                'phrases' => [],
+                'responses' => [
+                    'Por último favor escriba el nombre de su institución y lo contactaremos enseguida.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Agendar una demo guardar posición',
+                'type' => 'customeNode',
+                'save_information' => true,
+                'information_required' => TypeInformationRequired::PROFESION,
+                'position' => [
+                    'x' => 400,
+                    'y' => 1300,
+                ],
+                'data' => ['label' => 'Agendar una demo guardar posición'],
+                'phrases' => [],
+                'responses' => [
+                    'Por último favor escriba su posición y lo contactaremos enseguida.'
+                ],
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Agendar una demo respuesta final',
+                'type' => 'customeNode',
+                'position' => [
+                    'x' => 400,
+                    'y' => 1500,
+                ],
+                'data' => ['label' => 'Agendar una demo respuesta final'],
+                'phrases' => [],
+                'responses' => [
+                    'Hemos guardado tu información, un asesor se pondrá en contacto, ¿Tienes alguna otra pregunta o necesitas alguna otra información?.',
                 ],
             ],
             // Despedida
             [
-                'id' => 'f7e4a474-9ab7-4019-8f2a-3340efbb08f4', // Despedida
+                'id' => Str::uuid(),
                 'name' => 'Despedida',
                 'category' => 'despedida',
                 'is_choice' => false,
                 'type' => 'customNode',
                 'position' => [
-                    'x' => 1000,
-                    'y' => 600,
+                    'x' => 600,
+                    'y' => 300,
                 ],
                 'data' => ['label' => 'Despedida'],
                 'phrases' => [
@@ -326,7 +325,7 @@ class ChatbotLevelySeeder extends Seeder
                 // Crear intención
                 $intent = Intent::create([
                     'chatbot_id' => $chatbot->id,
-                    'id' => Str::uuid(),
+                    'id' => $intentData['id'],
                     'name' => $intentData['name'],
                     'is_choice' => $intentData['is_choice'] ?? false,
                     'save_information' => $intentData['save_information'] ?? false,

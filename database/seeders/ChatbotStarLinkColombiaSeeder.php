@@ -62,8 +62,8 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Otro tema de interés'
                 ],
                 'responses' => [
-                    '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy? Selecciona una opción:',
-                    '¡Hola soy SkynetBot! Tenemos varios temas que podrían interesarte. ¿Cuál te gustaría explorar?'
+                    '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy? Selecciona una opción o escribe una pregunta',
+                    '¡Hola soy SkynetBot! Tenemos varios temas que podrían interesarte. Selecciona una opción o escribe una pregunta'
                 ],
                 'options' => [
                     'Tipos de planes de internet',
@@ -206,7 +206,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                         'information_required' => TypeInformationRequired::NUMERO_DE_DOCUMENTO,
                         'position' => [
                             'x' => -1700,
-                            'y' => 1300,
+                            'y' => 1100,
                         ],
                         'data' => ['label' => 'Comprar Plan de 150 Mbps guardar documento'],
                         'phrases' => [],
@@ -222,7 +222,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                         'information_required' => TypeInformationRequired::NOMBRE_COMPLETO,
                         'position' => [
                             'x' => -1700,
-                            'y' => 1800,
+                            'y' => 1400,
                         ],
                         'data' => ['label' => 'Comprar Plan de 150 Mbps guardar nombre completo'],
                         'phrases' => [],
@@ -236,7 +236,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                         'type' => 'customeNode',
                         'position' => [
                             'x' => -1700,
-                            'y' => 2100,
+                            'y' => 1700,
                         ],
                         'data' => ['label' => 'Comprar Plan de 150 Mbps respuesta'],
                         'phrases' => [],
@@ -394,7 +394,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                         'type' => 'customeNode',
                         'position' => [
                             'x' => -800,
-                            'y' => 1300,
+                            'y' => 1100,
                         ],
                         'data' => ['label' => 'Comprar Plan de 1 Gbps respuesta'],
                         'phrases' => [],
@@ -454,7 +454,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                         'type' => 'customeNode',
                         'position' => [
                             'x' => -500,
-                            'y' => 1300,
+                            'y' => 1100,
                         ],
                         'data' => ['label' => 'Verificar cobertura respuesta'],
                         'phrases' => [],

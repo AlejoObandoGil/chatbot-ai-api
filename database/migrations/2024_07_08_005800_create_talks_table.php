@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('talks', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('chatbot_id');;
+            $table->foreignUuid('chatbot_id');
+            $table->string('thread_openai_id');
             $table->timestamp('started_at')->nullable();
             $table->timestamp('ended_at')->nullable();
             $table->timestamps();
