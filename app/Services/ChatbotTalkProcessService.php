@@ -130,7 +130,7 @@ class ChatbotTalkProcessService
                 }
                 return $defaultResponse;
             } else {
-                return 'La información proporcionada no coincide con el formato requerido, Por favor escribe solo la información solicitada.';
+                return $typeInformationRequired->getErrorMessage();
             }
 
             return false;
