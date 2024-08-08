@@ -165,15 +165,15 @@ class ChatbotController extends Controller
 
         $knowledge = $chatbot->knowledges()->first();
 
-        if ($request->hasFile('document')) {
+        if ($request->hasFile('document') && ($validatedData['type'] === 'Híbrido' || $validatedData['type'] === 'PLN')) {
             if ($knowledge && $knowledge->document) {
                 Storage::disk('public')->delete($knowledge->document);
             }
             $knowledge->document = $request->file('document')->store('documents', 'public');
-            $knowledge->file_openai_id = $this->openAIService->uploadFileGptApi($request->file('document'));
-            // if ($knowledge->file_openai_id) {
-            //     $knowledge->content_file_openai_id = $this->extractTextFromPdf($knowledge->document);
-            // }
+            $knowledge->file_openai_id = $this->openAIService->uploadFileGptApi($knowledge->document);
+            if ($knowledge->file_openai_id) {
+                $knowledge->content_file_openai_id = $this->extractTextFromPdf($knowledge->document);
+            }
         }
 
         if ($knowledge->file_openai_id) {

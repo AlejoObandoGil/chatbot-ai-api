@@ -48,7 +48,7 @@ class TalkMessageController extends Controller
             'sender' => 'user',
         ]);
 
-        $response = $this->chatbotTalkProcessService->handleMessageProcess($message, $option, $chatbot->id, $intent, $talk);
+        $response = $this->chatbotTalkProcessService->handleMessageProcess($message, $option, $chatbot, $intent, $talk);
 
         $talk->messages()->create([
             'intent_id' => $intent !== 'false' ? $intent : null,

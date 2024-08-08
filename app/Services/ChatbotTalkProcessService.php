@@ -18,21 +18,43 @@ use Phpml\FeatureExtraction\TokenCountVectorizer;
 
 class ChatbotTalkProcessService
 {
-    public function handleMessageProcess($message, $option, $chatbotId, $intentId, $talk)
+    protected $openAIService;
+
+    public function __construct(OpenAIService $openAIService)
+    {
+        $this->openAIService = $openAIService;
+    }
+
+    public function handleMessageProcess($message, $option, $chatbot, $intentId, $talk)
     {
         $intent = $intentId ? Intent::find($intentId) : null;
 
-        Log::info($intent);
+        Log::info('handleMessageProcess');
 
         if ($option['is_option']) {
-            return $this->handleOption($option);
+            $responseOption = $this->handleOption($option);
+            if ($responseOption) {
+                return $responseOption;
+            }
         }
 
-        $matchedIntent = $this->findBestMatchIntent($message, $chatbotId, $intentId);
-        if ($matchedIntent) {
-            $response = IntentResponse::where('intent_id', $matchedIntent->id)->inRandomOrder()->first();
+        $matchedIntent = $this->findBestMatchIntent($message, $chatbot->id, $intentId);
+        if ($matchedIntent['answer'] && isset($matchedIntent['bestMatchData'])) {
+            $response = IntentResponse::where('intent_id', $matchedIntent['bestMatchData']['id'])->inRandomOrder()->first();
 
-            return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
+            return $response ?? 'Lo siento, no tengo una respuesta para esto, por favor intenta preguntar de otra forma.';
+        }
+
+        if (($chatbot->type === 'Híbrido' || $chatbot->type === 'PLN') && (!$intent || !$intent->save_information)) {
+            $prepareInstruction = null;
+            if (isset($matchedIntent['bestMatchData'])) {
+                $prepareInstruction = $this->prepareInstructions($matchedIntent['bestMatchData']);
+            }
+            if ($talk->thread_openai_id) {
+                $response = $this->openAIService->createMessage($talk->thread_openai_id, $chatbot->assistant_openai_id, $message, $prepareInstruction);
+
+                return $response ?? 'Lo siento, no tengo una respuesta para esto, por favor intenta preguntar de otra forma.';
+            }
         }
 
         if ($intent && $intent->save_information) {
@@ -42,13 +64,43 @@ class ChatbotTalkProcessService
             }
         }
 
-        return $response ?? 'Lo siento, no entendí tu mensaje, por favor intenta preguntar de otra forma.';
+        return $response ?? 'Lo siento, no tengo una respuesta para esto, por favor intenta preguntar de otra forma.';
+    }
+
+    public function prepareInstructions($bestMatchData)
+    {
+        Log::info('prepareInstructions');
+
+        $intents = Intent::where('id', $bestMatchData->id)->with('trainingPhrases', 'responses')->get();
+
+        $instructions = "Contexto: ";
+        $intentNames = [];
+        $trainingPhrases = [];
+        $responses = [];
+
+        foreach ($intents as $intent) {
+            $intentNames[] = $intent->name;
+            foreach ($intent->trainingPhrases as $phrase) {
+                $trainingPhrases[] = $phrase->phrase;
+            }
+            foreach ($intent->responses as $response) {
+                $responses[] = $response->response;
+            }
+        }
+
+        $instructions .= "Intenciones: " . implode(", ", $intentNames) . ". ";
+        $instructions .= "Frases de Entrenamiento: " . implode(", ", $trainingPhrases) . ". ";
+        $instructions .= "Respuestas: " . implode(", ", $responses) . ". ";
+
+        return $instructions;
     }
 
     private function handleOption($option)
     {
+        Log::info('handleOption');
+
         $edgeOptionFind = Edge::where('source_handle', $option['id'])->first();
-        $defaultResponse = 'Lo siento, aún no hay una respuesta disponible para esta pregunta.';
+        $defaultResponse = null;
         if ($edgeOptionFind) {
             $intentTargetResponse = $edgeOptionFind->targetIntent->responses()->inRandomOrder()->first();
             return $intentTargetResponse ?? $defaultResponse;
@@ -58,6 +110,8 @@ class ChatbotTalkProcessService
 
     public function handleContactInformationSaving($message, Intent $intent, Talk $talk)
     {
+        Log::info('handleContactInformationSaving', $message);
+
         if (in_array($intent->information_required, TypeInformationRequired::getValues(), true)) {
             $typeInformationRequired = TypeInformationRequired::from($intent->information_required);
             $pattern = $typeInformationRequired->getRegexPattern();
@@ -76,7 +130,7 @@ class ChatbotTalkProcessService
                 }
                 return $defaultResponse;
             } else {
-                return 'La información proporcionada no coincide con el formato requerido, Por favor escribe solo la información solicitada sin ningún tipo de caracter especial.';
+                return 'La información proporcionada no coincide con el formato requerido, Por favor escribe solo la información solicitada.';
             }
 
             return false;
@@ -85,6 +139,8 @@ class ChatbotTalkProcessService
 
     public function findBestMatchIntent($message, $chatbotId, $intentId)
     {
+        Log::info('findBestMatchIntent');
+
         $intents = Intent::where('chatbot_id', $chatbotId)->with('trainingPhrases')->get();
 
         $phrasesData = $this->extractPhrasesData($intents);
@@ -102,6 +158,8 @@ class ChatbotTalkProcessService
 
     private function extractPhrasesData($intents)
     {
+        Log::info('extractPhrasesData');
+
         $phrases = [];
         $normalizedPhrases = [];
         $intentMap = [];
@@ -124,6 +182,8 @@ class ChatbotTalkProcessService
 
     private function prepareSamples($normalizedMessage, $normalizedPhrases)
     {
+        Log::info('prepareSamples');
+
         $tokenizer = new WhitespaceTokenizer();
         $vectorizer = new TokenCountVectorizer($tokenizer);
 
@@ -140,21 +200,23 @@ class ChatbotTalkProcessService
 
     private function comparePhrases($normalizedMessage, $messageSample, $phraseVectors, $normalizedPhrases, $intentMap)
     {
+        Log::info('comparePhrases');
+
         $bestMatch = null;
         $messageLength = str_word_count($normalizedMessage);
 
-        if ($messageLength <= 2) {
+        if ($messageLength <= 3) {
             $bestCosineSimilarity = 0.1;
-            $bestSimilarText = 50;
+            $bestSimilarText = 60;
             $bestLevenshtein = 5;
-        } elseif ($messageLength <= 5) {
-            $bestCosineSimilarity = 0.1;
-            $bestSimilarText = 45;
-            $bestLevenshtein = 6;
+        } elseif ($messageLength > 3 && $messageLength <= 7) {
+            $bestCosineSimilarity = 0.2;
+            $bestSimilarText = 55;
+            $bestLevenshtein = 7;
         } else {
             $bestCosineSimilarity = 0.2;
             $bestSimilarText = 40;
-            $bestLevenshtein = 8;
+            $bestLevenshtein = 9;
         }
 
         Log::info('Begin Comparing Message + word count: ' . json_encode($normalizedMessage) . ' ' . json_encode($messageLength));
@@ -173,7 +235,7 @@ class ChatbotTalkProcessService
                 $bestSimilarText = $percent;
                 $bestLevenshtein = $levenshtein;
                 $bestMatch = $intentMap[$normalizedPhrases[$i]];
-                Log::info('Training Phrase: ' . $normalizedPhrases[$i] . ', ' . $cosineSimilarity. ', ' . $percent . ', ' . $levenshtein);
+                Log::info('Training Phrase: ' . $bestMatch . $normalizedPhrases[$i] . ', ' . $cosineSimilarity. ', ' . $percent . ', ' . $levenshtein);
             }
         }
 
@@ -187,16 +249,27 @@ class ChatbotTalkProcessService
 
     private function evaluateBestMatch($bestMatchData, $normalizedMessage, $userMessage, $chatbotId, $intentId)
     {
+        Log::info('evaluateBestMatch');
+
+        if (isset($bestMatchData['bestMatch'])) {
+            Log::info('No match');
+
+            return [
+                'bestMatchData' => $bestMatchData['bestMatch'],
+                'answer' => false
+            ];
+        }
+
         $messageLength = str_word_count($userMessage);
 
-        if ($messageLength <= 2) {
+        if ($messageLength <= 3) {
             $cosineWeight = 0.1;
             $similarTextWeight = 0.4;
             $levenshteinWeight = 0.5;
-        } elseif ($messageLength <= 5) {
+        } elseif ($messageLength > 3 && $messageLength <= 7) {
             $cosineWeight = 0.2;
-            $similarTextWeight = 0.65;
-            $levenshteinWeight = 0.15;
+            $similarTextWeight = 0.55;
+            $levenshteinWeight = 0.25;
         } else {
             $cosineWeight = 0.25;
             $similarTextWeight = 0.55;
@@ -219,16 +292,26 @@ class ChatbotTalkProcessService
         if ($weightedScore >= 0.5) {
             $this->hanldeTrainingPhrasesSaving($chatbotId, $bestMatchData['bestMatch'], $userMessage);
 
-            return $bestMatchData['bestMatch'];
+            Log::info('$weightedScore >= 0.5: ' . json_encode($bestMatchData['bestMatch']));
+
+            return [
+                'bestMatchData' => $bestMatchData['bestMatch'],
+                'answer' => true
+            ];
         }
 
         Log::info('No match');
 
-        return null;
+        return [
+            'bestMatchData' => $bestMatchData['bestMatch'],
+            'answer' => false
+        ];
     }
 
     public function hanldeTrainingPhrasesSaving($chatbotId, $bestMatch, $userMessage)
     {
+        Log::info('hanldeTrainingPhrasesSaving');
+
         $intent = Intent::where('chatbot_id', $chatbotId)
             ->whereHas('trainingPhrases', function($query) use ($userMessage) {
                 $query->where('phrase', 'like', '%' . $userMessage . '%');

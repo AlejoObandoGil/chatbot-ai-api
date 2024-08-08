@@ -261,7 +261,7 @@ class ChatbotLevelySeeder extends Seeder
                 'data' => ['label' => 'Agendar una demo guardar país'],
                 'phrases' => [],
                 'responses' => [
-                    'Por último favor escriba el nombre de su institución y lo contactaremos enseguida.'
+                    'Por favor escriba el nombre de su institución.'
                 ],
             ],
             [

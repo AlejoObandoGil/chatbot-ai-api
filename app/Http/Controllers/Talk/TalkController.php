@@ -4,13 +4,21 @@ namespace App\Http\Controllers\Talk;
 
 use Carbon\Carbon;
 use App\Models\Talk\Talk;
+use OpenAI\Resources\Chat;
 use Illuminate\Http\Request;
 use App\Models\Chatbot\Chatbot;
+use App\Services\OpenAIService;
 use App\Http\Controllers\Controller;
-use OpenAI\Resources\Chat;
 
 class TalkController extends Controller
 {
+    protected $openAIService;
+
+    public function __construct(OpenAIService $openAIService)
+    {
+        $this->openAIService = $openAIService;
+    }
+
     /**
      * Display a listing of the resource.
      */
@@ -42,8 +50,13 @@ class TalkController extends Controller
      */
     public function store(Chatbot $chatbot)
     {
+        if ($chatbot->type === 'Híbrido' || $chatbot->type === 'PLN') {
+            $thread = $this->openAIService->createThread();
+        }
+
         $talk = Talk::create([
             'chatbot_id' => $chatbot->id,
+            'thread_openai_id' => $thread ? $thread->id : null,
             'started_at' => Carbon::now()
         ]);
 
@@ -53,11 +66,18 @@ class TalkController extends Controller
     /**
      * Display the specified resource.
      */
-    public function close(Talk $talk)
+    public function close(Chatbot $chatbot, Talk $talk)
     {
+        $chatbot = Chatbot::find($talk->chatbot_id);
+        if ($chatbot->type === 'Híbrido' || $chatbot->type === 'PLN') {
+            if ($talk->thread_openai_id) {
+                $thread = $this->openAIService->deleteThread($talk->thread_openai_id);
+                $talk->update(['thread_deleted' => $thread->deleted]);
+            }
+        }
         $talk->update(['ended_at' => Carbon::now()]);
 
-        return response()->json(['talk' => $talk], 200);
+        return response()->json(['talk' => $talk, 'close' => true], 200);
     }
 
     /**

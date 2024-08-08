@@ -15,6 +15,8 @@ class Talk extends Model
 
     protected $fillable = [
         'chatbot_id',
+        'thread_openai_id',
+        'thread_deleted',
         'started_at',
         'ended_at'
     ];
@@ -22,6 +24,7 @@ class Talk extends Model
     protected $casts = [
         'started_at' => 'datetime:Y-m-d H:i:s',
         'ended_at' => 'datetime:Y-m-d H:i:s',
+        'thread_deleted' => 'boolean'
     ];
 
     /**
