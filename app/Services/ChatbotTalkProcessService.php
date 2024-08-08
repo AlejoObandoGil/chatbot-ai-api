@@ -38,7 +38,7 @@ class ChatbotTalkProcessService
             }
         }
 
-        $matchedIntent = $this->findBestMatchIntent($message, $chatbot->id, $intentId);
+        $matchedIntent = $this->findBestMatchIntent($message, $chatbot, $intentId);
         if ($matchedIntent['answer'] && isset($matchedIntent['bestMatchData'])) {
             $response = IntentResponse::where('intent_id', $matchedIntent['bestMatchData']['id'])->inRandomOrder()->first();
 
@@ -51,7 +51,7 @@ class ChatbotTalkProcessService
                 $prepareInstruction = $this->prepareInstructions($matchedIntent['bestMatchData']);
             }
             if ($talk->thread_openai_id) {
-                $response = $this->openAIService->createMessage($talk->thread_openai_id, $chatbot->assistant_openai_id, $message, $prepareInstruction);
+                $response = $this->openAIService->createMessage($talk->thread_openai_id, $chatbot, $message, $prepareInstruction);
 
                 return $response ?? 'Lo siento, no tengo una respuesta para esto, por favor intenta preguntar de otra forma.';
             }
@@ -110,7 +110,7 @@ class ChatbotTalkProcessService
 
     public function handleContactInformationSaving($message, Intent $intent, Talk $talk)
     {
-        Log::info('handleContactInformationSaving', $message);
+        Log::info('handleContactInformationSaving');
 
         if (in_array($intent->information_required, TypeInformationRequired::getValues(), true)) {
             $typeInformationRequired = TypeInformationRequired::from($intent->information_required);
@@ -137,11 +137,11 @@ class ChatbotTalkProcessService
         }
     }
 
-    public function findBestMatchIntent($message, $chatbotId, $intentId)
+    public function findBestMatchIntent($message, $chatbot, $intentId)
     {
         Log::info('findBestMatchIntent');
 
-        $intents = Intent::where('chatbot_id', $chatbotId)->with('trainingPhrases')->get();
+        $intents = Intent::where('chatbot_id', $chatbot->id)->with('trainingPhrases')->get();
 
         $phrasesData = $this->extractPhrasesData($intents);
 
@@ -153,7 +153,7 @@ class ChatbotTalkProcessService
 
         $bestMatchData = $this->comparePhrases($normalizedMessage, $messageSample, $phraseVectors, $phrasesData['normalizedPhrases'], $phrasesData['intentMap']);
 
-        return $this->evaluateBestMatch($bestMatchData, $normalizedMessage, $message, $chatbotId, $intentId);
+        return $this->evaluateBestMatch($bestMatchData, $normalizedMessage, $message, $chatbot, $intentId);
     }
 
     private function extractPhrasesData($intents)
@@ -247,11 +247,11 @@ class ChatbotTalkProcessService
         ];
     }
 
-    private function evaluateBestMatch($bestMatchData, $normalizedMessage, $userMessage, $chatbotId, $intentId)
+    private function evaluateBestMatch($bestMatchData, $normalizedMessage, $userMessage, $chatbot, $intentId)
     {
-        Log::info('evaluateBestMatch');
+        Log::info('Best Match:', ['bestMatch' => $bestMatchData['bestMatch']]);
 
-        if (isset($bestMatchData['bestMatch'])) {
+        if (!isset($bestMatchData['bestMatch'])) {
             Log::info('No match');
 
             return [
@@ -289,8 +289,11 @@ class ChatbotTalkProcessService
 
         Log::info('Best match normalized score: ' . $cosineSimilarityScore . ', ' . $similarTextScore . ', ' . $levenshteinScore . ', ' . $weightedScore);
 
-        if ($weightedScore >= 0.5) {
-            $this->hanldeTrainingPhrasesSaving($chatbotId, $bestMatchData['bestMatch'], $userMessage);
+        if (($weightedScore >= 0.6 && $chatbot->type === 'Basado en reglas' && $bestMatchData['bestMatch']['save_information'])
+            || ($weightedScore >= 0.5 && $chatbot->type === 'Basado en reglas' && !$bestMatchData['bestMatch']['save_information'])
+            || ($weightedScore >= 0.6 && $chatbot->type === 'Híbrido')
+        ) {
+            $this->hanldeTrainingPhrasesSaving($chatbot->id, $bestMatchData['bestMatch'], $userMessage);
 
             Log::info('$weightedScore >= 0.5: ' . json_encode($bestMatchData['bestMatch']));
 
@@ -300,10 +303,15 @@ class ChatbotTalkProcessService
             ];
         }
 
+        if (!$bestMatchData['bestMatch']['save_information']) {
+            return [
+                'bestMatchData' => $bestMatchData['bestMatch']
+            ];
+        }
+
         Log::info('No match');
 
         return [
-            'bestMatchData' => $bestMatchData['bestMatch'],
             'answer' => false
         ];
     }

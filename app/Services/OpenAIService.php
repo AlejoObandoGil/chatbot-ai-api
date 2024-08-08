@@ -259,19 +259,27 @@ class OpenAIService
         }
     }
 
-    public function createMessage($threadId, $assistantId, $message, $instructions)
+    public function createMessage($threadId, $chatbot, $message, $instructions)
     {
         try {
-            Log::info('Creating message from GPT API: ' . $threadId, ['message' => $message, 'assistantId' => $assistantId, 'instructions' => $instructions]);
+            Log::info('Creating message from GPT API: ' . $threadId, ['message' => $message, 'assistantId' => $chatbot->assistant_openai_id, 'instructions' => $instructions]);
 
             OpenAI::threads()->messages()->create($threadId, [
                 'role' => 'user',
                 'content' => $message,
             ]);
 
+            $combinedInstructions = $instructions !== null
+                ? 'Limita tus respuestas a un máximo de 50 tokens. ' . $instructions
+                : 'Limita tus respuestas a un máximo de 50 tokens.';
+
             $run = OpenAI::threads()->runs()->create($threadId, [
-                'assistant_id' => $assistantId,
-                'instructions' => $instructions ?? '',
+                'assistant_id' => $chatbot->assistant_openai_id,
+                'instructions' => $combinedInstructions,
+                // 'token_control'=> [
+                    // 'max_prompt_tokens' => 256,
+                    // 'max_completion_tokens' => 256 * 2
+                // ]
             ]);
 
             do {
@@ -282,12 +290,19 @@ class OpenAIService
             $messages = OpenAI::threads()->messages()->list($threadId);
             $lastMessage = $messages->data[0]->content[0]->text->value;
 
-            return $lastMessage;
+            return $this->removeReferences($lastMessage);
 
         } catch (\Exception $e) {
             Log::error('Error create thread from GPT API: ' . $e->getMessage());
             return null;
         }
+    }
+
+    function removeReferences($text) {
+        $pattern = '/【\d+:\d+†source】/';
+        $cleanedText = preg_replace($pattern, '', $text);
+
+        return $cleanedText;
     }
 
     // public function downloadFileGptApi($fileId)

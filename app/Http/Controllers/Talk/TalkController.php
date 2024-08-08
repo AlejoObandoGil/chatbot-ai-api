@@ -68,6 +68,10 @@ class TalkController extends Controller
      */
     public function close(Chatbot $chatbot, Talk $talk)
     {
+        if ($talk->ended_at) {
+            return response()->json(['talk' => $talk, 'closed' => true], 200);
+        }
+
         $chatbot = Chatbot::find($talk->chatbot_id);
         if ($chatbot->type === 'Híbrido' || $chatbot->type === 'PLN') {
             if ($talk->thread_openai_id) {
@@ -77,7 +81,7 @@ class TalkController extends Controller
         }
         $talk->update(['ended_at' => Carbon::now()]);
 
-        return response()->json(['talk' => $talk, 'close' => true], 200);
+        return response()->json(['talk' => $talk, 'closed' => true], 200);
     }
 
     /**
