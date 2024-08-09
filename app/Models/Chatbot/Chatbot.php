@@ -26,12 +26,13 @@ class Chatbot extends Model
         'description',
         'type',
         'enabled',
-        'script_embed'
+        'assistant_openai_id',
+        'temperature',
+        'max_tokens',
     ];
 
     protected $casts = [
         'enabled' => 'boolean',
-        'script_embed' => 'json'
     ];
 
     public function user()
@@ -44,14 +45,24 @@ class Chatbot extends Model
         return $this->hasOne(ChatbotConfig::class);
     }
 
+    /**
+     * Define the relationship between the Chatbot model and the Intent model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function intents()
     {
         return $this->hasMany(Intent::class);
     }
 
+    /**
+     * Define the relationship between the Chatbot model and the Knowledge model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function knowledges()
     {
-        return $this->hasMany(Knowledge::class);
+        return $this->HasMany(Knowledge::class);
     }
 
     public function entities()

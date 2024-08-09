@@ -23,17 +23,17 @@ class ChatbotTelecomunicationSeeder extends Seeder
      */
     public function run(): void
     {
-        // hybrid,
-        // natural language processing,
-        // rule based
+        // Híbrido,
+        // PLN,
+        // Basado en reglas
 
         // Datos del chatbot
         $chatbotData = [
             'id' => '4cbda66d-2ba5-470e-956e-037946e96307',
             'user_id' => 1,
-            'name' => 'TelcoBot',
+            'name' => 'ComcelTelmexBot',
             'description' => 'Chatbot para la empresa de telefonía, televisión y internet.',
-            'type' => 'Natural language processing'
+            'type' => 'Híbrido'
         ];
 
         $chatbot = Chatbot::create($chatbotData);
@@ -53,13 +53,13 @@ class ChatbotTelecomunicationSeeder extends Seeder
                     'Hola',
                     'Buenos días',
                     'Buenas tardes',
-                    'Buenas noches'
+                    'Buenas noches',
+                    'Hello',
+                    'Hi',
                 ],
                 'responses' => [
-                    '¡Hola! ¿En qué puedo ayudarte hoy?',
-                    'Buenos días, ¿cómo puedo asistirte?',
-                    'Buenas tardes, ¿en qué puedo ayudarte?',
-                    'Buenas noches, ¿cómo puedo asistirte?'
+                    '¡Hola soy ComcelTelmexBot! ¿En qué puedo ayudarte hoy?',
+                    '¡Hola soy ComcelTelmexBot! ¿cómo puedo asistirte el dia de hoy?',
                 ],
             ],
             [
@@ -83,11 +83,13 @@ class ChatbotTelecomunicationSeeder extends Seeder
                         ],
                         'data' => ['label' => 'Obtener tipos de planes'],
                         'phrases' => [
-                            'Quiero saber sobre el plan de internet',
-                            '¿Qué tipo de planes tienen?'
+                            'Quiero saber que tipos de planes tienen',
+                            '¿Cuales son los tipos de planes que manejan?',
+                            'Información de planes',
+                            'Conocer planes'
                         ],
                         'responses' => [
-                            'Nuestro plan de Internet ofrece alta velocidad y precios competitivos.',
+                            'Tenemos planes de Internet, Telefónía y TV ¿En cual estás interesad@.',
                             'Ofrecemos planes de Internet, Teléfono y TV. ¿Cuál te interesa?'
                         ],
                         'options' => [
@@ -108,10 +110,12 @@ class ChatbotTelecomunicationSeeder extends Seeder
                                 'data' => ['label' => 'Plan de Internet'],
                                 'phrases' => [
                                     'Internet',
+                                    'Quiero información de Internet',
+                                    'Información de internet',
                                     'Quiero saber el precio del plan de internet'
                                 ],
                                 'responses' => [
-                                    'El plan de internet tiene un precio de $100.000 por mes, 500 Mbps de velocidad.'
+                                    'El plan de internet tiene un precio de $100.000 por mes, cuenta con 500 Mbps de velocidad.'
                                 ],
                                 'options' => [
                                     'Comprar',
@@ -353,6 +357,7 @@ class ChatbotTelecomunicationSeeder extends Seeder
                 if (isset($intentData['options'])) {
                     foreach ($intentData['options'] as $optionText) {
                         $option = IntentOption::create([
+                            'id' => Str::uuid(),
                             'intent_id' => $intent->id,
                             'option' => $optionText
                         ]);

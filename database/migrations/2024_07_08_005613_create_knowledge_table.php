@@ -13,9 +13,14 @@ return new class extends Migration
     {
         Schema::create('knowledge', function (Blueprint $table) {
             $table->id();
-            $table->foreignUuid('chatbot_id');;
+            $table->foreignUuid('chatbot_id');
             $table->text('content')->nullable();
-            $table->text('links')->nullable();
+            $table->string('link')->nullable();
+            $table->string('document')->nullable();
+            $table->string('file_openai_id')->nullable();
+            $table->string('vector_store_openai_id')->nullable();
+            $table->string('file_vector_openai_id')->nullable();
+            $table->text('content_file_openai_id')->nullable();
             $table->boolean('is_learning')->default(false);
             $table->timestamps();
             $table->softDeletes();

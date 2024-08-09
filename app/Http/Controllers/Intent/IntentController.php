@@ -18,11 +18,11 @@ use App\Models\Intent\IntentTrainingPhrase;
 
 class IntentController extends Controller
 {
-/**
+    /**
      * Display a listing of intents and edges for a specific chatbot.
      *
-     * @param  \App\Models\Chatbot  $chatbot
-     * @return \Illuminate\Http\Response
+     * @param  \App\Models\Chatbot\Chatbot  $chatbot
+     * @return \Illuminate\Http\JsonResponse.
      */
     public function index(Chatbot $chatbot)
     {
@@ -44,15 +44,6 @@ class IntentController extends Controller
         ]);
     }
 
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
     /**
      * Store a newly created resource in storage.
      */
@@ -60,24 +51,24 @@ class IntentController extends Controller
     {
         $validatedData = $request->validate([
             'id' => 'required|uuid',
-            'name' => 'required|string|max:100',
-            'type' => 'required|string|max:100',
+            'name' => 'required|string|max:191',
+            'type' => 'required|string|max:191',
             'is_choice' => 'required|boolean',
             'position.x' => 'required|numeric',
             'position.y' => 'required|numeric',
-            'data.label' => 'required|string|max:100',
+            'data.label' => 'required|string|max:191',
             'category' => 'nullable|string',
             'save_information' => 'nullable|boolean',
             'information_required' => 'nullable|in:' . implode(',', TypeInformationRequired::getValues()),
             'training_phrases' => 'nullable|array',
             'training_phrases.*.id' => 'nullable|numeric',
-            'training_phrases.*.phrase' => 'string|max:100',
+            'training_phrases.*.phrase' => 'string|max:191',
             'responses' => 'nullable|array',
             'responses.*.id' => 'nullable|numeric',
-            'responses.*.response' => 'string|max:100',
+            'responses.*.response' => 'nullable|string|max:191',
             'options' => 'array',
-            'options.*.id' => 'nullable|numeric',
-            'options.*.option' => 'string|max:100',
+            'options.*.id' => 'required|uuid',
+            'options.*.option' => 'string|max:191',
         ]);
 
         DB::beginTransaction();
@@ -147,44 +138,12 @@ class IntentController extends Controller
     {
         $newOptionsIds = Arr::pluck($options, 'id');
         foreach ($options as $optionData) {
-            $optionId = $optionData['id'] ?? null;
+            $optionId = $optionData['id'];
             IntentOption::updateOrCreate(
                 ['id' => $optionId],
                 ['option' => $optionData['option'], 'intent_id' => $intent->id]
             );
         }
         $intent->options()->whereNotIn('id', $newOptionsIds)->delete();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Intent $intent)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Intent $intent)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Intent $intent)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Intent $intent)
-    {
-        //
     }
 }

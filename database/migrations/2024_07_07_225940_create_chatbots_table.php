@@ -19,8 +19,9 @@ return new class extends Migration
             $table->text('description');
             $table->string('type');
             $table->boolean('enabled')->default(false);
-            $table->string('script_embed')->nullable();
-            $table->string('code')->unique()->nullable();
+            $table->float('temperature')->default(0.5);
+            $table->integer('max_tokens')->default(50);
+            $table->string('assistant_openai_id')->nullable();
 
             $table->timestamps();
             $table->softDeletes();

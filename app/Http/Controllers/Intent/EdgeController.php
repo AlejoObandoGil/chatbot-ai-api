@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Intent;
 use App\Models\Intent\Edge;
 use Illuminate\Http\Request;
 use App\Models\Intent\Intent;
+use App\Models\Chatbot\Chatbot;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
@@ -29,17 +30,17 @@ class EdgeController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request, Chatbot $chatbot)
     {
         $validatedData = $request->validate([
             'nodes' => 'required|array',
             'nodes.*.id' => 'required|uuid',
-            'nodes.*.name' => 'required|string|max:100',
-            'nodes.*.type' => 'required|string|max:100',
+            'nodes.*.name' => 'required|string|max:191',
+            'nodes.*.type' => 'required|string|max:191',
             'nodes.*.is_choice' => 'required|boolean',
             'nodes.*.position.x' => 'required|numeric',
             'nodes.*.position.y' => 'required|numeric',
-            'nodes.*.data.label' => 'required|string|max:100',
+            'nodes.*.data.label' => 'required|string|max:191',
             'nodes.*.category' => 'nullable|string',
             'nodes.*.save_information' => 'nullable|boolean',
             'nodes.*.information_required' => 'nullable|string',
@@ -58,6 +59,7 @@ class EdgeController extends Controller
                 Intent::updateOrCreate(
                     ['id' => $intentData['id']],
                     [
+                        'chatbot_id' => $chatbot->id,
                         'name' => $intentData['name'],
                         'type' => $intentData['type'],
                         'is_choice' => $intentData['is_choice'],
@@ -79,7 +81,7 @@ class EdgeController extends Controller
                     ['id' => $edgeData['id'] ?? null],
                     [
                         'source' => $edgeData['source'] ?? null,
-                        'sourceHandle' => $edgeData['sourceHandle'] ?? null,
+                        'source_handle' => $edgeData['sourceHandle'] !== 'default' ? $edgeData['sourceHandle'] : null,
                         'target' => $edgeData['target'] ?? null,
                     ]
                 );
