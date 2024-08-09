@@ -264,8 +264,8 @@ class ChatbotTalkProcessService
 
         if ($messageLength <= 3) {
             $cosineWeight = 0.1;
-            $similarTextWeight = 0.4;
-            $levenshteinWeight = 0.5;
+            $similarTextWeight = 0.5;
+            $levenshteinWeight = 0.4;
         } elseif ($messageLength > 3 && $messageLength <= 7) {
             $cosineWeight = 0.2;
             $similarTextWeight = 0.55;
@@ -305,7 +305,8 @@ class ChatbotTalkProcessService
 
         if (!$bestMatchData['bestMatch']['save_information']) {
             return [
-                'bestMatchData' => $bestMatchData['bestMatch']
+                'bestMatchData' => $bestMatchData['bestMatch'],
+                'answer' => false
             ];
         }
 
