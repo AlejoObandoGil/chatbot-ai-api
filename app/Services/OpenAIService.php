@@ -158,7 +158,7 @@ class OpenAIService
             Log::info('Vector store retrieved successfully', ['vectorStore' => $vectorStore]);
             return $vectorStore;
         } catch (\Exception $e) {
-            Log::error('Error retrieving vector store: ' . $e->getMessage(), ['vector_store' => json_encode($vectorStore)]);
+            Log::error('Error retrieving vector store: ' . $e->getMessage());
             return null;
         }
     }
@@ -204,7 +204,7 @@ class OpenAIService
             Log::warning('File upload to GPT API returned null ID');
             return null;
         } catch (\Exception $e) {
-            Log::error('Error uploading file to GPT API: ' . $e->getMessage(), ['file' => $filePath]);
+            Log::error('Error uploading file to GPT API: ' . $e->getMessage());
             return null;
         }
     }
@@ -225,7 +225,7 @@ class OpenAIService
             Log::warning('File retrieval from GPT API returned null', ['file' => $file]);
             return null;
         } catch (\Exception $e) {
-            Log::error('Error retrieving file from GPT API: ' . $e->getMessage(), ['file_id' => $fileId, 'file' => $file]);
+            Log::error('Error retrieving file from GPT API: ' . $e->getMessage());
             return null;
         }
     }
@@ -240,7 +240,7 @@ class OpenAIService
             return $thread;
 
         } catch (\Exception $e) {
-            Log::error('Error create thread from GPT API: ' . $e->getMessage(), ['thread' => $thread]);
+            Log::error('Error create thread from GPT API: ' . $e->getMessage());
             return null;
         }
     }
@@ -254,7 +254,7 @@ class OpenAIService
 
             return $thread;
         } catch (\Exception $e) {
-            Log::error('Error create thread from GPT API: ' . $e->getMessage(), ['thread' => $thread]);
+            Log::error('Error create thread from GPT API: ' . $e->getMessage());
             return null;
         }
     }
