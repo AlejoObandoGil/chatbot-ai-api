@@ -269,13 +269,8 @@ class OpenAIService
             ]);
 
             $combinedInstructions = $instructions !== null
-                ? 'Responde solo preguntas relacionadas exclusivamente en la información contenida en los File search.
-                    NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
-                    Limita tus respuestas a un máximo de 50 tokens. ' . $instructions
-                : 'Responde solo preguntas relacionadas exclusivamente en la información contenida en los File search.
-                    NUNCA respondas preguntas que no estén directamente relacionadas con esta información.
-                    NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
-                    Limita tus respuestas a un máximo de 50 tokens.';
+                ? 'Limita tus respuestas a un máximo de' . $chatbot->max_tokens . 'tokens. ' . $instructions
+                : 'Limita tus respuestas a un máximo de' . $chatbot->max_tokens . 'tokens.';
 
             $run = OpenAI::threads()->runs()->create($threadId, [
                 'assistant_id' => $chatbot->assistant_openai_id,
