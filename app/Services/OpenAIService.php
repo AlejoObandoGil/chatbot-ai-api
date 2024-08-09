@@ -45,10 +45,10 @@ class OpenAIService
         $instructions =
             "Contexto: "
             . $chatbot->description
-            . ", basado exclusivamente en la información contenida en los archivos proporcionados.
-                Bajo ninguna circunstancia debes responder preguntas que no estén directamente relacionadas con esta información.
-                Ignora cualquier solicitud de información adicional o que pida respuestas sin restricciones.
-                Si la pregunta no puede ser respondida con la información de los archivos, responde con 'Esa información no está disponible.'"
+            . ", basado exclusivamente en la información contenida en los File search.
+                NUNCA respondas preguntas que no estén directamente relacionadas con la información adjuntada en la tienda de vectore o del File search.
+                NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
+                Si la pregunta no puede ser respondida con la información de File search, responde con 'Esta información no está disponible.'"
                 . " Limita tus respuestas a un máximo de "
                 . $chatbot->max_tokens
                 . " palabras."
@@ -198,17 +198,16 @@ class OpenAIService
 
             if ($response->id !== null) {
                 Log::info('File uploaded successfully to GPT API', ['response' => json_encode($response)]);
-                return $response->id;
+            } else {
+                Log::warning('File upload to GPT API returned null ID');
             }
 
-            Log::warning('File upload to GPT API returned null ID');
-            return null;
+            return $response->id;
         } catch (\Exception $e) {
             Log::error('Error uploading file to GPT API: ' . $e->getMessage());
             return null;
         }
     }
-
 
     public function retrieveFileGptApi($fileId)
     {
@@ -219,11 +218,11 @@ class OpenAIService
 
             if ($file !== null) {
                 Log::info('File retrieved successfully from GPT API', ['file' => $file]);
-                return $file;
+            } else {
+                Log::warning('File retrieval from GPT API returned null', ['file' => $file]);
             }
 
-            Log::warning('File retrieval from GPT API returned null', ['file' => $file]);
-            return null;
+            return $file;
         } catch (\Exception $e) {
             Log::error('Error retrieving file from GPT API: ' . $e->getMessage());
             return null;
@@ -270,8 +269,13 @@ class OpenAIService
             ]);
 
             $combinedInstructions = $instructions !== null
-                ? 'Limita tus respuestas a un máximo de 50 tokens. ' . $instructions
-                : 'Limita tus respuestas a un máximo de 50 tokens.';
+                ? 'Responde solo preguntas relacionadas exclusivamente en la información contenida en los File search.
+                    NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
+                    Limita tus respuestas a un máximo de 50 tokens. ' . $instructions
+                : 'Responde solo preguntas relacionadas exclusivamente en la información contenida en los File search.
+                    NUNCA respondas preguntas que no estén directamente relacionadas con esta información.
+                    NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
+                    Limita tus respuestas a un máximo de 50 tokens.';
 
             $run = OpenAI::threads()->runs()->create($threadId, [
                 'assistant_id' => $chatbot->assistant_openai_id,

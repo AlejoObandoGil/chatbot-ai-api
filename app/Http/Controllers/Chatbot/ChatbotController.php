@@ -191,7 +191,6 @@ class ChatbotController extends Controller
                 }
                 if (!$chatbot->assistant_openai_id) {
                     $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
-                    $knowledge->assistant_openai_id = $assistant->id;
                     $chatbot->update([
                         'assistant_openai_id' => $assistant->id,
                     ]);

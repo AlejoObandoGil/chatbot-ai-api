@@ -25,6 +25,11 @@ class ContactInformation extends Model
         return $this->belongsTo(Talk::class);
     }
 
+    /**
+     * Retrieves the related Intent model for this object.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
     public function intent()
     {
         return $this->belongsTo(Intent::class);

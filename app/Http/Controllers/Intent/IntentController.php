@@ -22,7 +22,7 @@ class IntentController extends Controller
      * Display a listing of intents and edges for a specific chatbot.
      *
      * @param  \App\Models\Chatbot\Chatbot  $chatbot
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\JsonResponse.
      */
     public function index(Chatbot $chatbot)
     {
