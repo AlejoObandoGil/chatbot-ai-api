@@ -75,28 +75,28 @@ class ChatbotController extends Controller
                     if ($fileId) {
                         $content_file_openai_id = $this->extractTextFromPdf($documentPath);
                     }
-                }
 
-                if ($fileId) {
-                    $vectorStore = $this->openAIService->createVectorStore($validatedData['name'], $fileId);
-                    $attempts = 0;
-                    do {
-                        sleep(2);
-                        $vectorStore = $this->openAIService->retrieveVectorStore($vectorStore->id);
-                        $attempts++;
-                    } while ($vectorStore->status === 'in_progress' && $attempts < 10);
+                    if ($fileId) {
+                        $vectorStore = $this->openAIService->createVectorStore($validatedData['name'], $fileId);
+                        $attempts = 0;
+                        do {
+                            sleep(2);
+                            $vectorStore = $this->openAIService->retrieveVectorStore($vectorStore->id);
+                            $attempts++;
+                        } while ($vectorStore->status === 'in_progress' && $attempts < 10);
 
-                    if ($vectorStore->status !== 'in_progress') {
-                        $file_vector_openai_id = $this->openAIService->uploadFileVectorStore($fileId, $vectorStore->id);
+                        if ($vectorStore->status !== 'in_progress') {
+                            $file_vector_openai_id = $this->openAIService->uploadFileVectorStore($fileId, $vectorStore->id);
 
-                        if (!$chatbot->assistant_openai_id) {
-                            $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
-                            $chatbot->update([
-                                'assistant_openai_id' => $assistant->id,
-                            ]);
+                            if (!$chatbot->assistant_openai_id) {
+                                $assistant = $this->openAIService->createAssistant($chatbot, $validatedData['knowledgeBase'], $vectorStore->id);
+                                $chatbot->update([
+                                    'assistant_openai_id' => $assistant->id,
+                                ]);
+                            }
+                        } else {
+                            Log::error('El vector store sigue en progreso después de 10 intentos');
                         }
-                    } else {
-                        Log::error('El vector store sigue en progreso después de 10 intentos');
                     }
                 }
             }
@@ -247,7 +247,6 @@ class ChatbotController extends Controller
 
         return $text;
     }
-
 
     /**
      * Remove the specified resource from storage.

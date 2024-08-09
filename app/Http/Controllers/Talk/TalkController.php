@@ -50,7 +50,8 @@ class TalkController extends Controller
      */
     public function store(Chatbot $chatbot)
     {
-        $thread =null;
+        $thread = null;
+
         if ($chatbot->type === 'Híbrido' || $chatbot->type === 'PLN') {
             $thread = $this->openAIService->createThread();
         }

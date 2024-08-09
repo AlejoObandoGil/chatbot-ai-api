@@ -18,10 +18,10 @@ use App\Models\Intent\IntentTrainingPhrase;
 
 class IntentController extends Controller
 {
-/**
+    /**
      * Display a listing of intents and edges for a specific chatbot.
      *
-     * @param  \App\Models\Chatbot  $chatbot
+     * @param  \App\Models\Chatbot\Chatbot  $chatbot
      * @return \Illuminate\Http\Response
      */
     public function index(Chatbot $chatbot)
@@ -42,15 +42,6 @@ class IntentController extends Controller
             'edges' => $edges,
             'type_information_required' => $enumValues,
         ]);
-    }
-
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
     }
 
     /**
@@ -154,37 +145,5 @@ class IntentController extends Controller
             );
         }
         $intent->options()->whereNotIn('id', $newOptionsIds)->delete();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Intent $intent)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Intent $intent)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Intent $intent)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Intent $intent)
-    {
-        //
     }
 }
