@@ -132,8 +132,6 @@ class ChatbotTalkProcessService
             } else {
                 return $typeInformationRequired->getErrorMessage();
             }
-
-            return false;
         }
     }
 
@@ -209,7 +207,7 @@ class ChatbotTalkProcessService
             $bestCosineSimilarity = 0.1;
             $bestSimilarText = 60;
             $bestLevenshtein = 5;
-        } elseif ($messageLength > 3 && $messageLength <= 7) {
+        } elseif ($messageLength <= 7) {
             $bestCosineSimilarity = 0.2;
             $bestSimilarText = 55;
             $bestLevenshtein = 7;
@@ -266,7 +264,7 @@ class ChatbotTalkProcessService
             $cosineWeight = 0.1;
             $similarTextWeight = 0.4;
             $levenshteinWeight = 0.5;
-        } elseif ($messageLength > 3 && $messageLength <= 7) {
+        } elseif ($messageLength <= 7) {
             $cosineWeight = 0.2;
             $similarTextWeight = 0.55;
             $levenshteinWeight = 0.25;

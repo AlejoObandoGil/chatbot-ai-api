@@ -36,8 +36,11 @@ class Edge extends Model
         return $this->belongsTo(IntentOption::class, 'source_handle');
     }
 
+
     /**
      * Get the target intent associated with the edge.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function targetIntent()
     {

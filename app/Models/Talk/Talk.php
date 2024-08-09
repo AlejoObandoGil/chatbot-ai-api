@@ -42,6 +42,11 @@ class Talk extends Model
         return $this->belongsTo(Entity::class);
     }
 
+    /**
+     * Retrieves the contact information associated with the current model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function contactInformation() {
         return $this->hasMany(ContactInformation::class);
     }
