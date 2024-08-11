@@ -14,7 +14,8 @@ return new class extends Migration
         Schema::create('chatbot_configs', function (Blueprint $table) {
             $table->id();
             $table->foreignUuid('chatbot_id');
-            $table->text('config_data');
+            $table->string('message_color');
+            $table->string('chat_color');
             $table->timestamps();
             $table->softDeletes();
 

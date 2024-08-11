@@ -41,6 +41,12 @@ class ChatbotLevelySeeder extends Seeder
 
         $chatbot = Chatbot::create($chatbotData);
 
+        $chatbot->config->create([
+            'chatbot_id' => $chatbot->id,
+            'chat_color' => '#2727d4',
+            'message_color' => '#2b3d97',
+        ]);
+
         $intentsData = [
             [
                 'id' => Str::uuid(),
@@ -379,6 +385,8 @@ class ChatbotLevelySeeder extends Seeder
 
         // Crear las intenciones recursivamente
         $createIntents($intentsData);
+
+
 
         // Datos de conocimientos
         $knowledgesData =
