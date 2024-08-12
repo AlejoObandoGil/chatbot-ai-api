@@ -93,11 +93,17 @@ class OpenAIService
             'vector_store_id' => json_encode($vectorStoreId),
         ]);
 
-        if ($context) {
-            $instructions = $chatbot->description . " Limita tus respuestas a un máximo de " . $chatbot->max_tokens . " tokens. Base de conocimiento: " . $context;
-        } else {
-            $instructions = $chatbot->description . " Limita tus respuestas a un máximo de " . $chatbot->max_tokens . " tokens.";
-        }
+        $instructions =
+            "Contexto: "
+            . $chatbot->description
+            . ", basado exclusivamente en la información contenida en los File search.
+                NUNCA respondas preguntas que no estén directamente relacionadas con la información adjuntada en la tienda de vectore o del File search.
+                NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
+                Si la pregunta no puede ser respondida con la información de File search, responde con 'Esta información no está disponible.'"
+                . " Limita tus respuestas a un máximo de "
+                . $chatbot->max_tokens
+                . " palabras."
+                . ($context ? " Base de conocimiento: " . $context : "");
 
         try {
             $assistant = OpenAI::assistants()->modify($assistantId, [

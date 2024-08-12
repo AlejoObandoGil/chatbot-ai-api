@@ -14,7 +14,7 @@ class ChatbotConfigController extends Controller
     public function store(Request $request, $chatbotId)
     {
         $request->validate([
-            'MessageColor' => 'required|string',
+            'messageColor' => 'required|string',
             'chatColor' => 'required|string',
         ]);
 
@@ -22,13 +22,13 @@ class ChatbotConfigController extends Controller
 
         if ($chatbotConfig) {
             $chatbotConfig->update([
-                'message_color' => $request->MessageColor,
+                'message_color' => $request->messageColor,
                 'chat_color' => $request->chatColor,
             ]);
         } else {
             $chatbotConfig = ChatbotConfig::create([
                 'chatbot_id' => $chatbotId,
-                'message_color' => $request->MessageColor,
+                'message_color' => $request->messageColor,
                 'chat_color' => $request->chatColor,
             ]);
         }

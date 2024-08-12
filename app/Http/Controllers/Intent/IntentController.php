@@ -62,10 +62,10 @@ class IntentController extends Controller
             'information_required' => 'nullable|in:' . implode(',', TypeInformationRequired::getValues()),
             'training_phrases' => 'nullable|array',
             'training_phrases.*.id' => 'nullable|numeric',
-            'training_phrases.*.phrase' => 'string|max:191',
+            'training_phrases.*.phrase' => 'required|string|max:191',
             'responses' => 'nullable|array',
             'responses.*.id' => 'nullable|numeric',
-            'responses.*.response' => 'nullable|string|max:191',
+            'responses.*.response' => 'required|string|max:191',
             'options' => 'array',
             'options.*.id' => 'required|uuid',
             'options.*.option' => 'string|max:191',
@@ -113,6 +113,13 @@ class IntentController extends Controller
         $newPhrasesIds = Arr::pluck($trainingPhrases, 'id');
         foreach ($trainingPhrases as $phraseData) {
             $phraseId = $phraseData['id'] ?? null;
+            $existingPhrase = IntentTrainingPhrase::where('intent_id', $intent->id)
+            ->where('phrase', $phraseData['phrase'])
+            ->first();
+
+            if (!$phraseId && $existingPhrase) {
+                continue;
+            }
             IntentTrainingPhrase::updateOrCreate(
                 ['id' => $phraseId],
                 ['phrase' => $phraseData['phrase'], 'intent_id' => $intent->id]
@@ -126,6 +133,13 @@ class IntentController extends Controller
         $newResponsesIds = Arr::pluck($responses, 'id');
         foreach ($responses as $responseData) {
             $responseId = $responseData['id'] ?? null;
+            $existingResponse = IntentResponse::where('intent_id', $intent->id)
+                ->where('response', $responseData['response'])
+                ->first();
+
+            if (!$responseId && $existingResponse) {
+                continue;
+            }
             IntentResponse::updateOrCreate(
                 ['id' => $responseId],
                 ['response' => $responseData['response'], 'intent_id' => $intent->id]
@@ -139,6 +153,13 @@ class IntentController extends Controller
         $newOptionsIds = Arr::pluck($options, 'id');
         foreach ($options as $optionData) {
             $optionId = $optionData['id'];
+            $existingOption = IntentOption::where('intent_id', $intent->id)
+            ->where('option', $optionData['option'])
+            ->first();
+
+            if (!$optionId && $existingOption) {
+                continue;
+            }
             IntentOption::updateOrCreate(
                 ['id' => $optionId],
                 ['option' => $optionData['option'], 'intent_id' => $intent->id]
