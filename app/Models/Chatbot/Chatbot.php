@@ -2,8 +2,9 @@
 
 namespace App\Models\Chatbot;
 
-use App\Models\User\User;
 use App\Models\Talk\Talk;
+use App\Models\User\User;
+use App\Models\Intent\Edge;
 use App\Models\Entity\Entity;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Knowledge;
@@ -40,6 +41,11 @@ class Chatbot extends Model
         return $this->belongsTo(User::class, 'user_id', 'user_id');
     }
 
+    /**
+     * Define the relationship between the Chatbot model and the ChatbotConfig model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasOne
+     */
     public function config()
     {
         return $this->hasOne(ChatbotConfig::class);
@@ -53,6 +59,16 @@ class Chatbot extends Model
     public function intents()
     {
         return $this->hasMany(Intent::class);
+    }
+
+    /**
+     * Define the relationship between the Chatbot model and the Edge model.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function edges()
+    {
+        return $this->hasMany(Edge::class);
     }
 
     /**

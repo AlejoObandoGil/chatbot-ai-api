@@ -73,13 +73,14 @@ class EdgeController extends Controller
             }
 
             $edgeIdsInRequest = collect($validatedData['edges'])->pluck('id')->filter()->toArray();
-            Edge::whereNotIn('id', $edgeIdsInRequest)->delete();
+            Edge::where('chatbot_id', $chatbot->id)->whereNotIn('id', $edgeIdsInRequest)->delete();
 
             $edges = $validatedData['edges'] ?? [];
             foreach ($edges as $edgeData) {
                 Edge::updateOrCreate(
                     ['id' => $edgeData['id'] ?? null],
                     [
+                        'chatbot_id' => $chatbot->id,
                         'source' => $edgeData['source'] ?? null,
                         'source_handle' => $edgeData['sourceHandle'] !== 'default' ? $edgeData['sourceHandle'] : null,
                         'target' => $edgeData['target'] ?? null,

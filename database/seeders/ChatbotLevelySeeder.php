@@ -428,7 +428,7 @@ class ChatbotLevelySeeder extends Seeder
         // Crear Conocimientos
         Knowledge::create([
             'chatbot_id' => $chatbot->id,
-            'content' => $knowledgesData,
+            // 'content' => $knowledgesData,
             'document' => 'documents/RH4TsaZCULOC8tBlWftDLC9Npark1B4FpVydcAnw.pdf',
             'vector_store_openai_id' => 'vs_e6vTaTUi0iJ1j0t7IEPZPXKf',
             'file_openai_id' => 'file-Q9lZOEzMDGU4ElScYCyzHvRa',

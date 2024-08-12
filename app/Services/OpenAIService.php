@@ -280,7 +280,7 @@ class OpenAIService
 
             $run = OpenAI::threads()->runs()->create($threadId, [
                 'assistant_id' => $chatbot->assistant_openai_id,
-                'instructions' => $combinedInstructions,
+                // 'instructions' => $combinedInstructions,
                 // 'token_control'=> [
                     // 'max_prompt_tokens' => 256,
                     // 'max_completion_tokens' => 256 * 2

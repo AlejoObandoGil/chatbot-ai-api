@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('edges', function (Blueprint $table) {
             $table->uuid('id')->primary();
 
+            $table->foreignUuid('chatbot_id');
             $table->uuid('source')->nullable();
             $table->uuid('source_handle')->nullable();
             $table->uuid('target')->nullable();
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
             $table->softDeletes();
 
+            $table->foreign('chatbot_id')->references('id')->on('chatbots')->onDelete('cascade');
             $table->foreign('source')->references('id')->on('intents')->onDelete('cascade')->nullable();
             $table->foreign('source_handle')->references('id')->on('intent_options')->onDelete('cascade')->nullable();
             $table->foreign('target')->references('id')->on('intents')->onDelete('cascade')->nullable();
