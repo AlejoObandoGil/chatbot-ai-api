@@ -2,27 +2,26 @@
 
 namespace Database\Seeders;
 
-use App\Models\User\User;
 use Illuminate\Support\Str;
-use App\Models\Entity\Entity;
 use App\Models\Intent\Intent;
 use App\Models\Chatbot\Chatbot;
 use Illuminate\Database\Seeder;
 use App\Models\Chatbot\Knowledge;
-use App\Models\Entity\EntityValue;
 use App\Models\Intent\IntentOption;
 use App\Models\Intent\IntentResponse;
 use App\Enums\TypeInformationRequired;
 use App\Models\User\ContactInformation;
 use App\Models\Intent\IntentTrainingPhrase;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class ChatbotLevelySeeder extends Seeder
+class ChatbotPantheraSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
+
         // Híbrido,
         // PLN,
         // Basado en reglas
@@ -31,20 +30,20 @@ class ChatbotLevelySeeder extends Seeder
         $chatbotData = [
             'id' => 'eed9f0aa-add0-433f-a497-927a792a0c0a',
             'user_id' => 1,
-            'name' => 'LevelBot',
-            'description' => 'Eres un chatbot encargado de brindar asistencia a los usuarios sobre la plataforma de levely.',
+            'name' => 'PantherBot',
+            'description' => 'Eres un asistente virtual encargado de asesorar a nuestros usuarios, sobre los productos y servicios de desarrollo de software y marketing que ofrecemos a través de nuestra plataforma.',
             'type' => 'Híbrido',
-            'assistant_openai_id' => 'asst_96RBTTingTHmqV2VBhvXaM5z',
-            'temperature' => 0.5,
-            'max_tokens' => 50
+            // 'assistant_openai_id' => 'asst_96RBTTingTHmqV2VBhvXaM5z',
+            // 'temperature' => 0.5,
+            // 'max_tokens' => 50
         ];
 
         $chatbot = Chatbot::create($chatbotData);
 
-        $chatbot->config()->create([
+        $chatbot->config->create([
             'chatbot_id' => $chatbot->id,
-            'chat_color' => '#2727d4',
-            'message_color' => '#2b3d97',
+            'chat_color' => '#2b3d97',
+            'message_color' => '#404040',
         ]);
 
         $intentsData = [
@@ -507,3 +506,4 @@ class ChatbotLevelySeeder extends Seeder
         }
     }
 }
+

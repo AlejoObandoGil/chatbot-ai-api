@@ -12,7 +12,8 @@ class ChatbotConfig extends Model
 
     protected $fillable = [
         'chatbot_id',
-        'config_data'
+        'chat_color',
+        'message_color'
     ];
 
     public function chatbot()

@@ -5,6 +5,7 @@ use App\Services\OpenAIService;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Talk\TalkController;
 use App\Http\Controllers\Intent\EdgeController;
+use App\Http\Controllers\Chatbot\ChatbotConfigController;
 use App\Http\Controllers\Entity\EntityController;
 use App\Http\Controllers\Intent\IntentController;
 use App\Http\Controllers\Chatbot\ChatbotController;
@@ -42,6 +43,11 @@ Route::middleware(['auth:sanctum'])->group(function () {
             Route::put('/{chatbot}/enable', [ChatbotController::class, 'updateEnable']);
 
             Route::prefix('/{chatbot}')->group(function () {
+
+                Route::prefix('/config')->group(function () {
+                    Route::post('/', [ChatbotConfigController::class, 'store']);
+                });
+
                 Route::prefix('/contact-information')->group(function () {
                     Route::get('/', [ContactInformationController::class, 'index']);
                     Route::post('/', [ContactInformationController::class, 'store']);

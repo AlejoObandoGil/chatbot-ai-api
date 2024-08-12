@@ -19,8 +19,8 @@ return new class extends Migration
             $table->text('description');
             $table->string('type');
             $table->boolean('enabled')->default(false);
-            $table->float('temperature')->default(0.5);
-            $table->integer('max_tokens')->default(50);
+            $table->float('temperature')->nullable();
+            $table->integer('max_tokens')->nullable();
             $table->string('assistant_openai_id')->nullable();
 
             $table->timestamps();

@@ -139,7 +139,7 @@ class ChatbotController extends Controller
     {
         if (auth()->user()) {
             $chatbot = Chatbot::where('id', $chatbot->id)
-                ->with(['knowledges' => function ($query) {
+                ->with(['config', 'knowledges' => function ($query) {
                     $query->where('is_learning', false)->first();
                 }])
                 ->first();

@@ -59,7 +59,11 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Hi',
                     'Preguntar sobre otro tema',
                     'Quiero saber más sobre otro tema',
-                    'Otro tema de interés'
+                    'Otro tema de interés',
+                    'Menu principal',
+                    'Menu',
+                    'Menu de inicio',
+                    'Regresar al menu',
                 ],
                 'responses' => [
                     '¡Hola soy SkynetBot! ¿En qué puedo ayudarte hoy? Selecciona una opción o escribe una pregunta',
@@ -70,6 +74,7 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Cómo funciona el internet de Starlink',
                     'Tipo de contrato',
                     'Información sobre la cobertura',
+                    'Instalación rápida',
                     'Otra información relevante',
                 ]
             ],
@@ -498,7 +503,8 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                 ],
                 'data' => ['label' => 'Instalación rápida'],
                 'phrases' => [
-                    'Quiero saber cómo instalar Starlink',
+                    'Instalación rápida',
+                    'Instalación rápida de Starlink',
                     '¿Cuánto tiempo tarda en instalar Starlink?',
                     'Información sobre instalación rápida'
                 ],
@@ -506,6 +512,103 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Puedes instalar Starlink en solo dos pasos. ¿Te interesa?',
                     'Nuestra instalación es rápida y fácil. ¿Quieres saber más?'
                 ],
+                'options' => [
+                    'Saber más sobre instalación',
+                    'Accesorios y soportes',
+                    'Kit Estandar',
+                    'Preguntar sobre otro tema'
+                ],
+                'children' => [
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Como instalar',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -500,
+                            'y' => 1200,
+                        ],
+                        'data' => ['label' => 'Como instalar'],
+                        'phrases' => [
+                            'Saber más sobre instalación',
+                            '¿Como puedo instalar Starlink?',
+                            '¿Como instalar Starlink?',
+                            '¿Cuánto tiempo tarda en instalar Starlink?',
+                        ],
+                        'responses' => [
+                            'StarLink esta diseñado para que los propios usuarios lo instalen. Paso 1: Conectarlo. Paso 2 Apuntarlo al cielo. Starlink requiere un cielo despejado y sin obstrucciones. Descargue la aplicación Starlink para determinar su mejor ubicación de instalación'
+                        ],
+                        'options' => [
+                            'Descargar para android',
+                            'Descargar para iOS',
+                        ]
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Descargar para android',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -700,
+                            'y' => 1400,
+                        ],
+                        'data' => ['label' => 'Descargar para android'],
+                        'phrases' => [
+                            'Descargar para android',
+                            '¿Como descargar aplicación de Starlink Android?',
+                            'Quiero descargar la aplicación de Starlink Android',
+                            '¿Donde descargar aplicación de Starlink Android?',
+                        ],
+                        'responses' => [
+                            'Puedes descargar la aplicación de Starlink Android desde la página oficial de playstore de Starlink. https://play.google.com/store/apps/details?id=com.starlink.'
+                        ],
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Descargar para iOS',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -600,
+                            'y' => 1400,
+                        ],
+                        'data' => ['label' => 'Descargar para iOS'],
+                        'phrases' => [
+                            'Descargar para iOS',
+                            '¿Como descargar aplicación de Starlink iOS?',
+                            'Quiero descargar la aplicación de Starlink iOS',
+                            '¿Donde descargar aplicación de Starlink iOS?',
+                        ],
+                        'responses' => [
+                            'Puedes descargar la aplicación de Starlink iOS desde la página oficial de playstore de Starlink. https://apps.apple.com/us/app/starlink/id1537177988.'
+                        ],
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Accesorios y soportes',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => -100,
+                            'y' => 1200,
+                        ],
+                        'data' => ['label' => 'Accesorios y soportes'],
+                        'phrases' => [],
+                        'responses' => [
+                            '* adaptador ethernet. https://api.starlink.com/public-files/accessories_ethernet_adapter.webp * enrutador wifi de malla https://api.starlink.com/public-files/accessories_mesh_wifi_router.webp',
+                        ],
+                    ],
+                    [
+                        'id' => Str::uuid(),
+                        'name' => 'Kit Estandar',
+                        'type' => 'customeNode',
+                        'position' => [
+                            'x' => 300,
+                            'y' => 1200,
+                        ],
+                        'data' => ['label' => 'Accesorios y soportes'],
+                        'phrases' => [],
+                        'responses' => [
+                            'Conoce todo sobre lo que incluye el kit estandar aquí. https://www.starlink.com/co/specifications?spec=1',
+                        ],
+                    ],
+                ]
             ],
             // Nodo 3: Sin contratos
             [
@@ -522,11 +625,12 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
                     'Quiero saber si tengo que firmar un contrato',
                     '¿Hay contratos a largo plazo con Starlink?',
                     'Información sobre sin contratos',
-                    'Tipo de contrato'
+                    'Tipo de contrato',
+                    'Cual es el tipo de contrato'
                 ],
                 'responses' => [
-                    'No hay contratos a largo plazo con Starlink. ¿Te interesa?',
-                    'Puedes cancelar en cualquier momento sin penalizaciones. ¿Quieres saber más?'
+                    'No hay contratos a largo plazo con Starlink. Todos los planes de suscripción de Starlink incluyen datos ilimitados de alta velocidad en tierra sin contratos ni compromisos a largo plazo.',
+                    'Puedes cancelar en cualquier momento sin penalizaciones. Todos los planes de suscripción de Starlink incluyen datos ilimitados de alta velocidad en tierra sin contratos ni compromisos a largo plazo.'
                 ],
             ],
             [

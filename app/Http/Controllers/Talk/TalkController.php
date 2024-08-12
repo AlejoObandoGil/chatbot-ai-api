@@ -34,13 +34,15 @@ class TalkController extends Controller
      */
     public function create(Chatbot $chatbot)
     {
-        $chatbot = Chatbot::with(['intents' => function ($query) {
-            $query->where('category', 'saludo')
-                ->with(['responses' => function ($responseQuery) {
-                    $responseQuery->inRandomOrder()->limit(1);
-                }])
-                ->with('options');
-        }])->find($chatbot->id);
+        // if ($chatbot->enabled) {
+            $chatbot = Chatbot::with(['config', 'intents' => function ($query) {
+                $query->where('category', 'saludo')
+                    ->with(['responses' => function ($responseQuery) {
+                        $responseQuery->inRandomOrder()->limit(1);
+                    }])
+                    ->with('options');
+            }])->find($chatbot->id);
+        // }
 
         return response()->json(['chatbot' => $chatbot], 200);
     }
