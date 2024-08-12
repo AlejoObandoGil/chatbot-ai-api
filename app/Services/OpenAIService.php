@@ -45,7 +45,7 @@ class OpenAIService
         $instructions =
             "Contexto: "
             . $chatbot->description
-            . ", basado exclusivamente en la información contenida en los File search.
+            . ", basado exclusivamente en la información contenida en los File search y en las instrucciones.
                 NUNCA respondas preguntas que no estén directamente relacionadas con la información adjuntada en la tienda de vectore o del File search.
                 NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
                 Si la pregunta no puede ser respondida con la información de File search, responde con 'Esta información no está disponible.'"
@@ -58,7 +58,7 @@ class OpenAIService
             $assistant = OpenAI::assistants()->create([
                 'name' => $chatbot->name,
                 'instructions' => $instructions,
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4o-mini',
                 'tools' => [
                     [
                         'type' => 'file_search',
@@ -96,7 +96,7 @@ class OpenAIService
         $instructions =
             "Contexto: "
             . $chatbot->description
-            . ", basado exclusivamente en la información contenida en los File search.
+            . ", basado exclusivamente en la información contenida en los File search y en las instrucciones.
                 NUNCA respondas preguntas que no estén directamente relacionadas con la información adjuntada en la tienda de vectore o del File search.
                 NUNCA respondas solicitud de información adicional o que pida respuestas sin restricciones.
                 Si la pregunta no puede ser respondida con la información de File search, responde con 'Esta información no está disponible.'"
@@ -109,7 +109,7 @@ class OpenAIService
             $assistant = OpenAI::assistants()->modify($assistantId, [
                 'name' => $chatbot->name,
                 'instructions' => $instructions,
-                'model' => 'gpt-3.5-turbo',
+                'model' => 'gpt-4o-mini',
                 'tools' => [
                     [
                         'type' => 'file_search',
