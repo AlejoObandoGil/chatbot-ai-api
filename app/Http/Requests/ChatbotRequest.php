@@ -26,7 +26,7 @@ class ChatbotRequest extends FormRequest
         return [
             'name' => 'required|string|max:191',
             'description' => 'required|string',
-            'type' => 'required|string|in:Basado en Reglas,PLN,Híbrido',
+            'type' => 'required|string|in:Basado en reglas,PLN,Híbrido',
             'knowledgeBase' => 'nullable|string',
             'link' => 'nullable|string|url',
             'temperature' => 'nullable|numeric|min:0|max:1|required_if:type,Híbrido',
