@@ -228,7 +228,7 @@ class ChatbotController extends Controller
         $chatbot->save();
 
         return response()->json([
-            'chatbot' => $chatbot,
+            'chatbot' => $chatbot->load('knowledges'),
         ], 200);
     }
 
