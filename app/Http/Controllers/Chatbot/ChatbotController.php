@@ -23,6 +23,7 @@ class ChatbotController extends Controller
     {
         $this->openAIService = $openAIService;
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -30,7 +31,10 @@ class ChatbotController extends Controller
     {
         $chatbots = null;
         if (auth()->user())
-            $chatbots = Chatbot::where('user_id', auth()->user()->id)->get();
+            $chatbots = Chatbot::where('user_id', auth()->user()->id)
+                ->orWhere('id', '06e4e314-f510-44df-a849-71d2d85dd568')
+                ->orWhere('id', 'eed9f0aa-add0-433f-a497-927a792a0c0a')
+            ->get();
 
         return response()->json(['chatbots' => $chatbots]);
     }

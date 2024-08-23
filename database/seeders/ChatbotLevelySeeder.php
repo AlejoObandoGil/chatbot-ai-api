@@ -31,8 +31,8 @@ class ChatbotLevelySeeder extends Seeder
         $chatbotData = [
             'id' => 'eed9f0aa-add0-433f-a497-927a792a0c0a',
             'user_id' => 1,
-            'name' => 'LevelBot',
-            'description' => 'Eres un chatbot encargado de brindar asistencia a los usuarios sobre la plataforma de levely.',
+            'name' => 'LevelBot Tutorial IA',
+            'description' => 'Eres un chatbot encargado de brindar asistencia a nuestros usuarios sobre la plataforma de Levely.',
             'type' => 'Híbrido',
             'assistant_openai_id' => 'asst_96RBTTingTHmqV2VBhvXaM5z',
             'temperature' => 0.5,
@@ -68,7 +68,11 @@ class ChatbotLevelySeeder extends Seeder
                     'Hi',
                     'Preguntar sobre otro tema',
                     'Quiero saber más sobre otro tema',
-                    'Otro tema de interés'
+                    'Otro tema de interés',
+                    'Menu principal',
+                    'Menu',
+                    'Menu de inicio',
+                    'Regresar al menu',
                 ],
                 'responses' => [
                     '¡Hola soy levelBot! ¿En qué puedo asesorarte el dia de hoy? Selecciona una opción o escribe tu pregunta',

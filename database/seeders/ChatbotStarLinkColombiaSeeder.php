@@ -31,8 +31,8 @@ class ChatbotStarLinkColombiaSeeder extends Seeder
         $chatbotData = [
             'id' => '06e4e314-f510-44df-a849-71d2d85dd568',
             'user_id' => 1,
-            'name' => 'SkynetBot',
-            'description' => 'Chatbot para la empresa de elon mocs.',
+            'name' => 'StarLinkBot Tutorial',
+            'description' => 'Chatbot tematica StarLink - Tutorial de un chatbot basado en reglas sin IA.',
             'type' => 'Basado en reglas'
         ];
 

@@ -36,7 +36,7 @@ enum TypeInformationRequired: string
             self::NOMBRE => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
             self::APELLIDO => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
             self::NOMBRE_COMPLETO => '/^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]{2,100}$/',
-            self::TELEFONO => '/^\+?[0-9]{8,15}$/',
+            self::TELEFONO => '/^\+?[0-9]{8,10}$/',
             self::CORREO => '/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,100}$/',
             self::EDAD => '/^[0-9]{1,3}$/',
             self::FECHA_NACIMIENTO => '/^(0[1-9]|[12][0-9]|3[01])[- /.](0[1-9]|1[012])[- /.](19|20)\d\d$/',
